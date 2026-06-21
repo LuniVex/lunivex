@@ -177,12 +177,22 @@ const messages = defineMessages({
 					>
 						<ModrinthIcon class="w-6 h-6" />
 					</button>
-					<div class="max-w-[200px]">
-						<p class="m-0">Modrinth App {{ version }}</p>
+					<div class="max-w-[280px]">
+						<p class="m-0">LuniVex {{ version }}</p>
 						<p class="m-0">
 							<span v-if="osPlatform === 'macos'">macOS</span>
 							<span v-else class="capitalize">{{ osPlatform }}</span>
 							{{ osVersion }}
+						</p>
+						<p class="m-0 mt-2 text-xs text-secondary">
+							Built on
+							<a
+								href="https://github.com/modrinth/theseus"
+								class="text-secondary underline"
+								target="_blank"
+								rel="noopener noreferrer"
+							>Modrinth Theseus</a>
+							(GPLv3)
 						</p>
 					</div>
 				</div>

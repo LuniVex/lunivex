@@ -20,7 +20,7 @@ watch(
 		<div>
 			<h2 class="m-0 text-lg font-semibold text-contrast">Discord RPC</h2>
 			<p class="m-0 mt-1 text-sm">
-				Manages the Discord Rich Presence integration. Disabling this will cause 'Modrinth' to no
+				Manages the Discord Rich Presence integration. Disabling this will cause 'LuniVex' to no
 				longer show up as a game or app you are using on your Discord profile.
 			</p>
 			<p class="m-0 mt-2 text-sm">

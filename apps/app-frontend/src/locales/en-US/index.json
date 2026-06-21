@@ -51,7 +51,7 @@
     "message": "Advanced rendering"
   },
   "app.appearance-settings.color-theme.description": {
-    "message": "Select your preferred color theme for Modrinth App."
+    "message": "Select your preferred color theme for LuniVex."
   },
   "app.appearance-settings.color-theme.title": {
     "message": "Color theme"
@@ -486,7 +486,7 @@
     "message": "Sign In"
   },
   "app.skins.sign-in.description": {
-    "message": "Please sign into your Minecraft account to use the skin management features of the Modrinth app."
+    "message": "Please sign into your Minecraft account to use the skin management features of LuniVex."
   },
   "app.skins.sign-in.rinthbot-alt": {
     "message": "Excited Modrinth Bot"
@@ -498,13 +498,13 @@
     "message": "Skin selector"
   },
   "app.update-popup.body.download-complete": {
-    "message": "Modrinth App v{version} has finished downloading. Reload to update now, or automatically when you close Modrinth App."
+    "message": "LuniVex v{version} has finished downloading. Reload to update now, or automatically when you close LuniVex."
   },
   "app.update-popup.body.linux": {
-    "message": "Modrinth App v{version} is available. Use your package manager to update for the latest features and fixes!"
+    "message": "LuniVex v{version} is available. Use your package manager to update for the latest features and fixes!"
   },
   "app.update-popup.body.metered": {
-    "message": "Modrinth App v{version} is available now! Since you're on a metered network, we didn't automatically download it."
+    "message": "LuniVex v{version} is available now! Since you're on a metered network, we didn't automatically download it."
   },
   "app.update-popup.changelog": {
     "message": "Changelog"

@@ -170,7 +170,7 @@ const messages = defineMessages({
 	signInDescription: {
 		id: 'app.skins.sign-in.description',
 		defaultMessage:
-			'Please sign into your Minecraft account to use the skin management features of the Modrinth app.',
+			'Please sign into your Minecraft account to use the skin management features of LuniVex.',
 	},
 	signInButton: {
 		id: 'app.skins.sign-in.button',
