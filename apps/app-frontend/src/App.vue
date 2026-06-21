@@ -17,7 +17,6 @@ import {
 	LibraryIcon,
 	LogInIcon,
 	LogOutIcon,
-	NewspaperIcon,
 	NotepadTextIcon,
 	PlusIcon,
 	RefreshCwIcon,
@@ -39,7 +38,6 @@ import {
 	defineMessages,
 	I18nDebugPanel,
 	LoadingBar,
-	NewsArticleCard,
 	NotificationPanel,
 	OverflowMenu,
 	PopupNotificationPanel,
@@ -80,7 +78,6 @@ import InstallToPlayModal from '@/components/ui/modal/InstallToPlayModal.vue'
 import ModpackAlreadyInstalledModal from '@/components/ui/modal/ModpackAlreadyInstalledModal.vue'
 import UpdateToPlayModal from '@/components/ui/modal/UpdateToPlayModal.vue'
 import NavButton from '@/components/ui/NavButton.vue'
-import PrideFundraiserBanner from '@/components/ui/PrideFundraiserBanner.vue'
 import QuickInstanceSwitcher from '@/components/ui/QuickInstanceSwitcher.vue'
 import SplashScreen from '@/components/ui/SplashScreen.vue'
 import WindowControls from '@/components/ui/WindowControls.vue'
@@ -139,7 +136,6 @@ const router = useRouter()
 const route = useRoute()
 const APP_LEFT_NAV_WIDTH = '4rem'
 const APP_SIDEBAR_WIDTH = 300
-const PRIDE_FUNDRAISER_END_DATE = new Date('2026-07-01T00:00:00Z').getTime()
 const credentials = ref()
 const sidebarToggled = ref(true)
 const unsubscribeSidebarToggle = themeStore.$subscribe(() => {
@@ -149,9 +145,6 @@ const forceSidebar = computed(
 	() => route.path.startsWith('/browse') || route.path.startsWith('/project'),
 )
 const sidebarVisible = computed(() => sidebarToggled.value || forceSidebar.value)
-const prideFundraiserEnabled = computed(
-	() => themeStore.getFeatureFlag('pride_fundraiser') && Date.now() < PRIDE_FUNDRAISER_END_DATE,
-)
 
 const notificationManager = new AppNotificationManager()
 provideNotificationManager(notificationManager)
@@ -221,7 +214,6 @@ const {
 	handleModpackDuplicateGoToInstance,
 } = setupProviders(notificationManager, popupNotificationManager)
 
-const news = ref([])
 const availableSurvey = ref(false)
 const displayedServerInviteNotifications = new Set()
 
@@ -384,22 +376,6 @@ async function setupApp() {
 			console.log(
 				`No critical announcement found at https://api.modrinth.com/appCriticalAnnouncement.json?version=${version}`,
 			)
-		})
-
-	fetch(`https://modrinth.com/news/feed/articles.json`)
-		.then((response) => response.json())
-		.then((res) => {
-			if (res && res.articles) {
-				news.value = res.articles
-					.map((article) => ({
-						...article,
-						path: article.link,
-					}))
-					.slice(0, 4)
-			}
-		})
-		.catch((error) => {
-			console.error('Failed to fetch news articles', error)
 		})
 
 	get_opening_command().then(handleCommand)
@@ -1563,25 +1539,6 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 						<suspense>
 							<FriendsList :credentials="credentials" :sign-in="() => signIn()" />
 						</suspense>
-					</div>
-					<PrideFundraiserBanner
-						v-if="prideFundraiserEnabled"
-						class="p-4 border-0 border-b-[1px] border-[--brand-gradient-border] border-solid"
-					/>
-					<div v-if="news && news.length > 0" class="p-4 flex flex-col items-center">
-						<h3 class="text-base mb-4 text-primary font-medium m-0 text-left w-full">News</h3>
-						<div class="space-y-4 flex flex-col items-center w-full">
-							<NewsArticleCard
-								v-for="(item, index) in news"
-								:key="`news-${index}`"
-								:article="item"
-							/>
-							<ButtonStyled color="brand" size="large">
-								<a href="https://modrinth.com/news" target="_blank" class="my-4">
-									<NewspaperIcon /> View all news
-								</a>
-							</ButtonStyled>
-						</div>
 					</div>
 				</div>
 			</div>
