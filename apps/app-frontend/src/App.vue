@@ -1396,7 +1396,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		<div data-tauri-drag-region class="app-grid-statusbar bg-bg-raised h-[--top-bar-height] flex">
 			<div data-tauri-drag-region class="flex min-w-0 flex-1 overflow-hidden p-3">
 				<span class="flex items-center gap-2 shrink-0 select-none pointer-events-none">
-					<svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink:0">
+					<svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink:0">
 						<defs>
 							<mask id="lvCrescentMask">
 								<rect width="40" height="40" fill="black" />
