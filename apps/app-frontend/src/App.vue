@@ -1395,7 +1395,19 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		</div>
 		<div data-tauri-drag-region class="app-grid-statusbar bg-bg-raised h-[--top-bar-height] flex">
 			<div data-tauri-drag-region class="flex min-w-0 flex-1 overflow-hidden p-3">
-				<span class="shrink-0 text-contrast font-semibold text-lg leading-none select-none pointer-events-none">LuniVex</span>
+				<span class="flex items-center gap-2 shrink-0 select-none pointer-events-none">
+					<svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink:0">
+						<defs>
+							<mask id="lvCrescentMask">
+								<rect width="40" height="40" fill="black" />
+								<circle cx="20" cy="20" r="16" fill="white" />
+								<circle cx="27" cy="16" r="14" fill="black" />
+							</mask>
+						</defs>
+						<rect width="40" height="40" mask="url(#lvCrescentMask)" style="fill: var(--color-brand);" />
+					</svg>
+					<span class="text-contrast font-semibold text-lg leading-none">LuniVex</span>
+				</span>
 				<div data-tauri-drag-region class="flex shrink-0 items-center gap-1 ml-3">
 					<button
 						class="cursor-pointer p-0 m-0 text-contrast border-none outline-none bg-button-bg rounded-full flex items-center justify-center w-6 h-6 hover:brightness-75 transition-all"
