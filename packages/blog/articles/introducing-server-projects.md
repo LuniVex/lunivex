@@ -119,6 +119,6 @@ When a server updates its compatibility, such as publishing a new modpack versio
 
 ![Update available modal](./server-project-updates.webp)
 
-—
+-
 
 That’s all from us! Thank you so much for your continued support and happy playing!

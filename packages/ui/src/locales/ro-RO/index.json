@@ -2916,10 +2916,10 @@
     "defaultMessage": "Începe"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideal pentru 15–25 de jucători, pachete de moduri, sau modificări complexe."
+    "defaultMessage": "Ideal pentru 15-25 de jucători, pachete de moduri, sau modificări complexe."
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Bun pentru 6–15 jucători și multiple moduri."
+    "defaultMessage": "Bun pentru 6-15 jucători și multiple moduri."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Cel mai Popular"
@@ -2928,7 +2928,7 @@
     "defaultMessage": "Selectează un Plan"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Perfect pentru 1–5 prieteni cu câteva moduri simple."
+    "defaultMessage": "Perfect pentru 1-5 prieteni cu câteva moduri simple."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

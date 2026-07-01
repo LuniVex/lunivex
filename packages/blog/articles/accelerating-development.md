@@ -9,11 +9,11 @@ authors: ['MpxzqsyW', 'Dc7EYhxG', '6plzAzU4']
 
 ---
 
-There are over 3 billion gamers worldwide, but only a small fraction ever go further and mod the games they play. Modrinth is here to bring modding to every player on the planet—all the while allowing mod creators to make a living off of it.
+There are over 3 billion gamers worldwide, but only a small fraction ever go further and mod the games they play. Modrinth is here to bring modding to every player on the planet-all the while allowing mod creators to make a living off of it.
 
 Since our founding in 2020 and up until a few months ago, Modrinth has been a purely volunteer project. In the past couple months, the Modrinth team has been more productive than ever. We've released the [Anniversary Update](../two-years-of-modrinth), we're actively working on the launcher once more, and we're laying out plans for how to multiply Modrinth creator payouts.
 
-The vision we have for the future of Modrinth is great, and right alongside that is the need for an amazing team to build out this vision. That's why we [recently announced](https://x.com/modrinth/status/1615416957905342472) that [we're hiring](https://careers.modrinth.com)—we've already come so far on just volunteer work, but for Modrinth to be sustainable and for its growth to be sustainable, we need to pick up the pace.
+The vision we have for the future of Modrinth is great, and right alongside that is the need for an amazing team to build out this vision. That's why we [recently announced](https://x.com/modrinth/status/1615416957905342472) that [we're hiring](https://careers.modrinth.com)-we've already come so far on just volunteer work, but for Modrinth to be sustainable and for its growth to be sustainable, we need to pick up the pace.
 
 That's why we're excited to announce that we've raised a pre-seed round of funding led by [Makers Fund](https://www.makersfund.com/), with investors including [Ryan Johnson](https://x.com/ryanmjohnson), [Stephen Cole](https://x.com/sthenc), [Pim de Witte](https://x.com/PimDeWitte), [Chris Lee](https://www.linkedin.com/in/leechris1/), and [Andreas Thorstensson](https://x.com/andreas) to accelerate development and expand to new horizons for Modrinth.
 

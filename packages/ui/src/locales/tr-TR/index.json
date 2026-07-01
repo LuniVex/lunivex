@@ -3498,7 +3498,7 @@
     "defaultMessage": "Bekleyen"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "{username} nın avatarı"
@@ -4305,13 +4305,13 @@
     "defaultMessage": "Büyük"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "15–25 oyuncu arası mod paketleri veya fazla modlu sunucular için ideal."
+    "defaultMessage": "15-25 oyuncu arası mod paketleri veya fazla modlu sunucular için ideal."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Orta"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "6–15 oyuncu ve birden fazla mod için iyi."
+    "defaultMessage": "6-15 oyuncu ve birden fazla mod için iyi."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "En Popüler"
@@ -4323,7 +4323,7 @@
     "defaultMessage": "Küçük"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "1–5 arkadaş ve birkaç hafif mod için mükemmel."
+    "defaultMessage": "1-5 arkadaş ve birkaç hafif mod için mükemmel."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

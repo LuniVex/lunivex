@@ -2571,7 +2571,7 @@
     "message": "Na-update ang proyekto"
   },
   "project.settings.general.name.description": {
-    "message": "Iwasang unlapihan, hulapihan, panaklongan, o dumagdag ng paglalarawan—dapat ang tunay na pangalan ng proyekto lamang."
+    "message": "Iwasang unlapihan, hulapihan, panaklongan, o dumagdag ng paglalarawan-dapat ang tunay na pangalan ng proyekto lamang."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "hal. Nether Overhaul 2"
@@ -2997,13 +2997,13 @@
     "message": "Walang paunawa"
   },
   "servers.plan.large.description": {
-    "message": "Nakaaangkop sa 15–25 manlalaro, modpack, o mabibigat na modding."
+    "message": "Nakaaangkop sa 15-25 manlalaro, modpack, o mabibigat na modding."
   },
   "servers.plan.medium.description": {
-    "message": "Nakaaangkop sa 6–15 manlalaro at may karamihang mod."
+    "message": "Nakaaangkop sa 6-15 manlalaro at may karamihang mod."
   },
   "servers.plan.small.description": {
-    "message": "Nakaaangkop sa 1–5 manlalaro na may iilang mod."
+    "message": "Nakaaangkop sa 1-5 manlalaro na may iilang mod."
   },
   "settings.account.email.modal.header.add": {
     "message": "Magdagdag ng email"

@@ -105,7 +105,7 @@ const props = withDefaults(
 		maxDate?: string | Date
 		/**
 		 * The date the calendar opens to when no value is selected. Does not set
-		 * the value — only controls which month/year is shown when the picker
+		 * the value - only controls which month/year is shown when the picker
 		 * first opens (and on subsequent opens while the value is empty).
 		 */
 		defaultViewDate?: string | Date

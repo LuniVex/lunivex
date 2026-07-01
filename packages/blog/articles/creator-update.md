@@ -62,7 +62,7 @@ Not quite! Modpacks are much more complex than collections. Collections are simp
 | Must be reviewed by Modrinth’s staff and approved per [Modrinth’s rules](/legal/rules) before it can be published.                | Does **not** need to be reviewed by Modrinth’s staff. Can go public at any time.                                                              |
 | After approval, can be **listed** in search, **archived**, **unlisted**, or **private**.                                          | Can be **public** (shows up on your Modrinth profile), **unlisted** (only accessible by direct URL), or **private** (only you can access it). |
 
-All in all, collections are handy for easily grouping together and sharing Modrinth projects. If you’re bored on the subway heading home, you can look for new mods on your phone and quickly add them to a Modrinth collection. However, for many use cases, spending the time to create a modpack might make more sense. Collections and modpacks are both here to stay—one is not going to replace the other.
+All in all, collections are handy for easily grouping together and sharing Modrinth projects. If you’re bored on the subway heading home, you can look for new mods on your phone and quickly add them to a Modrinth collection. However, for many use cases, spending the time to create a modpack might make more sense. Collections and modpacks are both here to stay-one is not going to replace the other.
 
 ## New payouts system
 

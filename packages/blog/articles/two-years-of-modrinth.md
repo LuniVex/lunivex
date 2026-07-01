@@ -7,7 +7,7 @@ authors: ['6plzAzU4']
 
 Modrinth initially [went into beta](../modrinth-beta) on November 30th, 2020. Just over a month ago was November 30th, 2022, marking **two years** since Modrinth was generally available as a platform for everyone to use. Today, we're proud to announce the Anniversary Update, celebrating both two years of Modrinth as well as the coming of the new year, and we'll be discussing our New Year's Resolutions for 2023.
 
-Before you read this post, though, we recommend taking a look at [our retrospective on Modrinth's history through 2020—2022](../two-years-of-modrinth-history). It just wouldn't be right to take a look at the present and the future without also taking a look at our past, seeing how far we've come from our humble beginnings.
+Before you read this post, though, we recommend taking a look at [our retrospective on Modrinth's history through 2020-2022](../two-years-of-modrinth-history). It just wouldn't be right to take a look at the present and the future without also taking a look at our past, seeing how far we've come from our humble beginnings.
 
 With that out of the way, this post primarily serves to announce a few of the smaller features we've been working on after the release of creator monetization. We've bundled these all together as the **Anniversary Update**.
 
@@ -27,7 +27,7 @@ Data packs can optionally upload a corresponding resource pack as a separate fil
 
 ## New landing page
 
-The [homepage](/) has been completely remade, featuring a scrolling list of random projects from Modrinth. Feel free to use this to discover new projects—just make sure you refresh occasionally, because they loop after a little while until you refresh!
+The [homepage](/) has been completely remade, featuring a scrolling list of random projects from Modrinth. Feel free to use this to discover new projects-just make sure you refresh occasionally, because they loop after a little while until you refresh!
 
 ![A screenshot of the new homepage, with a maze background and projects scrolling across the bottom. Bold across the front is "The place for Minecraft mods".](./landing-page.jpg)
 
@@ -57,7 +57,7 @@ A screenshot of the way that individual versions look now:
 
 ![A screenshot of the way that individual versions look now.](./version-page.jpg)
 
-That's not all, though. Version creation now automatically infers most details after you upload your first file. Try it out sometime—whenever you upload your first file, most stuff should already be filled in. This system is still in-development, so if you find any issues, please file an issue on [GitHub](https://github.com/modrinth/code).
+That's not all, though. Version creation now automatically infers most details after you upload your first file. Try it out sometime-whenever you upload your first file, most stuff should already be filled in. This system is still in-development, so if you find any issues, please file an issue on [GitHub](https://github.com/modrinth/code).
 
 ## Project card views
 
@@ -94,7 +94,7 @@ Our [Discord server](https://discord.modrinth.com) has a brand new channel: #new
 
 ## New Year's Resolutions
 
-Now that we've looked at everything accomplished over the past month and a half, let's take a look at our New Year's Resolutions—things we wish to achieve during 2023.
+Now that we've looked at everything accomplished over the past month and a half, let's take a look at our New Year's Resolutions-things we wish to achieve during 2023.
 
 ### Theseus Launcher
 

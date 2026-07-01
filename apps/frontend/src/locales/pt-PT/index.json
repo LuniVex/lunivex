@@ -2385,7 +2385,7 @@
     "message": "Projeto atualizado"
   },
   "project.settings.general.name.description": {
-    "message": "Evita prefixos, sufixos, parênteses ou descrições adicionais—usa apenas o nome real do projeto."
+    "message": "Evita prefixos, sufixos, parênteses ou descrições adicionais-usa apenas o nome real do projeto."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "ex. Reformulação do Nether 2"

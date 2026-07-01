@@ -10,7 +10,7 @@ We're happy to announce that we have just launched [Modrinth Servers](https://mo
 ### What does this mean for me?
 
 - Lower latency and smoother gameplay for players across Asia and nearby regions.
-- More choice when creating new servers — Singapore is available as a region starting today.
+- More choice when creating new servers - Singapore is available as a region starting today.
 - Room to grow as we continue rolling out infrastructure where you need it most.
 
 This launch is a big step in bringing Modrinth Servers closer to more of our community. And we’re just getting started.

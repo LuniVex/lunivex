@@ -9,7 +9,7 @@ import { getNodeBaseUrl } from '../utils/node-url'
 export interface NodeAuth {
 	/** Node instance URL (e.g., "node-xyz.modrinth.com/modrinth/v0/fs") */
 	url: string
-	/** Base URL without path suffix (e.g., "node-xyz.modrinth.com") — used when available */
+	/** Base URL without path suffix (e.g., "node-xyz.modrinth.com") - used when available */
 	baseUrl?: string
 	/** JWT token */
 	token: string

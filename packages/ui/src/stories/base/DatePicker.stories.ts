@@ -467,7 +467,7 @@ export const PreserveDay: Story = {
 					@clamp="onClamp"
 				/>
 				<p v-if="wasClamped" class="text-xs text-secondary">
-					Day {{ intendedDay }} not available — showing {{ resolvedDay }}
+					Day {{ intendedDay }} not available - showing {{ resolvedDay }}
 				</p>
 				<p class="text-sm text-secondary">Selected value: {{ value || 'None' }}</p>
 				<p class="text-xs text-secondary">

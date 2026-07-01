@@ -813,7 +813,7 @@
     "message": "订阅有关 Modrinth 的更新邮件"
   },
   "auth.welcome.description": {
-    "message": "你现在是这个超棒社区的一员了——与创作者和社区玩家们一起创作、探索、获取模组并持续追踪最新的精彩模组动态吧。"
+    "message": "你现在是这个超棒社区的一员了--与创作者和社区玩家们一起创作、探索、获取模组并持续追踪最新的精彩模组动态吧。"
   },
   "auth.welcome.label.tos": {
     "message": "创建账户即表示你已同意 Modrinth 的<terms-link>使用条款</terms-link>和<privacy-policy-link>隐私政策</privacy-policy-link>。"
@@ -3294,7 +3294,7 @@
     "message": "项目已更新"
   },
   "project.settings.general.name.description": {
-    "message": "请勿添加前缀、后缀、括号内容或附加说明——仅填写项目实际名称。"
+    "message": "请勿添加前缀、后缀、括号内容或附加说明--仅填写项目实际名称。"
   },
   "project.settings.general.name.placeholder.1": {
     "message": "例：Nether Overhaul 2"
@@ -3798,13 +3798,13 @@
     "message": "没有告示"
   },
   "servers.plan.large.description": {
-    "message": "适合 15–25 名玩家使用，加模组包或重度添加模组。"
+    "message": "适合 15-25 名玩家使用，加模组包或重度添加模组。"
   },
   "servers.plan.medium.description": {
-    "message": "适合 6–15 名玩家使用，加多个模组。"
+    "message": "适合 6-15 名玩家使用，加多个模组。"
   },
   "servers.plan.small.description": {
-    "message": "适合 1–5 位朋友使用，加少量轻量模组。"
+    "message": "适合 1-5 位朋友使用，加少量轻量模组。"
   },
   "servers.purchase.step.plan.billed": {
     "message": "计费{interval, select, monthly {按月} quarterly {按季度} yearly {按年} other {{interval}}}"

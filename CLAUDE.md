@@ -1,6 +1,6 @@
 # Modrinth Monorepo
 
-This is the Modrinth monorepo — it contains all Modrinth projects, both frontend and backend. When entering a project, either to edit or analyse, you should read it's CLAUDE.md.
+This is the Modrinth monorepo - it contains all Modrinth projects, both frontend and backend. When entering a project, either to edit or analyse, you should read it's CLAUDE.md.
 
 ## Architecture
 
@@ -64,7 +64,7 @@ The website and app `prepr` commands
 
 Each project may have its own `CLAUDE.md` with detailed instructions:
 
-- [`apps/labrinth/AGENTS.md`](apps/labrinth/AGENTS.md) — Backend API
+- [`apps/labrinth/AGENTS.md`](apps/labrinth/AGENTS.md) - Backend API
 - [`apps/frontend/CLAUDE.md`](apps/frontend/CLAUDE.md) - Frontend Website
 
 ## Code Guidelines
@@ -80,7 +80,7 @@ Each project may have its own `CLAUDE.md` with detailed instructions:
 - NEVER use `| head -n X` or `| tail -n X` to truncate output
 - IMPORTANT: Run commands directly without pipes when possible
 - IMPORTANT: If you need to limit output, use command-specific flags (e.g. `git log -n 10` instead of `git log | head -10`)
-- ALWAYS read the full output — never pipe through filters
+- ALWAYS read the full output - never pipe through filters
 
 ### General
 - Do not create new non-source code files (e.g. Bash scripts, SQL scripts) unless explicitly prompted to

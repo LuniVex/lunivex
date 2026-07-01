@@ -144,7 +144,7 @@ const modpackContentModal = ref<InstanceType<typeof ModpackContentModal>>()
 async function openViewContents() {
 	modpackContentModal.value?.showLoading()
 	try {
-		// Ensure version data is available — the useQuery may not have resolved yet
+		// Ensure version data is available - the useQuery may not have resolved yet
 		const versionId = modpackVersionId.value
 		const version =
 			modpackVersion.value ?? (versionId ? await get_version(versionId, 'must_revalidate') : null)
@@ -246,7 +246,7 @@ const messages = defineMessages({
 	serverRequiresMods: {
 		id: 'app.modal.install-to-play.server-requires-mods',
 		defaultMessage:
-			'This server requires mods to play. Click Install to set up the required files from Modrinth, then launch directly into the server.',
+			'This server requires mods to play. Click Install to set up the required files, then launch directly into the server.',
 	},
 	requiredModpack: {
 		id: 'app.modal.install-to-play.required-modpack',

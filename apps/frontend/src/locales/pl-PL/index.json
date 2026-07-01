@@ -3240,7 +3240,7 @@
     "message": "Projekt zaktualizowany"
   },
   "project.settings.general.name.description": {
-    "message": "Unikaj przedrostków, przyrostków, wtrąceń lub dodatkowych opisów — używaj tylko rzeczywistej nazwy projektu."
+    "message": "Unikaj przedrostków, przyrostków, wtrąceń lub dodatkowych opisów - używaj tylko rzeczywistej nazwy projektu."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "np. Nether Overhaul 2"
@@ -3735,13 +3735,13 @@
     "message": "Brak powiadomień"
   },
   "servers.plan.large.description": {
-    "message": "Idealny dla 15–25 graczy, paczek modów lub dużej ilości modów."
+    "message": "Idealny dla 15-25 graczy, paczek modów lub dużej ilości modów."
   },
   "servers.plan.medium.description": {
-    "message": "Świetny wybór dla 6–15 graczy i wielu modów."
+    "message": "Świetny wybór dla 6-15 graczy i wielu modów."
   },
   "servers.plan.small.description": {
-    "message": "Idealny dla 1–5 przyjaciół z kilkoma lekkimi modami."
+    "message": "Idealny dla 1-5 przyjaciół z kilkoma lekkimi modami."
   },
   "settings.account.button.complete-setup": {
     "message": "Zakończ ustawianie"

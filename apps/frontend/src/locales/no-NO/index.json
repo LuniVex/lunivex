@@ -177,7 +177,7 @@
     "message": "Skjermbilde av Modrinth-appen med en Cobblemon instans åpnet på 'Innhold' siden."
   },
   "app-marketing.hero.description": {
-    "message": "Modrinth-appen er en unik, åpen kildekode-launcher som lar deg spille dine favoritt-mods og holde dem oppdatert – alt samlet i én ryddig pakke."
+    "message": "Modrinth-appen er en unik, åpen kildekode-launcher som lar deg spille dine favoritt-mods og holde dem oppdatert - alt samlet i én ryddig pakke."
   },
   "app-marketing.hero.download-button": {
     "message": "Last ned Modrinth Appen"
@@ -2406,7 +2406,7 @@
     "message": "Prosjekt oppdatert"
   },
   "project.settings.general.name.description": {
-    "message": "Unngå forstavelser, avledningsendelser, parantesisering, eller lagt til beskrivelser—bare det aktuelle navnet til prosjeket."
+    "message": "Unngå forstavelser, avledningsendelser, parantesisering, eller lagt til beskrivelser-bare det aktuelle navnet til prosjeket."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "Til dømes Nether Overhaul 2"

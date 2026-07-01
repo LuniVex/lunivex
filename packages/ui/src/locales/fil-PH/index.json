@@ -2013,7 +2013,7 @@
     "defaultMessage": "Tagagamit"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.audit-log.column.time": {
     "defaultMessage": "Oras"
@@ -2142,13 +2142,13 @@
     "defaultMessage": "Large"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Nakaaangkop sa 15–25 manlalaro, modpack, o mabibigat na modding."
+    "defaultMessage": "Nakaaangkop sa 15-25 manlalaro, modpack, o mabibigat na modding."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Medium"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Nakaaangkop sa 6–15 manlalaro at may karamihang mod."
+    "defaultMessage": "Nakaaangkop sa 6-15 manlalaro at may karamihang mod."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Pinakasikat"
@@ -2160,7 +2160,7 @@
     "defaultMessage": "Small"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Nakaaangkop sa 1–5 manlalaro na may iilang mod."
+    "defaultMessage": "Nakaaangkop sa 1-5 manlalaro na may iilang mod."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

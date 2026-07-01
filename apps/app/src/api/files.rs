@@ -4,6 +4,7 @@ use serde::Serialize;
 use std::io::Cursor;
 use tauri::Runtime;
 use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_http::reqwest;
 use theseus::profile::get_full_path;
 
 pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
@@ -12,6 +13,7 @@ pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
             file_extract_zip,
             file_save_as,
             file_read_dragged_file,
+            download_file,
         ])
         .build()
 }
@@ -141,6 +143,46 @@ pub async fn file_extract_zip(
     }
 
     Ok(None)
+}
+
+/// Downloads a file from `url` and writes it to `dest_path`, creating parent directories as needed.
+/// Intended for downloads that are blocked by the WebView CSP (e.g. third-party CDNs).
+#[tauri::command]
+pub async fn download_file(url: String, dest_path: String) -> Result<()> {
+    let client = reqwest::Client::new();
+    let response = client
+        .get(&url)
+        .send()
+        .await
+        .map_err(|e| {
+            theseus::Error::from(theseus::ErrorKind::OtherError(format!(
+                "download_file request failed: {e}"
+            )))
+        })?;
+
+    if !response.status().is_success() {
+        return Err(theseus::Error::from(theseus::ErrorKind::OtherError(
+            format!(
+                "download_file: HTTP {} from {}",
+                response.status(),
+                url
+            ),
+        ))
+        .into());
+    }
+
+    let bytes = response.bytes().await.map_err(|e| {
+        theseus::Error::from(theseus::ErrorKind::OtherError(format!(
+            "download_file read body failed: {e}"
+        )))
+    })?;
+
+    let dest = std::path::Path::new(&dest_path);
+    if let Some(parent) = dest.parent() {
+        tokio::fs::create_dir_all(parent).await?;
+    }
+    tokio::fs::write(dest, bytes).await?;
+    Ok(())
 }
 
 #[tauri::command]

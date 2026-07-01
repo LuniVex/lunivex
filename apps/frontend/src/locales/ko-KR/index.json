@@ -2778,7 +2778,7 @@
     "message": "프로젝트 수정됨"
   },
   "project.settings.general.name.description": {
-    "message": "접두사, 접미사, 괄호 속 설명 또는 추가 설명은 피하세요—프로젝트의 실제 이름만 기재하세요."
+    "message": "접두사, 접미사, 괄호 속 설명 또는 추가 설명은 피하세요-프로젝트의 실제 이름만 기재하세요."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "예시: Nether Overhaul 2"
@@ -3243,13 +3243,13 @@
     "message": "알림 없음"
   },
   "servers.plan.large.description": {
-    "message": "15–25명의 플레이어, 모드팩 또는 무거운 모드에 적합합니다."
+    "message": "15-25명의 플레이어, 모드팩 또는 무거운 모드에 적합합니다."
   },
   "servers.plan.medium.description": {
-    "message": "6–15명의 플레이어와 여러 개의 모드에 적합합니다."
+    "message": "6-15명의 플레이어와 여러 개의 모드에 적합합니다."
   },
   "servers.plan.small.description": {
-    "message": "1–5명의 친구와 적은 수의 가벼운 모드에 적합합니다."
+    "message": "1-5명의 친구와 적은 수의 가벼운 모드에 적합합니다."
   },
   "settings.account.button.complete-setup": {
     "message": "설정 완료"

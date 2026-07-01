@@ -30,7 +30,7 @@ export const CreateWorld: Story = {
 			const openModal = () => modalRef.value?.show()
 
 			const onCreate = (config: CreationFlowContextValue) => {
-				lastEvent.value = `create emitted — name: "${config.worldName.value}", mode: ${config.gamemode.value}`
+				lastEvent.value = `create emitted - name: "${config.worldName.value}", mode: ${config.gamemode.value}`
 			}
 			return { modalRef, openModal, lastEvent, onCreate }
 		},
@@ -67,7 +67,7 @@ export const ServerOnboarding: Story = {
 			const openModal = () => modalRef.value?.show()
 
 			const onCreate = (config: CreationFlowContextValue) => {
-				lastEvent.value = `create emitted — loader: ${config.selectedLoader.value}, version: ${config.selectedGameVersion.value}`
+				lastEvent.value = `create emitted - loader: ${config.selectedLoader.value}, version: ${config.selectedGameVersion.value}`
 			}
 			return { modalRef, openModal, lastEvent, onCreate }
 		},
@@ -104,7 +104,7 @@ export const Instance: Story = {
 			const openModal = () => modalRef.value?.show()
 
 			const onCreate = (config: CreationFlowContextValue) => {
-				lastEvent.value = `create emitted — loader: ${config.selectedLoader.value}, version: ${config.selectedGameVersion.value}`
+				lastEvent.value = `create emitted - loader: ${config.selectedLoader.value}, version: ${config.selectedGameVersion.value}`
 			}
 			return { modalRef, openModal, lastEvent, onCreate }
 		},

@@ -1374,10 +1374,10 @@
     "defaultMessage": "Har noe funksjonalitet både på klienten og serveren, selv om den bare er delvis."
   },
   "project.settings.environment.client_and_server.optional_both.title": {
-    "defaultMessage": "Valgfritt på begge – fungerer likt enten det er installert på klient eller server."
+    "defaultMessage": "Valgfritt på begge - fungerer likt enten det er installert på klient eller server."
   },
   "project.settings.environment.client_and_server.optional_both_prefers_both.title": {
-    "defaultMessage": "Valgfritt på begge – fungerer best når det er installert på både klient og server."
+    "defaultMessage": "Valgfritt på begge - fungerer best når det er installert på både klient og server."
   },
   "project.settings.environment.client_and_server.optional_client.title": {
     "defaultMessage": "Valgfritt på klient"
@@ -1662,10 +1662,10 @@
     "defaultMessage": "Kom i gang"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideell for 15–25 spillere, modpakker eller tung modding."
+    "defaultMessage": "Ideell for 15-25 spillere, modpakker eller tung modding."
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Flott for 6–15 spillere og flere mods."
+    "defaultMessage": "Flott for 6-15 spillere og flere mods."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Mest populær"
@@ -1674,7 +1674,7 @@
     "defaultMessage": "Velg Plan"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Perfekt for 1–5 venner med noen få lette modifikasjoner."
+    "defaultMessage": "Perfekt for 1-5 venner med noen få lette modifikasjoner."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

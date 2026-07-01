@@ -1113,13 +1113,13 @@
     "defaultMessage": "Annulé"
   },
   "files.upload-dropdown.failed-file-exists": {
-    "defaultMessage": "Échec — Fichier existe déjà"
+    "defaultMessage": "Échec - Fichier existe déjà"
   },
   "files.upload-dropdown.failed-generic": {
-    "defaultMessage": "Échec — {error}"
+    "defaultMessage": "Échec - {error}"
   },
   "files.upload-dropdown.failed-incorrect-type": {
-    "defaultMessage": "Échec — Type de fichier incorrect"
+    "defaultMessage": "Échec - Type de fichier incorrect"
   },
   "files.upload-dropdown.failed-to-upload": {
     "defaultMessage": "Impossible d'importer {fileName}"
@@ -3561,7 +3561,7 @@
     "defaultMessage": "En attente"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Avatar de {username}"
@@ -4377,13 +4377,13 @@
     "defaultMessage": "Grand"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Idéal pour 15–25 joueurs, des modpacks, ou le modding intensif."
+    "defaultMessage": "Idéal pour 15-25 joueurs, des modpacks, ou le modding intensif."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Moyen"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Parfait pour 6–15 joueurs et plusieurs mods."
+    "defaultMessage": "Parfait pour 6-15 joueurs et plusieurs mods."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Le plus populaire"
@@ -4395,7 +4395,7 @@
     "defaultMessage": "Petit"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Parfait pour 1–5 amis et quelques mods légers."
+    "defaultMessage": "Parfait pour 1-5 amis et quelques mods légers."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Forfait"

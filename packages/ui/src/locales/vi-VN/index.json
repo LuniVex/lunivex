@@ -3627,13 +3627,13 @@
     "defaultMessage": "Lớn"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ý tưởng cho 15–25 người chơi, modpacks hoặc nặng về modding."
+    "defaultMessage": "Ý tưởng cho 15-25 người chơi, modpacks hoặc nặng về modding."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Trung bình"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Tốt cho 6–15 người chơi và nhiều mods khác nhau."
+    "defaultMessage": "Tốt cho 6-15 người chơi và nhiều mods khác nhau."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Phổ biến nhất"
@@ -3645,7 +3645,7 @@
     "defaultMessage": "Nhỏ"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Hoàn hảo cho 1–5 người bạn với một vài mod nhẹ."
+    "defaultMessage": "Hoàn hảo cho 1-5 người bạn với một vài mod nhẹ."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Gói"

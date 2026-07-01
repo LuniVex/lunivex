@@ -3330,7 +3330,7 @@
     "message": "Projekt aktualisiert"
   },
   "project.settings.general.name.description": {
-    "message": "Vermeide Prefixe, Suffixe, Klammern oder zusätzliche Beschreibungen—Nur der tatsächliche Projektname."
+    "message": "Vermeide Prefixe, Suffixe, Klammern oder zusätzliche Beschreibungen-Nur der tatsächliche Projektname."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "z.B. Nether Overhaul 2"

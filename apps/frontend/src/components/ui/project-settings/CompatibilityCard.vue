@@ -65,7 +65,7 @@
 					<div class="flex flex-col gap-2">
 						<div class="font-medium text-secondary">Recommended version</div>
 						<div class="text-2xl font-semibold text-contrast">
-							{{ content.recommended_game_version ?? '—' }}
+							{{ content.recommended_game_version ?? '-' }}
 						</div>
 					</div>
 					<div class="flex flex-col gap-2">
@@ -80,7 +80,7 @@
 							>
 								{{ v }}
 							</TagItem>
-							<div v-if="!content.supported_game_versions.length">—</div>
+							<div v-if="!content.supported_game_versions.length">-</div>
 						</div>
 					</div>
 				</div>

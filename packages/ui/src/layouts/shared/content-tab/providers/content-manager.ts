@@ -59,7 +59,7 @@ export interface ContentManagerContext {
 	browse: () => void
 	uploadFiles: () => void
 
-	// Bulk actions (optional — when provided, used instead of one-by-one loops)
+	// Bulk actions (optional - when provided, used instead of one-by-one loops)
 	bulkDeleteItems?: (items: ContentItem[]) => Promise<void>
 	bulkEnableItems?: (items: ContentItem[]) => Promise<void>
 	bulkDisableItems?: (items: ContentItem[]) => Promise<void>
@@ -85,26 +85,26 @@ export interface ContentManagerContext {
 	// Per-item overflow menu (optional)
 	getOverflowOptions?: (item: ContentItem) => OverflowMenuOption[]
 
-	// Share support (optional — when undefined, share button becomes hidden entirely)
+	// Share support (optional - when undefined, share button becomes hidden entirely)
 	shareItems?: (items: ContentItem[], format: 'names' | 'file-names' | 'urls' | 'markdown') => void
 
 	// Stable per-row identity. ContentItem.id can be a content hash, so it is not always unique.
 	getItemId?: (item: ContentItem) => string
 
-	// Bulk operation guard — set by layout, checked by providers to suppress refreshes
+	// Bulk operation guard - set by layout, checked by providers to suppress refreshes
 	isBulkOperating?: Ref<boolean>
 
 	// Deletion context (controls modal variant)
 	deletionContext?: 'instance' | 'server'
 
-	// One-time content hint (optional — shows tooltip on modpack content button)
+	// One-time content hint (optional - shows tooltip on modpack content button)
 	showContentHint?: Ref<boolean>
 	dismissContentHint?: () => void
 
 	// Table item mapping (link generation differs per platform)
 	mapToTableItem: (item: ContentItem) => ContentCardTableItem
 
-	// Filter persistence key — when set, selected filters are saved/restored via sessionStorage
+	// Filter persistence key - when set, selected filters are saved/restored via sessionStorage
 	filterPersistKey?: string
 }
 

@@ -82,7 +82,7 @@
 
 		<div v-if="totalPages > 1" class="flex items-center justify-between">
 			<div>
-				Showing {{ itemsPerPage * (currentPage - 1) + 1 }}–{{
+				Showing {{ itemsPerPage * (currentPage - 1) + 1 }}-{{
 					itemsPerPage * (currentPage - 1) + Math.min(itemsPerPage, paginatedProjects.length)
 				}}
 				of {{ filteredProjects.length }}

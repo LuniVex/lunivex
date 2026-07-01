@@ -10,7 +10,7 @@ defineProps({
 	},
 	shareTitle: {
 		type: String,
-		default: 'Modrinth',
+		default: 'LuniVex',
 	},
 	shareText: {
 		type: String,

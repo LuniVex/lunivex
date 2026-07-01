@@ -807,7 +807,7 @@
     "message": "確定要刪除這個收藏嗎？"
   },
   "collection.description": {
-    "message": "{description} — 前往 Modrinth 查看 {username} 的收藏「{name}」"
+    "message": "{description} - 前往 Modrinth 查看 {username} 的收藏「{name}」"
   },
   "collection.description.following": {
     "message": "由系統自動產生的收藏，包含你正在追蹤的所有專案。"
@@ -2856,7 +2856,7 @@
     "message": "前往 Modrinth 下載 {username} 的專案"
   },
   "profile.meta.description-with-bio": {
-    "message": "{bio} — 前往 Modrinth 下載 {username} 的專案"
+    "message": "{bio} - 前往 Modrinth 下載 {username} 的專案"
   },
   "profile.official-account": {
     "message": "Modrinth 官方帳號"

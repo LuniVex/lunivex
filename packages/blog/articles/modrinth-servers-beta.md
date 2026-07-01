@@ -1,5 +1,5 @@
 ---
-title: Host your own server with Modrinth Servers — now in beta
+title: Host your own server with Modrinth Servers - now in beta
 short_title: Introducing Modrinth Servers
 summary: Fast, simple, reliable servers directly integrated into Modrinth.
 short_summary: Host your next Minecraft server with Modrinth.

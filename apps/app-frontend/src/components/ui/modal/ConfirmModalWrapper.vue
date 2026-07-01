@@ -34,7 +34,7 @@ defineProps({
 		type: Boolean,
 		default: true,
 	},
-	/** @deprecated No longer used — ads are handled by provideModalBehavior */
+	/** @deprecated No longer used - ads are handled by provideModalBehavior */
 	showAdOnClose: {
 		type: Boolean,
 		default: true,

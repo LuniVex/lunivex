@@ -204,7 +204,7 @@ watch(
 				proceedWithModpack()
 			}
 		} catch {
-			// Failed to fetch versions — do nothing
+			// Failed to fetch versions - do nothing
 		}
 	},
 )

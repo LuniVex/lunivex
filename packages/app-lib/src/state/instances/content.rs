@@ -826,7 +826,7 @@ async fn get_modpack_identifiers(
             });
         }
 
-        // Legacy cache entry without project_ids — resolve via hash lookup API
+        // Legacy cache entry without project_ids - resolve via hash lookup API
         tracing::info!(
             "Legacy cache entry without project IDs, resolving via API for version {}",
             version_id

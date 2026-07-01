@@ -2955,7 +2955,7 @@
     "message": "Baixe os projetos de {username} no Modrinth"
   },
   "profile.meta.description-with-bio": {
-    "message": "{bio} — Baixe os projetos de {username} no Modrinth"
+    "message": "{bio} - Baixe os projetos de {username} no Modrinth"
   },
   "profile.official-account": {
     "message": "Conta oficial do Modrinth"
@@ -3822,13 +3822,13 @@
     "message": "Sem avisos"
   },
   "servers.plan.large.description": {
-    "message": "Ideal para 15–25 jogadores, pacotes de mods ou mods pesados."
+    "message": "Ideal para 15-25 jogadores, pacotes de mods ou mods pesados."
   },
   "servers.plan.medium.description": {
-    "message": "Bom para 6–15 jogadores e vários mods."
+    "message": "Bom para 6-15 jogadores e vários mods."
   },
   "servers.plan.small.description": {
-    "message": "Perfeito para 1–5 amigos e alguns mods leves."
+    "message": "Perfeito para 1-5 amigos e alguns mods leves."
   },
   "servers.purchase.step.plan.billed": {
     "message": "cobrado {interval, select, monthly {mensalmente} quarterly {trimestralmente} yearly {anualmente} other {{interval}}}"
@@ -4290,7 +4290,7 @@
     "message": "Erro ao reassinar"
   },
   "settings.billing.pyro.resubscribe.request-submitted.text": {
-    "message": "Se o servidor estiver cancelado no momento, a configuração pode levar de 10–15 minutos."
+    "message": "Se o servidor estiver cancelado no momento, a configuração pode levar de 10-15 minutos."
   },
   "settings.billing.pyro.resubscribe.request-submitted.title": {
     "message": "Solicitação de reassinar enviada"

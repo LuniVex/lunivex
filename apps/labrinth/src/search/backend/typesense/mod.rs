@@ -1168,7 +1168,7 @@ fn meili_to_typesense(filter: &str) -> String {
     static OR_RE: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"(?i)\bOR\b").expect("valid regex"));
 
-    // Step 1 – IN / NOT IN
+    // Step 1 - IN / NOT IN
     let s = IN_RE.replace_all(filter, |caps: &regex::Captures<'_>| {
         let field = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
         let is_not = caps.get(2).is_some();
@@ -1197,14 +1197,14 @@ fn meili_to_typesense(filter: &str) -> String {
         }
     });
 
-    // Step 2 – comparison operators (field op value → field:op value).
+    // Step 2 - comparison operators (field op value → field:op value).
     let s = CMP_RE.replace_all(&s, |caps: &regex::Captures<'_>| {
         let field = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
         let op = caps.get(2).map(|m| m.as_str()).unwrap_or_default();
         format!("{field}:{op} ")
     });
 
-    // Step 3 – logical operators
+    // Step 3 - logical operators
     let s = AND_RE.replace_all(&s, " && ");
     let s = OR_RE.replace_all(&s, " || ");
     s.into_owned()

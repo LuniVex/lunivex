@@ -56,6 +56,6 @@ You can select a time timeframe and filter by user or action type if you’re lo
 
 ![The activity log section of the Access tab, where you can see the user that performed an action on the left column, the action that was performed in the center, and the time it happened on the right.](./activity-log.webp)
 
-—
+-
 
 Thank you for your continued support! 💚

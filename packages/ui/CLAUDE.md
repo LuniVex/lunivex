@@ -1,6 +1,6 @@
 # Architecture
 
-The shared UI package used by both `apps/frontend` (Nuxt 3) and `apps/app-frontend` (Vue 3 + Tauri). Components here must be platform-agnostic — use dependency injection for platform-specific behavior.
+The shared UI package used by both `apps/frontend` (Nuxt 3) and `apps/app-frontend` (Vue 3 + Tauri). Components here must be platform-agnostic - use dependency injection for platform-specific behavior.
 
 ## Folder Structure
 
@@ -23,8 +23,8 @@ Each subdirectory under `components/` has an `index.ts` barrel file. All public 
 
 Self-contained page layouts shared across frontends. Split into two categories:
 
-- **`shared/`** — Reusable layout modules with their own components, composables, providers, and types. Each module is a self-contained unit (e.g. `shared/content-tab/` contains the content/mods tab layout with its own `layout.vue`, `components/`, `composables/`, `providers/`, and `types.ts`).
-- **`wrapped/`** — Page-level Vue components that mirror route structures (e.g. `wrapped/hosting/manage/`). These are full page implementations consumed by both `apps/frontend` and `apps/app-frontend`.
+- **`shared/`** - Reusable layout modules with their own components, composables, providers, and types. Each module is a self-contained unit (e.g. `shared/content-tab/` contains the content/mods tab layout with its own `layout.vue`, `components/`, `composables/`, `providers/`, and `types.ts`).
+- **`wrapped/`** - Page-level Vue components that mirror route structures (e.g. `wrapped/hosting/manage/`). These are full page implementations consumed by both `apps/frontend` and `apps/app-frontend`.
 
 Files inside `layouts/` use the `#ui/*` import alias (resolved via the `"imports"` field in `package.json`) to reference other `src/` modules like `#ui/components/base/ButtonStyled.vue` or `#ui/composables/i18n`.
 
@@ -42,7 +42,7 @@ CSS custom properties are defined in `packages/assets/styles/variables.scss` wit
 
 ### Color Usage Rules
 
-**Use `surface-*` variables for backgrounds — never aliased `bg-*` color variables:**
+**Use `surface-*` variables for backgrounds - never aliased `bg-*` color variables:**
 
 | Token            | Usage                                     |
 | ---------------- | ----------------------------------------- |
@@ -61,12 +61,12 @@ CSS custom properties are defined in `packages/assets/styles/variables.scss` wit
 | `text-primary`   | Default body text                |
 | `text-secondary` | Reduced emphasis, secondary info |
 
-**Brand and semantic colors** not all exposed as Figma variables — refer to `packages/assets/styles/variables.scss` for the full set:
+**Brand and semantic colors** not all exposed as Figma variables - refer to `packages/assets/styles/variables.scss` for the full set:
 
-- `bg-{color}`, `text-{color}` etc. — Primary brand colors
-- `bg-{color}-highlight` — 25% opacity semantic highlights
+- `bg-{color}`, `text-{color}` etc. - Primary brand colors
+- `bg-{color}-highlight` - 25% opacity semantic highlights
 
-**Color palette** (each with shades 50–950): red, orange, green, blue, purple, gray. Platform-specific colors also exist (fabric, forge, quilt, neoforge, etc.).
+**Color palette** (each with shades 50-950): red, orange, green, blue, purple, gray. Platform-specific colors also exist (fabric, forge, quilt, neoforge, etc.).
 
 ## Storybook
 
@@ -78,8 +78,8 @@ This package defines the DI layer using `createContext` from `src/providers/inde
 
 Key providers exported from this package:
 
-- `provideModrinthClient` / `injectModrinthClient` — API client
-- `provideNotificationManager` / `injectNotificationManager` — Notifications
+- `provideModrinthClient` / `injectModrinthClient` - API client
+- `provideNotificationManager` / `injectNotificationManager` - Notifications
 
 ## Vue Template Rules
 

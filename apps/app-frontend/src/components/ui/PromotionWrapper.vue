@@ -40,12 +40,12 @@ function updateAdPosition() {
 		>
 			<img
 				src="https://cdn-raw.modrinth.com/modrinth-hosting-medal-light.webp"
-				alt="Host your next server with Modrinth Hosting"
+				alt="Host your next server"
 				class="hidden light-image rounded-[inherit]"
 			/>
 			<img
 				src="https://cdn-raw.modrinth.com/modrinth-hosting-medal-dark.webp"
-				alt="Host your next server with Modrinth Hosting"
+				alt="Host your next server"
 				class="dark-image rounded-[inherit]"
 			/>
 		</a>

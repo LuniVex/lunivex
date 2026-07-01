@@ -11,7 +11,7 @@ Over the few months, Modrinth has seen incredible interest towards our Servers p
 
 Modrinth has some ambitious goals for the next year. We want to create the best possible way for all Java players play Minecraft, and to host and play their favorite modpacks and custom servers. To achieve this, it’s clear that Modrinth Servers needs to be built and scaled on our own infrastructure.
 
-By running every aspect of our hosting platform, we gain the flexibility to tailor the experience to our community’s needs—whether that means deeper integrations with Modrinth’s ecosystem, better performance, or more innovative features. This also allows us to invest in the long-term sustainability of Modrinth Servers, ensuring that we can scale seamlessly and avoid running out of available servers stock.
+By running every aspect of our hosting platform, we gain the flexibility to tailor the experience to our community’s needs-whether that means deeper integrations with Modrinth’s ecosystem, better performance, or more innovative features. This also allows us to invest in the long-term sustainability of Modrinth Servers, ensuring that we can scale seamlessly and avoid running out of available servers stock.
 
 ### A Thank You to Pyro
 
@@ -33,4 +33,4 @@ We know you may have questions, and we want to make this transition as smooth as
 
   Modrinth Servers will remain the same great experience its has been, you likely won’t notice any changes right away. Long term, this means we’ll be able to improve both the stability of servers as well as the features that make managing your server a breeze.
 
-This is an exciting step toward a future where Modrinth is the go-to destination for Java Minecraft players—not just for mods and mod-packs, but for hosting and playing too. We appreciate your support and can’t wait to share more soon!
+This is an exciting step toward a future where Modrinth is the go-to destination for Java Minecraft players-not just for mods and mod-packs, but for hosting and playing too. We appreciate your support and can’t wait to share more soon!

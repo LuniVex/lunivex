@@ -75,11 +75,11 @@ const messages = defineMessages({
 	},
 	warningBody: {
 		id: 'unknown-pack-warning-modal.warning.body',
-		defaultMessage: `We couldn't find this file on Modrinth. We strongly recommend only installing files from sources you trust.`,
+		defaultMessage: `We couldn't verify this file. We strongly recommend only installing files from sources you trust.`,
 	},
 	body: {
 		id: 'unknown-pack-warning-modal.body',
-		defaultMessage: `A file is only reviewed if it’s uploaded to Modrinth, regardless of its file format (including .mrpack).`,
+		defaultMessage: `A file is only reviewed if it’s from a verified source, regardless of its file format (including .mrpack).`,
 	},
 	malwareStatement: {
 		id: 'unknown-pack-warning-modal.malware-statement',

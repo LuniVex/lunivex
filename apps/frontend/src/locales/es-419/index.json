@@ -3327,7 +3327,7 @@
     "message": "Proyecto actualizado"
   },
   "project.settings.general.name.description": {
-    "message": "Evita prefijos, sufijos, explicaciones entre paréntesis o descripciones añadidas—solo utiliza el nombre real del proyecto."
+    "message": "Evita prefijos, sufijos, explicaciones entre paréntesis o descripciones añadidas-solo utiliza el nombre real del proyecto."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "ej. El Nether Reimaginado 2"
@@ -3837,13 +3837,13 @@
     "message": "Sin avisos"
   },
   "servers.plan.large.description": {
-    "message": "Ideal para 15–25 jugadores, modpacks o uso intensivo de mods."
+    "message": "Ideal para 15-25 jugadores, modpacks o uso intensivo de mods."
   },
   "servers.plan.medium.description": {
-    "message": "Ideal para 6–15 jugadores y múltiples mods."
+    "message": "Ideal para 6-15 jugadores y múltiples mods."
   },
   "servers.plan.small.description": {
-    "message": "Perfecto para 1–5 amigos con algunos mods ligeros."
+    "message": "Perfecto para 1-5 amigos con algunos mods ligeros."
   },
   "servers.purchase.step.plan.billed": {
     "message": "facturado {interval, select, monthly {mensual} quarterly {trimestral} yearly {anual} other {{interval}}}"

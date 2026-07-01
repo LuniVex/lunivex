@@ -75,7 +75,7 @@
 		<p>
 			Right now, you can use PayPal or Venmo to withdraw money from your Modrinth account. Gift card
 			withdrawal is also available. We are working on more methods to withdraw money from your
-			account. There are fees to withdraw money from your Modrinth account—see the revenue page in
+			account. There are fees to withdraw money from your Modrinth account-see the revenue page in
 			your dashboard for more information.
 		</p>
 		<h3 id="pending">What does "pending" revenue mean in my dashboard?</h3>

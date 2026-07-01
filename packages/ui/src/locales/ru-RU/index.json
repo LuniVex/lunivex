@@ -69,7 +69,7 @@
     "defaultMessage": "{intervalOption, select, fiveDays {в 5 дней} monthly {в месяц} quarterly {в 3 месяца} yearly {в год} other {{interval}}}"
   },
   "billing.resubscribe-modal.next-charge": {
-    "defaultMessage": "Следующее списание — <charge-date>{date}</charge-date>."
+    "defaultMessage": "Следующее списание - <charge-date>{date}</charge-date>."
   },
   "billing.resubscribe-modal.plan-label": {
     "defaultMessage": "План"
@@ -696,7 +696,7 @@
     "defaultMessage": "Поиск сборки"
   },
   "creation-flow.modal.setup-type.instance.description": {
-    "defaultMessage": "Сборка — это установка Minecraft с определённым загрузчиком модов, версией и модами."
+    "defaultMessage": "Сборка - это установка Minecraft с определённым загрузчиком модов, версией и модами."
   },
   "creation-flow.modal.setup-type.option.custom-setup.description": {
     "defaultMessage": "Начать с нуля, выбрав загрузчик и версию игры."
@@ -1680,10 +1680,10 @@
     "defaultMessage": "Этот мод зависит от клиентского мода и может вызвать проблемы при запуске сервера"
   },
   "label.client-only-warning": {
-    "defaultMessage": "Это клиентский мод — он может вызвать проблемы при запуске сервера"
+    "defaultMessage": "Это клиентский мод - он может вызвать проблемы при запуске сервера"
   },
   "label.client-retained-warning": {
-    "defaultMessage": "Это клиентский мод, который был установлен в качестве зависимости — он может вызвать проблемы при запуске сервера"
+    "defaultMessage": "Это клиентский мод, который был установлен в качестве зависимости - он может вызвать проблемы при запуске сервера"
   },
   "label.collections": {
     "defaultMessage": "Коллекции"
@@ -2814,10 +2814,10 @@
     "defaultMessage": "Расположение сервера: {regionName}"
   },
   "project.server.region.us_east": {
-    "defaultMessage": "США — Восток"
+    "defaultMessage": "США - Восток"
   },
   "project.server.region.us_west": {
-    "defaultMessage": "США — Запад"
+    "defaultMessage": "США - Запад"
   },
   "project.server.status.offline": {
     "defaultMessage": "Не в сети"
@@ -2871,7 +2871,7 @@
     "defaultMessage": "Укажите среду проекта"
   },
   "project.settings.environment.notice.multiple-environments.description": {
-    "defaultMessage": "В разных версиях проекта указаны разные среды — глобальное изменение сред невозможно."
+    "defaultMessage": "В разных версиях проекта указаны разные среды - глобальное изменение сред невозможно."
   },
   "project.settings.environment.notice.multiple-environments.title": {
     "defaultMessage": "У проекта несколько сред"
@@ -3390,7 +3390,7 @@
     "defaultMessage": "В ожидании"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Аватар {username}"
@@ -3414,7 +3414,7 @@
     "defaultMessage": "Экземпляр"
   },
   "servers.audit-log.column.world.tooltip-description": {
-    "defaultMessage": "Экземпляры сервера — это изолированные среды со своим установленным контентом и файлами мира."
+    "defaultMessage": "Экземпляры сервера - это изолированные среды со своим установленным контентом и файлами мира."
   },
   "servers.audit-log.column.world.tooltip-title": {
     "defaultMessage": "Скоро будет доступно!"
@@ -4197,13 +4197,13 @@
     "defaultMessage": "Большой"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Для 15–25 игроков, сборок и тяжёлых модов."
+    "defaultMessage": "Для 15-25 игроков, сборок и тяжёлых модов."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Средний"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Для 6–15 игроков и нескольких модов."
+    "defaultMessage": "Для 6-15 игроков и нескольких модов."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Популярный"
@@ -4215,7 +4215,7 @@
     "defaultMessage": "Малый"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Для 1–5 друзей и пары лёгких модов."
+    "defaultMessage": "Для 1-5 друзей и пары лёгких модов."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "План"

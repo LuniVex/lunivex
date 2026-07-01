@@ -11,7 +11,7 @@ export type ReadyStateQuery<TData, TError = DefaultError> = Pick<
 /**
  * Returns true while a query is loading for the FIRST time (no cached data yet).
  *
- * Excludes background refetches and refetch-on-window-focus by design — those
+ * Excludes background refetches and refetch-on-window-focus by design - those
  * have `isLoading === false` once data exists in the cache, so `ReadyTransition`
  * stays open and the loading bar stays silent.
  *

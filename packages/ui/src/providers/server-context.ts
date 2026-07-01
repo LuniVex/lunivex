@@ -53,7 +53,7 @@ export interface ModrinthServerContext {
 	// Content sync state
 	readonly isSyncingContent: Ref<boolean>
 
-	// Busy state — when non-empty, all write operations should be disabled
+	// Busy state - when non-empty, all write operations should be disabled
 	readonly busyReasons: ComputedRef<BusyReason[]>
 
 	// Filesystem state

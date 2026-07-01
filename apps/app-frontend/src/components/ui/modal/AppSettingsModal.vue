@@ -4,7 +4,6 @@ import {
 	GameIcon,
 	GaugeIcon,
 	LanguagesIcon,
-	ModrinthIcon,
 	PaintbrushIcon,
 	SettingsIcon,
 	ShieldIcon,
@@ -175,7 +174,22 @@ const messages = defineMessages({
 						}"
 						@click="devModeCount"
 					>
-						<ModrinthIcon class="w-6 h-6" />
+						<svg
+							width="20"
+							height="20"
+							viewBox="0 0 40 40"
+							aria-hidden="true"
+							style="flex-shrink: 0; fill: var(--color-brand)"
+						>
+							<defs>
+								<mask id="lvCrescentMaskSm">
+									<rect width="40" height="40" fill="black" />
+									<circle cx="20" cy="20" r="16" fill="white" />
+									<circle cx="27" cy="16" r="14" fill="black" />
+								</mask>
+							</defs>
+							<rect width="40" height="40" mask="url(#lvCrescentMaskSm)" />
+						</svg>
 					</button>
 					<div class="max-w-[280px]">
 						<p class="m-0">LuniVex {{ version }}</p>
@@ -191,7 +205,8 @@ const messages = defineMessages({
 								class="text-secondary underline"
 								target="_blank"
 								rel="noopener noreferrer"
-							>Modrinth Theseus</a>
+								>Theseus</a
+							>
 							(GPLv3)
 						</p>
 					</div>

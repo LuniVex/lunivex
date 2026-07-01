@@ -205,7 +205,7 @@ export const formatVersions = (tag, versionArray) => {
 
 	for (const interval of newIntervals) {
 		if (interval.length === 2) {
-			output.push(`${interval[0][0]}–${interval[1][0]}`)
+			output.push(`${interval[0][0]}-${interval[1][0]}`)
 		} else {
 			output.push(interval[0][0])
 		}

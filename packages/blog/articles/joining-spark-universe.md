@@ -95,6 +95,6 @@ Thank you to every creator who has published their work here. Thank you to all t
 
 Watch, stay involved, and keep holding us to the standard you deserve.
 
-— Jai, Founder of Modrinth
+- Jai, Founder of Modrinth
 
 <div id="spark-live-widget-embed"></div>

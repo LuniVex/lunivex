@@ -717,7 +717,7 @@
     "defaultMessage": "Пошук збірок"
   },
   "creation-flow.modal.setup-type.instance.description": {
-    "defaultMessage": "Профіль — це налаштування Minecraft із певним завантажувачем, версією та модами."
+    "defaultMessage": "Профіль - це налаштування Minecraft із певним завантажувачем, версією та модами."
   },
   "creation-flow.modal.setup-type.option.custom-setup.description": {
     "defaultMessage": "Почніть з нуля, вибравши завантажувач і версію гри."
@@ -1065,13 +1065,13 @@
     "defaultMessage": "Скасовано"
   },
   "files.upload-dropdown.failed-file-exists": {
-    "defaultMessage": "Помилка — такий файл вже існує"
+    "defaultMessage": "Помилка - такий файл вже існує"
   },
   "files.upload-dropdown.failed-generic": {
-    "defaultMessage": "Помилка — {error}"
+    "defaultMessage": "Помилка - {error}"
   },
   "files.upload-dropdown.failed-incorrect-type": {
-    "defaultMessage": "Помилка — неправильний тип файлу"
+    "defaultMessage": "Помилка - неправильний тип файлу"
   },
   "files.upload-dropdown.failed-to-upload": {
     "defaultMessage": "Не вдалося вивантажити «{fileName}»"
@@ -1089,7 +1089,7 @@
     "defaultMessage": "Виникла непередбачувана помилка."
   },
   "files.upload-dropdown.uploads-left": {
-    "defaultMessage": " — залишилося {count}"
+    "defaultMessage": " - залишилося {count}"
   },
   "files.upload.drag-and-drop.drop-to-upload": {
     "defaultMessage": "Перемістіть {type} сюди, щоб завантажити"
@@ -3669,13 +3669,13 @@
     "defaultMessage": "Великий"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ідеально підходить для 15–25 гравців, збірок або великої кількости модів."
+    "defaultMessage": "Ідеально підходить для 15-25 гравців, збірок або великої кількости модів."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Середній"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Чудово підходить для 6–15 гравців та кількох модів."
+    "defaultMessage": "Чудово підходить для 6-15 гравців та кількох модів."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Найпопулярніший"
@@ -3687,7 +3687,7 @@
     "defaultMessage": "Малий"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Прекрасно підходить для 1–5 друзів із кількома легкими модами."
+    "defaultMessage": "Прекрасно підходить для 1-5 друзів із кількома легкими модами."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "План"

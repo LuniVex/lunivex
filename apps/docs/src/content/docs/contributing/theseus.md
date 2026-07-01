@@ -18,7 +18,7 @@ The [Modrinth App], codename Theseus, is the Tauri-based launcher that lets user
 ### 2. Install dependencies & set up .env
 
 - Clone [`https://github.com/modrinth/code`](https://github.com/modrinth/code) and run `pnpm install` in the workspace root folder.
-- In `packages/app-lib` you should be able to see `.env.prod`, `.env.staging` — for basic app work, it's recommended to use `.env.prod`. Copy the relevant file into a new `.env` file within the `packages/app-lib` folder.
+- In `packages/app-lib` you should be able to see `.env.prod`, `.env.staging` - for basic app work, it's recommended to use `.env.prod`. Copy the relevant file into a new `.env` file within the `packages/app-lib` folder.
 
 ### 3. Run the app
 

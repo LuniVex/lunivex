@@ -164,7 +164,7 @@
 			<div>
 				Showing
 				{{ itemsPerPage * (currentPage - 1) + 1 }}
-				–
+				-
 				{{ itemsPerPage * (currentPage - 1) + Math.min(itemsPerPage, paginatedReports.length) }}
 				of {{ sortedReports.length }} reports
 			</div>

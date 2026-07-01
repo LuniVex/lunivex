@@ -1,5 +1,5 @@
 ---
-title: 'Skins — Now in Modrinth App!'
+title: 'Skins - Now in Modrinth App!'
 summary: 'Customize your look, save your favorite skins, and swap them out in a flash, all within Modrinth App.'
 date: 2025-07-06T16:45:00-07:00
 authors: [bOHH0P9Z, Dc7EYhxG]

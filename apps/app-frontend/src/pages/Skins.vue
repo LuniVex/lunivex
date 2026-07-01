@@ -67,16 +67,16 @@ const messages = defineMessages({
 	},
 	modrinthPrideSection: {
 		id: 'app.skins.section.modrinth-pride',
-		defaultMessage: 'Modrinth Pride',
+		defaultMessage: 'Pride',
 	},
 	modrinthPrideTooltip: {
 		id: 'app.skins.section.modrinth-pride.tooltip',
 		defaultMessage:
-			'You received these skins for donating to a Modrinth Pride fundraiser during Pride Month.',
+			'You received these skins for donating to a Pride fundraiser during Pride Month.',
 	},
 	modrinthSection: {
 		id: 'app.skins.section.modrinth',
-		defaultMessage: 'Modrinth',
+		defaultMessage: 'LuniVex',
 	},
 	defaultSkinsSection: {
 		id: 'app.skins.section.default-skins',
@@ -161,7 +161,7 @@ const messages = defineMessages({
 	},
 	excitedRinthbotAlt: {
 		id: 'app.skins.sign-in.rinthbot-alt',
-		defaultMessage: 'Excited Modrinth Bot',
+		defaultMessage: 'Excited LuniVex Bot',
 	},
 	signInTitle: {
 		id: 'app.skins.sign-in.title',

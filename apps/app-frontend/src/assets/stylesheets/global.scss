@@ -182,6 +182,18 @@ img {
 
 @import '@modrinth/assets/omorphia.scss';
 
+/* ── LuniVex violet overrides for Browse/Discover page ─────────── */
+.dark,
+.dark-mode {
+	/* Active tab pill: solid violet instead of 25%-opacity highlight */
+	--color-button-bg-selected: rgba(142, 132, 207, 0.45);
+	/* Active tab text + icon stay violet */
+	--color-button-text-selected: #b8b0e8;
+
+	/* Search bar focus glow explicitly violet */
+	--color-brand-shadow: rgba(142, 132, 207, 0.65);
+}
+
 input {
 	border-radius: var(--size-rounded-sm);
 	box-sizing: border-box;

@@ -142,7 +142,7 @@ export function formatVersionsForDisplay(gameVersions, overrideTags) {
 			return `${major}.x`
 		}
 
-		return `${formatVersion(major, minor[0])}–${formatVersion(major, minor[minor.length - 1])}`
+		return `${formatVersion(major, minor[0])}-${formatVersion(major, minor[minor.length - 1])}`
 	})
 
 	const legacyVersionsAsRanges = groupConsecutiveIndices(
@@ -223,31 +223,31 @@ function groupConsecutiveIndices(versions, referenceList) {
 	for (let i = 1; i < sortedList.length; i++) {
 		const current = sortedList[i]
 		if (referenceMap.get(current) !== referenceMap.get(previous) + 1) {
-			ranges.push(validateRange(`${previous}–${start}`))
+			ranges.push(validateRange(`${previous}-${start}`))
 			start = current
 		}
 		previous = current
 	}
 
-	ranges.push(validateRange(`${previous}–${start}`))
+	ranges.push(validateRange(`${previous}-${start}`))
 
 	return ranges
 }
 
 function validateRange(range) {
 	switch (range) {
-		case 'rd-132211–b1.8.1':
+		case 'rd-132211-b1.8.1':
 			return 'All legacy versions'
-		case 'a1.0.4–b1.8.1':
+		case 'a1.0.4-b1.8.1':
 			return 'All alpha and beta versions'
-		case 'a1.0.4–a1.2.6':
+		case 'a1.0.4-a1.2.6':
 			return 'All alpha versions'
-		case 'b1.0–b1.8.1':
+		case 'b1.0-b1.8.1':
 			return 'All beta versions'
-		case 'rd-132211–inf20100618':
+		case 'rd-132211-inf20100618':
 			return 'All pre-alpha versions'
 	}
-	const splitRange = range.split('–')
+	const splitRange = range.split('-')
 	if (splitRange && splitRange[0] === splitRange[1]) {
 		return splitRange[0]
 	}

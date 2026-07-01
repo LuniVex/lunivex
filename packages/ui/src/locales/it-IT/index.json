@@ -3501,7 +3501,7 @@
     "defaultMessage": "In attesa"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Foto profilo di {username}"
@@ -4302,13 +4302,13 @@
     "defaultMessage": "Grande"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideale per 15–25 giocatori, pacchetti di mod o modding intenso."
+    "defaultMessage": "Ideale per 15-25 giocatori, pacchetti di mod o modding intenso."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Medio"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Ottimo per 6–15 giocatori e più mod."
+    "defaultMessage": "Ottimo per 6-15 giocatori e più mod."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Il più scelto"
@@ -4320,7 +4320,7 @@
     "defaultMessage": "Piccolo"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Perfetto per 1–5 giocatori e qualche mod leggera."
+    "defaultMessage": "Perfetto per 1-5 giocatori e qualche mod leggera."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Piano"

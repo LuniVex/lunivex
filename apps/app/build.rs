@@ -275,6 +275,7 @@ fn main() {
                         "file_extract_zip",
                         "file_save_as",
                         "file_read_dragged_file",
+                        "download_file",
                     ])
                     .default_permission(
                         DefaultPermissionRule::AllowAllCommands,

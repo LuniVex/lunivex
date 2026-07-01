@@ -2973,13 +2973,13 @@
     "message": "Tidak ada pemberitahuan"
   },
   "servers.plan.large.description": {
-    "message": "Cocok untuk 15—25 pemain, paket mod, atau yang penggunakan mod berat."
+    "message": "Cocok untuk 15-25 pemain, paket mod, atau yang penggunakan mod berat."
   },
   "servers.plan.medium.description": {
-    "message": "Cocok untuk 6—15 orang pemain dan yang menggunakan beberapa mod."
+    "message": "Cocok untuk 6-15 orang pemain dan yang menggunakan beberapa mod."
   },
   "servers.plan.small.description": {
-    "message": "Cocok untuk 1—5 orang teman dengan beberapa mod ringan."
+    "message": "Cocok untuk 1-5 orang teman dengan beberapa mod ringan."
   },
   "settings.account.delete.confirm.proceed": {
     "message": "Hapus akun ini"

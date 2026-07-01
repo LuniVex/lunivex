@@ -582,7 +582,7 @@
     "message": "Поиск по друзьям..."
   },
   "friends.section.heading": {
-    "message": "{title} — {count}"
+    "message": "{title} - {count}"
   },
   "friends.sign-in-to-add-friends": {
     "message": "<link>Войдите в аккаунт Modrinth</link>, чтобы добавлять друзей и следить за ними!"

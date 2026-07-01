@@ -43,7 +43,7 @@ const messages = defineMessages({
 	nameDescription: {
 		id: 'project.settings.general.name.description',
 		defaultMessage:
-			"Avoid prefixes, suffixes, parentheticals, or added descriptions—just the project's actual name.",
+			"Avoid prefixes, suffixes, parentheticals, or added descriptions-just the project's actual name.",
 	},
 	taglineTitle: {
 		id: 'project.settings.general.tagline.title',

@@ -11,19 +11,19 @@ Request Flow:
 
 ### Key Directories
 
-- **`src/core/`** — base classes (`AbstractModrinthClient`, `AbstractModule`, `AbstractFeature`, etc.)
-- **`src/platform/`** — platform implementations (generic, nuxt, tauri, xhr-upload, websocket)
-- **`src/features/`** — middleware plugins (auth, retry, circuit-breaker, etc.)
-- **`src/modules/`** — API endpoint modules organized by service (`labrinth/`, `archon/`, `kyros/`, `iso3166/`)
-- **`src/types/`** — core type definitions (client config, request options, upload types, errors)
+- **`src/core/`** - base classes (`AbstractModrinthClient`, `AbstractModule`, `AbstractFeature`, etc.)
+- **`src/platform/`** - platform implementations (generic, nuxt, tauri, xhr-upload, websocket)
+- **`src/features/`** - middleware plugins (auth, retry, circuit-breaker, etc.)
+- **`src/modules/`** - API endpoint modules organized by service (`labrinth/`, `archon/`, `kyros/`, `iso3166/`)
+- **`src/types/`** - core type definitions (client config, request options, upload types, errors)
 
 ### Client Hierarchy
 
 All platform clients extend `XHRUploadClient` → `AbstractModrinthClient`:
 
-- **`GenericModrinthClient`** — uses `ofetch`, attaches WebSocket client to `archon.sockets`
-- **`NuxtModrinthClient`** — uses Nuxt's `$fetch`, SSR-aware, blocks `upload()` during SSR
-- **`TauriModrinthClient`** — uses `@tauri-apps/plugin-http`
+- **`GenericModrinthClient`** - uses `ofetch`, attaches WebSocket client to `archon.sockets`
+- **`NuxtModrinthClient`** - uses Nuxt's `$fetch`, SSR-aware, blocks `upload()` during SSR
+- **`TauriModrinthClient`** - uses `@tauri-apps/plugin-http`
 
 ### Module Access
 
@@ -49,7 +49,7 @@ This structure is derived at runtime from the flat `MODULE_REGISTRY` in `modules
 
 ## Critical: Always use `this.client.request()`
 
-API modules **must** use `this.client.request()` (or `.upload`) for all HTTP calls — never `$fetch`, `fetch`, or any other HTTP library directly. The request method routes through the platform-specific implementation (Nuxt `$fetch`, Tauri HTTP plugin, etc.) and the feature middleware chain (auth, retry, circuit breaker). Using `$fetch` directly bypasses the platform layer and will fail in Tauri (CORS/sandboxing). The only exception is the `ISO3166Module` which is explicitly node-only.
+API modules **must** use `this.client.request()` (or `.upload`) for all HTTP calls - never `$fetch`, `fetch`, or any other HTTP library directly. The request method routes through the platform-specific implementation (Nuxt `$fetch`, Tauri HTTP plugin, etc.) and the feature middleware chain (auth, retry, circuit breaker). Using `$fetch` directly bypasses the platform layer and will fail in Tauri (CORS/sandboxing). The only exception is the `ISO3166Module` which is explicitly node-only.
 
 For external APIs (non-Modrinth), pass the full base URL as the `api` field and set `skipAuth: true`:
 
@@ -96,7 +96,7 @@ const { data } = useQuery({
 
 ## Types
 
-Types must match 1:1 with how they are returned from the backend API they are fetching from. Do not reshape, rename, or omit fields — the types should be a direct representation of the API response.
+Types must match 1:1 with how they are returned from the backend API they are fetching from. Do not reshape, rename, or omit fields - the types should be a direct representation of the API response.
 
 Types are organized in namespaces that mirror the backend services:
 
@@ -114,9 +114,9 @@ Each API has a `types.ts` in its module directory (`modules/labrinth/types.ts`, 
 
 Features wrap requests in a chain. Each feature can modify the request, retry, or short-circuit:
 
-- **`AuthFeature`** — injects `Authorization: Bearer <token>`, supports async token providers
-- **`RetryFeature`** — exponential/linear/constant backoff, retries on 408/429/5xx and network errors
-- **`CircuitBreakerFeature`** — opens after N consecutive failures per endpoint, resets after timeout
+- **`AuthFeature`** - injects `Authorization: Bearer <token>`, supports async token providers
+- **`RetryFeature`** - exponential/linear/constant backoff, retries on 408/429/5xx and network errors
+- **`CircuitBreakerFeature`** - opens after N consecutive failures per endpoint, resets after timeout
 
 ## XHR Upload
 
@@ -132,8 +132,8 @@ interface UploadHandle<T> {
 
 Supports two modes:
 
-- **Single file** — `{ file: File | Blob }` sends with `Content-Type: application/octet-stream`
-- **FormData** — `{ formData: FormData }` for multipart uploads (browser/platform sets boundary)
+- **Single file** - `{ file: File | Blob }` sends with `Content-Type: application/octet-stream`
+- **FormData** - `{ formData: FormData }` for multipart uploads (browser/platform sets boundary)
 
 Uploads go through the feature chain (auth, retry, etc.). Features detect uploads via `context.metadata.isUpload`.
 

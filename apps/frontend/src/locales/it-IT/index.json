@@ -3306,7 +3306,7 @@
     "message": "Progetto aggiornato"
   },
   "project.settings.general.name.description": {
-    "message": "Evita prefissi, suffissi, parentesi, o descrizioni aggiuntive—solo il nome effettivo del progetto."
+    "message": "Evita prefissi, suffissi, parentesi, o descrizioni aggiuntive-solo il nome effettivo del progetto."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "es. Il Nether Reinventato 2"
@@ -3789,13 +3789,13 @@
     "message": "Nessun avviso"
   },
   "servers.plan.large.description": {
-    "message": "Ideale per 15–25 giocatori, pacchetti di mod o modding intenso."
+    "message": "Ideale per 15-25 giocatori, pacchetti di mod o modding intenso."
   },
   "servers.plan.medium.description": {
-    "message": "Ottimo per 6–15 giocatori e più mod."
+    "message": "Ottimo per 6-15 giocatori e più mod."
   },
   "servers.plan.small.description": {
-    "message": "Perfetto per 1–5 giocatori e qualche mod leggera."
+    "message": "Perfetto per 1-5 giocatori e qualche mod leggera."
   },
   "servers.purchase.step.plan.billed": {
     "message": "addebitato {interval, select, monthly {mensilmente} quarterly {trimerstralmente} yearly {annualmente} other {{interval}}}"

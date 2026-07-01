@@ -33,6 +33,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { LocationQuery } from 'vue-router'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 
+import BrowseFeaturedSection from '@/components/ui/BrowseFeaturedSection.vue'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
 import { useAppServerBrowse } from '@/composables/browse/use-app-server-browse'
 import {
@@ -356,7 +357,7 @@ const {
 	installingServerProjects,
 	playServerProject,
 	showAddServerToInstanceModal,
-	handleError,
+	handleError: (err: unknown) => handleError(err as Error),
 	router,
 })
 
@@ -729,7 +730,7 @@ function getCardActions(
 				iconClass: isInstalling || isInstallingSelection ? 'animate-spin' : undefined,
 				disabled: isInstalled || isInstalling || isInstallingSelection,
 				color: isQueued && !isInstalling && !isInstallingSelection ? 'green' : 'brand',
-				type: 'outlined',
+				type: 'standard',
 				onClick: async () => {
 					if (isQueued) {
 						removeQueuedServerInstall(projectResult.project_id)
@@ -794,7 +795,7 @@ function getCardActions(
 			iconClass: isInstalling ? 'animate-spin' : undefined,
 			disabled: isInstalled || isInstalling,
 			color: 'brand',
-			type: 'outlined',
+			type: 'standard',
 			onClick: async () => {
 				setProjectInstalling(projectResult.project_id, true)
 				try {
@@ -828,7 +829,7 @@ function getCardActions(
 					)
 				} catch (err) {
 					setProjectInstalling(projectResult.project_id, false)
-					handleError(err)
+					handleError(err as Error)
 				}
 			},
 		},
@@ -948,6 +949,71 @@ const searchState = useBrowseSearch({
 		shi: serverHideInstalled.value ? 'true' : undefined,
 	}),
 })
+
+const showFeaturedSections = computed(
+	() => projectType.value === 'modpack' && !searchState.query.value,
+)
+
+// ── Daily-rotating featured modpacks ────────────────────────────────────────
+
+const FEATURED_POOL = [
+	'fabulously-optimized',
+	'adrenaline',
+	'better-mc-fabric-bmc2',
+	'prominence-2-fabric',
+	'cobblemon-fabric',
+	'all-the-mods-9',
+	'better-mc-forge-bmc4',
+	'create-above-and-beyond',
+	'the-pixelmon-modpack',
+	'rlcraft',
+	'sky-factory-4',
+	'magic-and-monsters',
+]
+
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+	const a = [...arr]
+	let s = seed
+	for (let i = a.length - 1; i > 0; i--) {
+		s = (s * 1664525 + 1013904223) & 0x7fffffff
+		const j = s % (i + 1)
+		;[a[i], a[j]] = [a[j], a[i]]
+	}
+	return a
+}
+
+const todayNum = (() => {
+	const d = new Date()
+	return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()
+})()
+
+const dailyShuffled = seededShuffle(FEATURED_POOL, todayNum)
+const featuredSlugs = dailyShuffled.slice(0, 3)
+const staffPicksSlugs = dailyShuffled.slice(3, 6)
+
+const SYL_COMMENTS: Record<string, string> = {
+	'fabulously-optimized': 'makes vanilla feel like it was always supposed to run this fast',
+	'adrenaline': 'bare minimum optimization pack - no excuses not to use it',
+	'better-mc-fabric-bmc2': 'vanilla but actually good, hard to go back after this',
+	'prominence-2-fabric': 'one of the better kitchen-sink packs right now, genuinely',
+	'cobblemon-fabric': 'Pokémon in Minecraft done right - took long enough',
+	'all-the-mods-9': 'more content than you will ever actually finish',
+	'better-mc-forge-bmc4': 'the Forge version holds up just as well',
+	'create-above-and-beyond': 'Create is peak Minecraft and this is the best Create pack',
+	'the-pixelmon-modpack': 'the original Pokémon mod, still going strong',
+	'rlcraft': 'genuinely hard - don\'t say I didn\'t warn you',
+	'sky-factory-4': 'skyblock with automation, you could lose weeks to this',
+	'magic-and-monsters': 'covers basically every magic mod worth playing',
+}
+
+const SYL_TIPS = [
+	'if your modpack crashes on launch, the Fabric API version is usually the culprit',
+	'Sodium makes almost everything run better - just saying',
+	'always check the changelog before updating a modpack, breaking changes happen more than they should',
+	'if a pack feels slow, it\'s usually one mod hogging RAM, not all of them',
+	'when in doubt, allocate 6 GB and see if the stuttering goes away',
+]
+const sylTip = SYL_TIPS[Math.floor(Math.random() * SYL_TIPS.length)]
 
 watch(
 	[
@@ -1080,7 +1146,18 @@ provideBrowseManager({
 </script>
 
 <template>
-	<div class="flex flex-col gap-3 p-6">
+	<div class="browse-page flex flex-col gap-3 p-6">
+		<p class="syl-tip">{{ sylTip }}</p>
+		<div v-if="showFeaturedSections" class="flex flex-col gap-3">
+			<BrowseFeaturedSection :slugs="featuredSlugs" label="Featured" />
+			<BrowseFeaturedSection
+				:slugs="staffPicksSlugs"
+				label="Syl's Picks"
+				subtitle="Curated by Syl"
+				:comments="SYL_COMMENTS"
+			/>
+			<hr class="browse-section-divider" />
+		</div>
 		<BrowsePageLayout>
 			<template #after>
 				<ContextMenu ref="contextMenuRef" @option-clicked="handleOptionsClick">
@@ -1112,3 +1189,31 @@ provideBrowseManager({
 		</Teleport>
 	</div>
 </template>
+
+<style lang="scss">
+.syl-tip {
+	margin: 0;
+	font-size: 0.8125rem;
+	color: #6b6485;
+	font-style: italic;
+}
+
+.browse-page {
+	.browse-section-divider {
+		border: none;
+		border-top: 1px solid var(--color-divider, rgba(193, 190, 209, 0.1));
+		margin: 0.125rem 0;
+	}
+
+	/* Tint tag chips with faint violet background */
+	.grid-project-card-list__tags {
+		--_bg-color: rgba(142, 132, 207, 0.1);
+		--_color: #b8b0e8;
+	}
+
+	/* More breathing room between search result rows */
+	.search [role='list'] {
+		gap: 0.875rem;
+	}
+}
+</style>

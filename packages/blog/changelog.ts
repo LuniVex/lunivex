@@ -905,7 +905,7 @@ const VERSIONS: VersionEntry[] = [
 ## Changed
 - When updating your game version in the platform settings, incompatible mods are now disabled instead of removed.
 - Better UI for installed custom modpack files.
-- Redesigned the server panel header — loader, game version, server address, uptime, and linked project are now shown as clean inline stats with the project icon and a link to the project page, matching instances in the Modrinth App.
+- Redesigned the server panel header - loader, game version, server address, uptime, and linked project are now shown as clean inline stats with the project icon and a link to the project page, matching instances in the Modrinth App.
 - Rebuilt the Files tab with right-click context menus, keyboard shortcuts, drag-and-drop, improved modals for moving items and extracting archives, undo/redo for file moves and renames, and smoother scrolling for large directories, now aligned with the Content tab design.
 - Cleaned up backup progress indicators to be more compact.
 
@@ -921,7 +921,7 @@ const VERSIONS: VersionEntry[] = [
 		product: 'app',
 		version: '0.12.5',
 		body: `## Added
-- Added a Files tab for instances, matching the Modrinth Hosting experience — browse, edit, and manage all files in your instance folder without leaving the app, ideal for editing config files, viewing crash reports, and more.
+- Added a Files tab for instances, matching the Modrinth Hosting experience - browse, edit, and manage all files in your instance folder without leaving the app, ideal for editing config files, viewing crash reports, and more.
 - Added new filters to the Worlds tab: Online, Offline, Singleplayer, Modded, and Vanilla, replacing the previous set.
 - Added a "Browse servers" option to the Worlds tab, allowing you to search for compatible servers and quickly play or save them for later.
 - Added an empty state to the Worlds tab aligned with the Content tabs, with options to add or browse for servers.
@@ -2661,7 +2661,7 @@ Contributed by [IMB11](https://github.com/modrinth/code/pull/1301).`,
 - The Platform options page has been completely redesigned to streamline user interactions and improve overall clarity.
 - Suspended servers now display a clear "Suspended" status instead of a confusing "Connection lost" message, allowing users to easily check their billing information.
 - The console has been internally reworked to improve responsiveness and prevent freezing during high-volume spam.
-- Resolved CPU usage readings that previously exceeded 100% during high-load scenarios. CPU usage is now accurately normalized to a 0–100% range across all cores.
+- Resolved CPU usage readings that previously exceeded 100% during high-load scenarios. CPU usage is now accurately normalized to a 0-100% range across all cores.
 - Corrected CPU limit settings for some servers, potentially improving performance by up to half a core.
 - Fixed an issue preventing server reinstallation when at the maximum backup limit.
 - Resolved installation and runtime problems with older Minecraft versions.

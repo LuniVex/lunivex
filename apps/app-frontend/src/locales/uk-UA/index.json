@@ -570,7 +570,7 @@
     "message": "Пошук друзів…"
   },
   "friends.section.heading": {
-    "message": "{title} — {count}"
+    "message": "{title} - {count}"
   },
   "friends.sign-in-to-add-friends": {
     "message": "<link>Увійдіть в обліковий запис Modrinth</link>, щоб додати друзів і бачити, у що вони грають!"

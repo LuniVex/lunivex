@@ -102,8 +102,8 @@ async function findLauncherDir() {
 				Purge cache
 			</button>
 			<p class="m-0 leading-tight text-secondary">
-				The Modrinth app stores a cache of data to speed up loading. This can be purged to force the
-				app to reload data. This may slow down the app temporarily.
+				LuniVex stores a cache of data to speed up loading. This can be purged to force the app to
+				reload data. This may slow down the app temporarily.
 			</p>
 		</div>
 

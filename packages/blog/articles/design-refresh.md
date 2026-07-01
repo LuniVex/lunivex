@@ -46,7 +46,7 @@ We know there will be some minor hiccups and disruptions of workflows, but we’
 
 In the last few months, Modrinth has grown an incredible amount. We are now serving over a petabyte of data per month (that is, 1,000 terabytes!) to over 20 million unique IP addresses. It’s almost unfathomable how large we have become since we started from nothing just four years ago.
 
-However, with growth like this, our costs have also grown drastically—primarily in bandwidth. This, unfortunately, means that we’ve grown well beyond what a single advertiser could support.
+However, with growth like this, our costs have also grown drastically-primarily in bandwidth. This, unfortunately, means that we’ve grown well beyond what a single advertiser could support.
 
 Our original plan was to build out our own ad network (Adrinth) where we could cut out the middleman and provide highly targeted ads without the need for tracking to our gaming-specific audience. Unfortunately, we’ve grown too quickly (a very good problem to have!) and don’t have the immediate resources to do this at this time.
 

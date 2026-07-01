@@ -52,14 +52,14 @@ Next, select a timeframe and group results by an interval. We’ve added several
 
 Lastly, the meat and potatoes: breakdowns and filters. Breakdowns split your data into groups to compare. Filters narrow the data down to only what you want to see. You can select up to two breakdowns and as many filters as you want. The following breakdowns and filters are available:
 
-- **Project** — Only available when more than one project is selected
+- **Project** - Only available when more than one project is selected
 - **Country**
-- **Monetization** — Shows whether downloads or views are monetized or unmonetized
-- **Download source** — Shows what launchers your downloads are coming from
-- **Download reason** — Shows if your project was downloaded as part of a modpack, dependency, or standalone.
+- **Monetization** - Shows whether downloads or views are monetized or unmonetized
+- **Download source** - Shows what launchers your downloads are coming from
+- **Download reason** - Shows if your project was downloaded as part of a modpack, dependency, or standalone.
 - **Project version**
-- **Loader** — Shows what loaders people are downloading your project for
-- **Game version** — Shows what game versions people are downloading your project for
+- **Loader** - Shows what loaders people are downloading your project for
+- **Game version** - Shows what game versions people are downloading your project for
 
 ## Metrics overview
 
@@ -119,6 +119,6 @@ If using headers isn’t possible, or query parameters work better for your setu
 https://cdn.modrinth.com/...?mr_download_reason=standalone&mr_game_version=1.20.1&mr_loader=fabric
 ```
 
-—
+-
 
 We hope you’re as excited about this as we are! We're quite proud of this one. If you have any feedback, please let us know in the thread in our [Discord server](https://discord.modrinth.com)!

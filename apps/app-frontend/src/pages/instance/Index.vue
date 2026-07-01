@@ -309,7 +309,7 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import ContextMenu from '@/components/ui/ContextMenu.vue'
@@ -575,7 +575,7 @@ const handlePlayServer = async () => {
 }
 
 const repairInstance = async () => {
-	await finish_install(instance.value).catch(handleError)
+	if (instance.value) await finish_install(instance.value).catch(handleError)
 }
 
 const handleRightClick = (event: MouseEvent) => {
@@ -649,13 +649,14 @@ const unlistenProfiles = await profile_listener(
 			}
 			return
 		}
-		instance.value = await get(route.params.id as string).catch((err) => {
-			if (String(err).includes('not managed')) {
-				router.push({ path: '/' })
-				return undefined
-			}
-			return handleError(err)
-		})
+		instance.value =
+			(await get(route.params.id as string).catch((err) => {
+				if (String(err).includes('not managed')) {
+					router.push({ path: '/' })
+					return undefined
+				}
+				return handleError(err)
+			})) ?? undefined
 		if (!instance.value?.linked_data?.project_id) {
 			linkedProjectV3.value = undefined
 			isServerInstance.value = false
@@ -676,6 +677,13 @@ const icon = computed(() =>
 )
 
 const settingsModal = ref<InstanceType<typeof InstanceSettingsModal>>()
+
+onMounted(() => {
+	if (route.query.settings === '1') {
+		settingsModal.value?.show()
+		router.replace({ query: { ...route.query, settings: undefined } })
+	}
+})
 
 const timePlayed = computed(() => {
 	return instance.value
@@ -704,7 +712,9 @@ onUnmounted(() => {
 	unlistenProfiles()
 	const profilePath = route.params.id
 	if (profilePath) {
-		const { destroy } = useInstanceConsole(profilePath)
+		const { destroy } = useInstanceConsole(
+			Array.isArray(profilePath) ? profilePath[0] : profilePath,
+		)
 		destroy()
 	}
 })

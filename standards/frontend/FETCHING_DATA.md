@@ -10,9 +10,9 @@
 
 # TanStack Query
 
-TanStack Query (`@tanstack/vue-query` v5) is used for server state management — caching, background refetching, and cache invalidation. Use it instead of manual `ref()` + `await` patterns for any data that comes from an API.
+TanStack Query (`@tanstack/vue-query` v5) is used for server state management - caching, background refetching, and cache invalidation. Use it instead of manual `ref()` + `await` patterns for any data that comes from an API.
 
-A TanStack MCP server is available — use `tanstack_doc` and `tanstack_search_docs` tools to look up API details when needed.
+A TanStack MCP server is available - use `tanstack_doc` and `tanstack_search_docs` tools to look up API details when needed.
 
 ## Setup
 
@@ -150,7 +150,7 @@ Keys use a hierarchical array pattern:
 ['tech-reviews']
 ```
 
-Use `as const` for type safety. Put the resource ID last when possible — this makes partial key matching work for invalidation:
+Use `as const` for type safety. Put the resource ID last when possible - this makes partial key matching work for invalidation:
 
 ```ts
 // Invalidates all project queries for this ID
@@ -159,6 +159,6 @@ queryClient.invalidateQueries({ queryKey: ['project', projectId] })
 
 ## Key Files
 
-- `apps/frontend/src/plugins/tanstack.ts` — QueryClient setup + SSR hydration
-- `apps/frontend/src/composables/query-client.ts` — `useAppQueryClient()` helper
-- `apps/frontend/src/composables/queries/` — reusable query option factories
+- `apps/frontend/src/plugins/tanstack.ts` - QueryClient setup + SSR hydration
+- `apps/frontend/src/composables/query-client.ts` - `useAppQueryClient()` helper
+- `apps/frontend/src/composables/queries/` - reusable query option factories

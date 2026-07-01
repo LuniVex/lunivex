@@ -1095,7 +1095,7 @@
     "message": "Készen állsz! 🎉"
   },
   "dashboard.creator-tax-form-modal.entity.description": {
-    "message": "A külföldi jogi személy olyan üzleti egységet jelent, amelyet az Egyesült Államokon kívül hoztak létre (például nem amerikai részvénytársaság, társulás vagy korlátolt felelősségű társaság – LLC)."
+    "message": "A külföldi jogi személy olyan üzleti egységet jelent, amelyet az Egyesült Államokon kívül hoztak létre (például nem amerikai részvénytársaság, társulás vagy korlátolt felelősségű társaság - LLC)."
   },
   "dashboard.creator-tax-form-modal.entity.foreign-entity": {
     "message": "Külföldi szervezet"
@@ -3051,7 +3051,7 @@
     "message": "Projekt frissítve"
   },
   "project.settings.general.name.description": {
-    "message": "Kerüld az előtagokat, utótagokat, zárójeleket vagy hozzáadott leírásokat – csak a projekt tényleges nevét használd."
+    "message": "Kerüld az előtagokat, utótagokat, zárójeleket vagy hozzáadott leírásokat - csak a projekt tényleges nevét használd."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "pl. Nether Overhaul 2"
@@ -3465,7 +3465,7 @@
     "message": "Szinkronizálás a szerverrel"
   },
   "servers.manage.content.title": {
-    "message": "Tartalom – {serverName} – Modrinth"
+    "message": "Tartalom - {serverName} - Modrinth"
   },
   "servers.notice.actions": {
     "message": "Műveletek"
@@ -3495,13 +3495,13 @@
     "message": "Nincsen értesítés"
   },
   "servers.plan.large.description": {
-    "message": "Ideális 15–25 játékos számára, modcsomagokhoz vagy intenzív moddoláshoz."
+    "message": "Ideális 15-25 játékos számára, modcsomagokhoz vagy intenzív moddoláshoz."
   },
   "servers.plan.medium.description": {
-    "message": "Nagyszerű 6–15 játékos számára, többféle moddal."
+    "message": "Nagyszerű 6-15 játékos számára, többféle moddal."
   },
   "servers.plan.small.description": {
-    "message": "Tökéletes 1–5 barát számára, néhány kisebb moddal."
+    "message": "Tökéletes 1-5 barát számára, néhány kisebb moddal."
   },
   "settings.account.button.complete-setup": {
     "message": "Beállítás befejezése"

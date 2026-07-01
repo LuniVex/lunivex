@@ -99,7 +99,7 @@ Name the page, tab, modal, or feature you're talking about. "The Content tab", "
 
 ## Featured release bullets
 
-When an entry has a linked blog post heading (e.g. `## [Introducing Server Projects](/news/article/...)`), the bullets underneath summarize the *highlights* in 1–4 lines, then link out. They don't need to be exhaustive - that's what the blog post is for.
+When an entry has a linked blog post heading (e.g. `## [Introducing Server Projects](/news/article/...)`), the bullets underneath summarize the *highlights* in 1-4 lines, then link out. They don't need to be exhaustive - that's what the blog post is for.
 
 ## Quick checklist before committing a bullet
 

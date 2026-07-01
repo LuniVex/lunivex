@@ -36,7 +36,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	const tags = useGeneratedState()
 
 	try {
-		// Fetch v2 and v3 in parallel — cache both for the page's useQuery calls
+		// Fetch v2 and v3 in parallel - cache both for the page's useQuery calls
 		const [project, projectV3] = await Promise.all([
 			queryClient.fetchQuery(projectQueryOptions.v2(projectId, client)),
 			queryClient.fetchQuery(projectQueryOptions.v3(projectId, client)),

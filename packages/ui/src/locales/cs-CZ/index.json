@@ -1320,10 +1320,10 @@
     "defaultMessage": "Začít"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideální pro 15–25 hráčů, modpacky nebo náročné moddingy."
+    "defaultMessage": "Ideální pro 15-25 hráčů, modpacky nebo náročné moddingy."
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Skvělé pro 6–15 hráčů a více modů."
+    "defaultMessage": "Skvělé pro 6-15 hráčů a více modů."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Nejoblíbenější"
@@ -1332,7 +1332,7 @@
     "defaultMessage": "Vyberte si plán"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Ideální pro 1–5 přátel s pár lehkými módámi."
+    "defaultMessage": "Ideální pro 1-5 přátel s pár lehkými módámi."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plán"

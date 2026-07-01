@@ -21,7 +21,7 @@ In the end, as of February 1st, 2024, I decided to return $800k in remaining inv
 
 This decision was not an easy one, as without this funding, we would be unable to support the Modrinth team as it previously existed. With this reality, I made the difficult decision to significantly reduce the size of our team to match our goals of sustainable growth.
 
-I also owe a huge debt of gratitude to everyone on the team affected by all of this–Emma, Wyatt, Maya, Coolbot, Jade, Carter, and Prospector–for everything they have done to help make Modrinth what it is today.
+I also owe a huge debt of gratitude to everyone on the team affected by all of this-Emma, Wyatt, Maya, Coolbot, Jade, Carter, and Prospector-for everything they have done to help make Modrinth what it is today.
 
 I want to take a moment to highlight each of their contributions:
 
@@ -43,7 +43,5 @@ We’ve made great strides in this already with new moderation infrastructure in
 
 We started Modrinth to serve the community, and are taking this path so we can continue to. We hope you all will continue to support us as the newly independent Modrinth.
 
-—
-
-**Jai (aka Geometrically)**  
-Founder of Modrinth
+- **Jai (aka Geometrically)**  
+  Founder of Modrinth

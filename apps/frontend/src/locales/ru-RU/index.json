@@ -450,7 +450,7 @@
     "message": "Без монетизации"
   },
   "app-marketing.download.description": {
-    "message": "Наше приложение доступно на всех платформах — выберите желаемую версию."
+    "message": "Наше приложение доступно на всех платформах - выберите желаемую версию."
   },
   "app-marketing.download.download-appimage": {
     "message": "Скачать AppImage"
@@ -609,7 +609,7 @@
     "message": "Лаунчер, непохожий"
   },
   "app-marketing.features.website.description": {
-    "message": "Приложение полностью интегрировано с сайтом — открывайте любимые проекты прямо в Modrinth App!"
+    "message": "Приложение полностью интегрировано с сайтом - открывайте любимые проекты прямо в Modrinth App!"
   },
   "app-marketing.features.website.title": {
     "message": "Интеграция с сайтом"
@@ -621,7 +621,7 @@
     "message": "Скриншот Modrinth App со страницей содержимого сборки Cobblemon."
   },
   "app-marketing.hero.description": {
-    "message": "Modrinth App — уникальный лаунчер с открытым кодом, возможностью играть в любимые моды и быстро обновлять их, — всё в одной аккуратной упаковке."
+    "message": "Modrinth App - уникальный лаунчер с открытым кодом, возможностью играть в любимые моды и быстро обновлять их, - всё в одной аккуратной упаковке."
   },
   "app-marketing.hero.download-button": {
     "message": "Скачать Modrinth App"
@@ -813,7 +813,7 @@
     "message": "Вы действительно хотите удалить эту коллекцию?"
   },
   "collection.description": {
-    "message": "{description} — Посмотреть коллекцию {name} от {username} на Modrinth"
+    "message": "{description} - Посмотреть коллекцию {name} от {username} на Modrinth"
   },
   "collection.description.following": {
     "message": "Создана автоматически на основе всех отслеживаемых проектов."
@@ -846,7 +846,7 @@
     "message": "Профиль {user}"
   },
   "collection.title": {
-    "message": "{name} — Коллекция"
+    "message": "{name} - Коллекция"
   },
   "conversation-thread.action.add-private-note": {
     "message": "Добавить приватную заметку"
@@ -1155,7 +1155,7 @@
     "message": "Поиск коллекций..."
   },
   "dashboard.collections.sort.name-ascending": {
-    "message": "Название (А–Я)"
+    "message": "Название (А-Я)"
   },
   "dashboard.collections.sort.recently-created": {
     "message": "Дата создания"
@@ -1176,7 +1176,7 @@
     "message": "Готово! 🎉"
   },
   "dashboard.creator-tax-form-modal.entity.description": {
-    "message": "Иностранная организация — юридическое лицо, созданное за пределами Соединённых Штатов (например, иностранная компания, партнёрство или ООО)."
+    "message": "Иностранная организация - юридическое лицо, созданное за пределами Соединённых Штатов (например, иностранная компания, партнёрство или ООО)."
   },
   "dashboard.creator-tax-form-modal.entity.foreign-entity": {
     "message": "Иностранная организация"
@@ -1230,7 +1230,7 @@
     "message": "Юридическое лицо"
   },
   "dashboard.creator-withdraw-modal.kyc.entity-description": {
-    "message": "Юридическое лицо — зарегистрированная организация, например компания, партнёрство или ООО."
+    "message": "Юридическое лицо - зарегистрированная организация, например компания, партнёрство или ООО."
   },
   "dashboard.creator-withdraw-modal.kyc.entity-question": {
     "message": "Вы выводите как физическое или юридическое лицо?"
@@ -2010,7 +2010,7 @@
     "message": "Создайте свой сервер с Modrinth Hosting"
   },
   "hosting-marketing.hero.hosting-description": {
-    "message": "Modrinth Hosting — самый простой способ создать свой сервер Minecraft: Java Edition. Устанавливайте и играйте в любимые моды и сборки без хлопот — всё это внутри платформы Modrinth."
+    "message": "Modrinth Hosting - самый простой способ создать свой сервер Minecraft: Java Edition. Устанавливайте и играйте в любимые моды и сборки без хлопот - всё это внутри платформы Modrinth."
   },
   "hosting-marketing.included.advanced-networking": {
     "message": "Гибкое управление сетью"
@@ -2085,7 +2085,7 @@
     "message": "Управляйте всем на Modrinth"
   },
   "hosting-marketing.why.all-on-modrinth.description": {
-    "message": "Сервер, моды, игроки — всё уже есть на Modrinth. Не нужно переключаться между платформами."
+    "message": "Сервер, моды, игроки - всё уже есть на Modrinth. Не нужно переключаться между платформами."
   },
   "hosting-marketing.why.consistently-fast": {
     "message": "Всегда высокая скорость"
@@ -2178,7 +2178,7 @@
     "message": "Следите за тем, что нравится"
   },
   "landing.feature.launcher.description": {
-    "message": "Наш открытый API позволяет глубже интегрироваться с Modrinth — используйте <link>наше приложение</link> или сторонние лаунчеры наподобие ATLauncher, MultiMC и Prism Launcher."
+    "message": "Наш открытый API позволяет глубже интегрироваться с Modrinth - используйте <link>наше приложение</link> или сторонние лаунчеры наподобие ATLauncher, MultiMC и Prism Launcher."
   },
   "landing.feature.launcher.heading": {
     "message": "Играйте через свой лаунчер"
@@ -2247,7 +2247,7 @@
     "message": "Делитесь творениями с миром"
   },
   "landing.section.for-players.description": {
-    "message": "От магических биомов до проклятых подземелий — вы точно найдёте контент, который выведет игру на новый уровень."
+    "message": "От магических биомов до проклятых подземелий - вы точно найдёте контент, который выведет игру на новый уровень."
   },
   "landing.section.for-players.label": {
     "message": "Для игроков"
@@ -2418,7 +2418,7 @@
     "message": "Информация о Modrinth"
   },
   "layout.footer.open-source": {
-    "message": "Modrinth — <github-link>открытый проект</github-link>."
+    "message": "Modrinth - <github-link>открытый проект</github-link>."
   },
   "layout.footer.products": {
     "message": "Продукты"
@@ -2784,7 +2784,7 @@
     "message": "Банковский перевод (PEN)"
   },
   "muralpay.rail.fiat-usd-peru.name": {
-    "message": "Банковский перевод (USD — Перу)"
+    "message": "Банковский перевод (USD - Перу)"
   },
   "muralpay.rail.fiat-usd.name": {
     "message": "Банковский перевод (USD)"
@@ -2898,7 +2898,7 @@
     "message": "Скачать проекты {username} на Modrinth"
   },
   "profile.meta.description-with-bio": {
-    "message": "{bio} — Скачать проекты {username} на Modrinth"
+    "message": "{bio} - Скачать проекты {username} на Modrinth"
   },
   "profile.official-account": {
     "message": "Официальный аккаунт Modrinth"
@@ -3054,7 +3054,7 @@
     "message": "Проверить проект"
   },
   "project.actions.servers-promo.description": {
-    "message": "Modrinth Hosting — самый простой способ играть с друзьями без лишних хлопот!"
+    "message": "Modrinth Hosting - самый простой способ играть с друзьями без лишних хлопот!"
   },
   "project.actions.servers-promo.pricing": {
     "message": "От {price}<small> в месяц</small>"
@@ -3126,7 +3126,7 @@
     "message": "Скачивание {title}"
   },
   "project.environment.migration-no-permission.message": {
-    "message": "Недавно мы переработали систему сред на Modrinth — теперь доступны новые варианты. У вас нет разрешения на изменение этих настроек — сообщите другому участнику проекта, что необходимо проверить метаданные среды."
+    "message": "Недавно мы переработали систему сред на Modrinth - теперь доступны новые варианты. У вас нет разрешения на изменение этих настроек - сообщите другому участнику проекта, что необходимо проверить метаданные среды."
   },
   "project.environment.migration-no-permission.title": {
     "message": "Необходимо проверить метаданные среды"
@@ -3204,7 +3204,7 @@
     "message": "Ваш проект будет проверен автоматической системой и затем рассмотрен модераторами на соответствие <rules-link>правилам контента Modrinth</rules-link> и <terms-link>условиям использования</terms-link>."
   },
   "project.moderation.admonition.under-review.body.3": {
-    "message": "Вы по-прежнему можете редактировать проект — это не повлияет на его положение в очереди."
+    "message": "Вы по-прежнему можете редактировать проект - это не повлияет на его положение в очереди."
   },
   "project.moderation.admonition.under-review.body.4": {
     "message": "Мы стараемся проверять проекты в течение 24-48 часов, однако иногда возможны задержки. Это не означает, что с вашим проектом что-то не так."
@@ -3261,7 +3261,7 @@
     "message": "Проект обновлён"
   },
   "project.settings.general.name.description": {
-    "message": "Избегайте префиксов, суффиксов, скобок и описаний — введите только название проекта."
+    "message": "Избегайте префиксов, суффиксов, скобок и описаний - введите только название проекта."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "например: Переработка Нижнего Мира 2"
@@ -3717,7 +3717,7 @@
     "message": "Использовать с сервера"
   },
   "servers.manage.content.title": {
-    "message": "Контент — {serverName} — Modrinth"
+    "message": "Контент - {serverName} - Modrinth"
   },
   "servers.notice.actions": {
     "message": "Действия"
@@ -3747,13 +3747,13 @@
     "message": "Нет оповещений"
   },
   "servers.plan.large.description": {
-    "message": "Для 15–25 игроков, сборок и тяжёлых модов."
+    "message": "Для 15-25 игроков, сборок и тяжёлых модов."
   },
   "servers.plan.medium.description": {
-    "message": "Для 6–15 игроков и нескольких модов."
+    "message": "Для 6-15 игроков и нескольких модов."
   },
   "servers.plan.small.description": {
-    "message": "Для 1–5 друзей и пары лёгких модов."
+    "message": "Для 1-5 друзей и пары лёгких модов."
   },
   "servers.purchase.step.plan.billed": {
     "message": "{interval, select, monthly {на месяц} quarterly {на 3 месяца} yearly {на год} other {оплата {interval}}}"
@@ -4011,7 +4011,7 @@
     "message": "Вы действительно хотите удалить это приложение?"
   },
   "settings.applications.description.intro": {
-    "message": "Через приложения пользователи Modrinth могут входить в ваши сервисы. Подробнее — в <docs-link>документации</docs-link>."
+    "message": "Через приложения пользователи Modrinth могут входить в ваши сервисы. Подробнее - в <docs-link>документации</docs-link>."
   },
   "settings.applications.field.description": {
     "message": "Описание"
@@ -4068,7 +4068,7 @@
     "message": "Авторизованные приложения получают доступ к аккаунту Modrinth. Здесь можно просматривать и отзывать этот доступ."
   },
   "settings.authorizations.empty-state": {
-    "message": "Список приложений временно недоступен. Мы работаем над исправлением — загляните сюда позже."
+    "message": "Список приложений временно недоступен. Мы работаем над исправлением - загляните сюда позже."
   },
   "settings.authorizations.head-title": {
     "message": "Авторизации"
@@ -4194,7 +4194,7 @@
     "message": "{price} в {interval}"
   },
   "settings.billing.pyro.linked-server.not-found": {
-    "message": "Привязанный сервер не найден. Возможных причин несколько: сервер куплен только что — подождите, подготовка занимает до часа; сервер куплен давно — вероятно, его уже приостановили. Если что‑то не так, свяжитесь с поддержкой Modrinth, указав следующие данные:"
+    "message": "Привязанный сервер не найден. Возможных причин несколько: сервер куплен только что - подождите, подготовка занимает до часа; сервер куплен давно - вероятно, его уже приостановили. Если что‑то не так, свяжитесь с поддержкой Modrinth, указав следующие данные:"
   },
   "settings.billing.pyro.linked-server.server-id": {
     "message": "ID сервера: {id}"
@@ -4338,7 +4338,7 @@
     "message": "Расширенные эффекты"
   },
   "settings.display.sidebar.external-links-new-tab.description": {
-    "message": "Ссылки за пределы Modrinth будут открываться в новой вкладке. Исключения: ссылки внутри домена и в Markdown — всегда в той же вкладке; реклама и страницы редактирования — всегда в новой."
+    "message": "Ссылки за пределы Modrinth будут открываться в новой вкладке. Исключения: ссылки внутри домена и в Markdown - всегда в той же вкладке; реклама и страницы редактирования - всегда в новой."
   },
   "settings.display.sidebar.external-links-new-tab.title": {
     "message": "Внешние ссылки в новой вкладке"
@@ -4374,7 +4374,7 @@
     "message": "Создать токен доступа"
   },
   "settings.pats.description": {
-    "message": "Токены доступа используются для обращения к API Modrinth. Их можно создавать и отзывать в любое время. Подробнее — в <doc-link>документации</doc-link>."
+    "message": "Токены доступа используются для обращения к API Modrinth. Их можно создавать и отзывать в любое время. Подробнее - в <doc-link>документации</doc-link>."
   },
   "settings.pats.modal.create.action": {
     "message": "Создать токен доступа"

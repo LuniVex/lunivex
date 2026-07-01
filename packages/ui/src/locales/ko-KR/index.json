@@ -3498,7 +3498,7 @@
     "defaultMessage": "대기 중"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "{username}의 아바타"
@@ -4212,13 +4212,13 @@
     "defaultMessage": "프리미엄"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "15–25명의 플레이어, 모드팩 또는 무거운 모드에 적합합니다."
+    "defaultMessage": "15-25명의 플레이어, 모드팩 또는 무거운 모드에 적합합니다."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "레귤러"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "6–15명의 플레이어와 여러개의 모드에 적합합니다."
+    "defaultMessage": "6-15명의 플레이어와 여러개의 모드에 적합합니다."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "가장 인기"
@@ -4230,7 +4230,7 @@
     "defaultMessage": "소형"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "1–5명의 친구와 적은 수의 가벼운 모드에 적합합니다."
+    "defaultMessage": "1-5명의 친구와 적은 수의 가벼운 모드에 적합합니다."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "플랜"

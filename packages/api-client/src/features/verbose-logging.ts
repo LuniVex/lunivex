@@ -24,7 +24,7 @@ export class VerboseLoggingFeature extends AbstractFeature {
 			return result
 		} catch (error) {
 			const details = formatErrorDetails(error)
-			console.debug(`${prefix} ${context.url} FAILED${details ? ` — ${details}` : ''}`)
+			console.debug(`${prefix} ${context.url} FAILED${details ? ` - ${details}` : ''}`)
 			throw error
 		}
 	}

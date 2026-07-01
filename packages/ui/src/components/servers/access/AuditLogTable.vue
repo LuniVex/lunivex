@@ -105,7 +105,7 @@
 							class="block min-w-0 truncate whitespace-nowrap"
 							:class="entry.world ? 'text-primary' : 'text-secondary'"
 						>
-							{{ entry.world?.name ?? '—' }}
+							{{ entry.world?.name ?? '-' }}
 						</span>
 					</template>
 

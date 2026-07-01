@@ -228,7 +228,7 @@ function formatRangeLabel(
 	if (includeTime) {
 		const startLabel = new Intl.DateTimeFormat(DATE_LOCALE, startOptions).format(start)
 		const endLabel = new Intl.DateTimeFormat(DATE_LOCALE, timeOptions).format(end)
-		const range = `${startLabel}–${endLabel}`
+		const range = `${startLabel}-${endLabel}`
 
 		if (!showTrailingYear) return range
 
@@ -247,7 +247,7 @@ function formatRangeLabel(
 
 	const startLabel = new Intl.DateTimeFormat(DATE_LOCALE, startOptions).format(start)
 	const endLabel = new Intl.DateTimeFormat(DATE_LOCALE, endOptions).format(end)
-	const range = `${startLabel}–${endLabel}`
+	const range = `${startLabel}-${endLabel}`
 
 	if (!showTrailingYear) return range
 

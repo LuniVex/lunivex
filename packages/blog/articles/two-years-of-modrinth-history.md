@@ -43,7 +43,7 @@ Picking up the remnants from what others had left behind, one man was destined t
 
 Right around the corner came 2022. Perchance this would be the time for the silence to be broken? Indeed, the world would be able to hear about all that was brewing over the past few months.
 
-Of course, this wasn't all introduced at once—it was a gradual rollout over several months. First was the introduction of v2 of Modrinth's API, allowing many breaking changes to occur, including namely the renaming of _mods_ to _projects_. Wait, why was this necessary?
+Of course, this wasn't all introduced at once-it was a gradual rollout over several months. First was the introduction of v2 of Modrinth's API, allowing many breaking changes to occur, including namely the renaming of _mods_ to _projects_. Wait, why was this necessary?
 
 Up until this point, Modrinth only hosted mods. Project types, as we call them, allow projects to be given the designation of something other than _mod_; for example, _modpack_ or _resourcepack_, like we have today. This simple field, alongside all of the infrastructure which was needed to support it, was the first step to allow modpacks on Modrinth.
 
@@ -67,7 +67,7 @@ The next couple months were spent preparing for the release of modpacks. This is
 
 ## May 2022: Modpacks in alpha
 
-In May, we finally did the big release of modpacks on Modrinth. Well, in alpha, anyway—but that was less of a marker of instability and more a marker of being incomplete without the launcher. [The modpack alpha release blog post can be found here](../modpacks-alpha).
+In May, we finally did the big release of modpacks on Modrinth. Well, in alpha, anyway-but that was less of a marker of instability and more a marker of being incomplete without the launcher. [The modpack alpha release blog post can be found here](../modpacks-alpha).
 
 When we first announced modpacks, the initial format had been set in stone for a couple years, and it had been decided that CurseForge links would be allowed within them. This got turned on its head due to an email sent to us by Overwolf. More information on that can be found on the [Changes to Modrinth Modpacks blog post](../modpack-changes).
 
@@ -83,7 +83,7 @@ Plugins in particular were tricky since we had to account for projects which had
 
 With plugins and resource packs done, we continued working on creator monetization. This included [a brief experiment](../carbon-ads) with a different ad provider before we eventually switched to creating [our own ad system](https://adrinth.com).
 
-November brought the actual beta release of creator monetization—[here's the blog post for that](../creator-monetization-beta). We are continuing to develop and refine this system to ensure authors continue to earn money from publishing projects on Modrinth.
+November brought the actual beta release of creator monetization-[here's the blog post for that](../creator-monetization-beta). We are continuing to develop and refine this system to ensure authors continue to earn money from publishing projects on Modrinth.
 
 ## December 2022-January 2023: Anniversary Update
 

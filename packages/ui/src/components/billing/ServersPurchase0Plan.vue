@@ -51,15 +51,15 @@ const messages = defineMessages({
 	},
 	smallDesc: {
 		id: 'servers.purchase.step.plan.small.desc',
-		defaultMessage: 'Perfect for 1–5 friends with a few light mods.',
+		defaultMessage: 'Perfect for 1-5 friends with a few light mods.',
 	},
 	mediumDesc: {
 		id: 'servers.purchase.step.plan.medium.desc',
-		defaultMessage: 'Great for 6–15 players and multiple mods.',
+		defaultMessage: 'Great for 6-15 players and multiple mods.',
 	},
 	largeDesc: {
 		id: 'servers.purchase.step.plan.large.desc',
-		defaultMessage: 'Ideal for 15–25 players, modpacks, or heavy modding.',
+		defaultMessage: 'Ideal for 15-25 players, modpacks, or heavy modding.',
 	},
 	customDesc: {
 		id: 'servers.purchase.step.plan.custom.desc',

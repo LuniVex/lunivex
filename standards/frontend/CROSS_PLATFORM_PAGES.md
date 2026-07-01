@@ -34,7 +34,7 @@ export interface ContentManagerContext {
 	deleteItem: (item: ContentItem) => Promise<void>
 	refresh: () => Promise<void>
 
-	// Optional capabilities — not every platform supports everything
+	// Optional capabilities - not every platform supports everything
 	hasUpdateSupport: boolean
 	updateItem?: (id: string) => void
 	bulkDeleteItems?: (items: ContentItem[]) => Promise<void>
@@ -48,7 +48,7 @@ export const [injectContentManager, provideContentManager] =
 
 ### Platform implementations
 
-**Website** — uses `api-client` and TanStack Query:
+**Website** - uses `api-client` and TanStack Query:
 
 ```vue
 <!-- apps/frontend/src/pages/instance/content.vue -->
@@ -74,7 +74,7 @@ provideContentManager({
 </template>
 ```
 
-**App** — uses Tauri `invoke`:
+**App** - uses Tauri `invoke`:
 
 ```vue
 <!-- apps/app-frontend/src/pages/instance/Mods.vue -->
@@ -116,12 +116,12 @@ v-if="ctx.bulkUpdateItems && hasOutdatedProjects"
 
 | Use       | When                                                                                       |
 | --------- | ------------------------------------------------------------------------------------------ |
-| **DI**    | Data depends on _how_ it's fetched — API calls, file operations, navigation (per-platform) |
-| **Props** | Data is the same regardless of platform — configuration flags, display options              |
+| **DI**    | Data depends on _how_ it's fetched - API calls, file operations, navigation (per-platform) |
+| **Props** | Data is the same regardless of platform - configuration flags, display options              |
 
 ## Wrapped Pages (`layouts/wrapped/`)
 
-For pages where the **logic is identical** on both platforms — same API source, same data fetching, same state management. These are full page-level Vue components that directly implement routes:
+For pages where the **logic is identical** on both platforms - same API source, same data fetching, same state management. These are full page-level Vue components that directly implement routes:
 
 ```
 wrapped/hosting/manage/
@@ -149,7 +149,7 @@ import { ServersManageContentPage } from '@modrinth/ui'
 
 #### Wrapped layout: `ReadyTransition` and `useReadyState`
 
-Many wrapped pages wrap the main UI in [`ReadyTransition`](../../packages/ui/src/components/base/ReadyTransition.vue) with `:pending` driven by [`useReadyState`](../../packages/ui/src/composables/use-ready-state.ts) on the **primary** TanStack query (true only on the first load while that query has no cached data yet—background refetches stay “ready”). That avoids flashing empty content before data exists.
+Many wrapped pages wrap the main UI in [`ReadyTransition`](../../packages/ui/src/components/base/ReadyTransition.vue) with `:pending` driven by [`useReadyState`](../../packages/ui/src/composables/use-ready-state.ts) on the **primary** TanStack query (true only on the first load while that query has no cached data yet-background refetches stay “ready”). That avoids flashing empty content before data exists.
 
 ```vue
 <!-- Conceptual: inside packages/ui wrapped layout -->
@@ -195,13 +195,13 @@ If a route parameter is required for the query (e.g. `worldId`), only call `ensu
 
 Duplicating the query definition in the shell is intentional until a shared query-options module exists; keep keys and fetchers aligned when editing the layout or the shell.
 
-A wrapped page may still compose shared layouts internally — for example, the hosting content page uses the shared `content-tab` layout, providing its own `ContentManagerContext` with web API calls.
+A wrapped page may still compose shared layouts internally - for example, the hosting content page uses the shared `content-tab` layout, providing its own `ContentManagerContext` with web API calls.
 
 ## Composables
 
 Reusable stateful logic lives in `packages/ui/src/layouts/shared/*/composables/`. These are consumed internally by the shared layout:
 
-- **Search** — Fuse.js fuzzy search over items
-- **Filtering** — Dynamic filter pills
-- **Selection** — Multi-select with bulk operation support
-- **Bulk operations** — Sequential execution with progress tracking
+- **Search** - Fuse.js fuzzy search over items
+- **Filtering** - Dynamic filter pills
+- **Selection** - Multi-select with bulk operation support
+- **Bulk operations** - Sequential execution with progress tracking

@@ -9,14 +9,14 @@
 			'subpage-active': isSubpage && isSubpage(route),
 			disabled: disabled,
 		}"
-		class="w-12 h-12 text-primary rounded-full flex items-center justify-center text-2xl transition-all bg-transparent hover:bg-button-bg hover:text-contrast"
+		class="nav-btn w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all bg-transparent hover:bg-button-bg hover:text-contrast"
 	>
 		<slot />
 	</RouterLink>
 	<button
 		v-else
 		v-bind="$attrs"
-		class="button-animation border-none text-primary cursor-pointer w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all bg-transparent hover:bg-button-bg hover:text-contrast"
+		class="nav-btn button-animation border-none cursor-pointer w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all bg-transparent hover:bg-button-bg hover:text-contrast"
 		:disabled="disabled"
 		@click="to"
 	>
@@ -51,6 +51,10 @@ defineOptions({
 </script>
 
 <style lang="scss" scoped>
+.nav-btn {
+	color: #9892b0;
+}
+
 .router-link-active,
 .subpage-active {
 	svg {
@@ -59,7 +63,8 @@ defineOptions({
 }
 
 .router-link-active {
-	@apply text-[--color-button-text-selected] bg-[--color-button-bg-selected];
+	color: #8e84cf;
+	@apply bg-[--color-button-bg-selected];
 }
 
 .subpage-active {

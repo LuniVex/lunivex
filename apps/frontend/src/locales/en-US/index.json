@@ -3330,7 +3330,7 @@
     "message": "Project updated"
   },
   "project.settings.general.name.description": {
-    "message": "Avoid prefixes, suffixes, parentheticals, or added descriptions—just the project's actual name."
+    "message": "Avoid prefixes, suffixes, parentheticals, or added descriptions-just the project's actual name."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "e.g. Nether Overhaul 2"
@@ -3840,13 +3840,13 @@
     "message": "No notices"
   },
   "servers.plan.large.description": {
-    "message": "Ideal for 15–25 players, modpacks, or heavy modding."
+    "message": "Ideal for 15-25 players, modpacks, or heavy modding."
   },
   "servers.plan.medium.description": {
-    "message": "Great for 6–15 players and multiple mods."
+    "message": "Great for 6-15 players and multiple mods."
   },
   "servers.plan.small.description": {
-    "message": "Perfect for 1–5 friends with a few light mods."
+    "message": "Perfect for 1-5 friends with a few light mods."
   },
   "servers.purchase.step.plan.billed": {
     "message": "billed {interval, select, monthly {monthly} quarterly {quarterly} yearly {yearly} other {{interval}}}"

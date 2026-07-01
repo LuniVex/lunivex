@@ -11,13 +11,13 @@
 
 # Internationalization (i18n)
 
-All user-visible strings in Vue SFCs must use the localization system from `@modrinth/ui`. No hard-coded English strings should appear in templates or script — everything comes from `formatMessage` or `<IntlFormatted>`.
+All user-visible strings in Vue SFCs must use the localization system from `@modrinth/ui`. No hard-coded English strings should appear in templates or script - everything comes from `formatMessage` or `<IntlFormatted>`.
 
 ## Translatable Strings
 
 User-visible strings include: inner text, `alt` attributes, `placeholder` attributes, button labels, dropdown option labels, notification messages, etc.
 
-Dynamic expressions (`{{ user.name }}`) and HTML tags are not translatable strings — only static human-readable text.
+Dynamic expressions (`{{ user.name }}`) and HTML tags are not translatable strings - only static human-readable text.
 
 ## Message Definitions
 
@@ -57,7 +57,7 @@ Dynamic values use ICU placeholders in `defaultMessage`:
 
 ICU gives you powerful tools (plurals, selects, nested expressions), but translators in other languages face constraints that English doesn't have:
 
-- **Word order varies by language.** Don't assume `{action} {noun}` works everywhere — some languages need `{noun} {action}` or require prepositions between them.
+- **Word order varies by language.** Don't assume `{action} {noun}` works everywhere - some languages need `{noun} {action}` or require prepositions between them.
 - **Plurals aren't just "add an s".** Many languages change internal parts of a word or phrase for pluralization, not just the ending. A simple `{count} {itemType}` breaks if `itemType` is always singular.
 - **Grammatical gender affects surrounding words.** Articles, adjectives, and verbs may change based on whether a noun is masculine or feminine. If a variable like `{contentType}` can be "shader" or "mod", translators may need to inflect surrounding text differently for each.
 
@@ -66,10 +66,10 @@ ICU gives you powerful tools (plurals, selects, nested expressions), but transla
 1. **Use `select` for content types, not bare variables.** When a variable represents different content types (mod, shader, modpack, etc.), pass a key and use ICU `select` so translators can write type-specific forms:
 
 ```
-// Bad — translators can't inflect around a pre-rendered noun
+// Bad - translators can't inflect around a pre-rendered noun
 'Delete {count} {itemType}'
 
-// Good — translators can write entirely different phrases per type
+// Good - translators can write entirely different phrases per type
 'Delete {count} {contentType, select, mod {{count, plural, one {mod} other {mods}}} shader {{count, plural, one {shader} other {shaders}}} other {items}}'
 ```
 
@@ -77,7 +77,7 @@ This lets translators write entirely different noun forms per branch, which many
 
 2. **Prefer separate messages over complex ICU when branches diverge significantly.** If the singular and plural versions of a string are structurally different (not just a noun change), use two separate message IDs rather than one complex ICU expression.
 
-3. **Don't concatenate translated strings.** Never build a sentence by joining multiple `formatMessage` calls — the word order may be wrong in other languages. Put the entire sentence in one message.
+3. **Don't concatenate translated strings.** Never build a sentence by joining multiple `formatMessage` calls - the word order may be wrong in other languages. Put the entire sentence in one message.
 
 4. **Keep variables semantic.** Pass `contentType: 'mod'` (a key), not `contentType: 'Mod'` (a pre-rendered display string). Translators can then map each key to the correct form in their language.
 
@@ -132,10 +132,10 @@ If an ICU placeholder ends right before `}}` in a Vue template, insert a space (
 
 All i18n utilities come from `@modrinth/ui`:
 
-- `defineMessage` / `defineMessages` — message definitions
-- `useVIntl` — composable providing `formatMessage`
-- `IntlFormatted` — component for rich-text messages
-- `normalizeChildren` — helper for complex rich-text slot children
+- `defineMessage` / `defineMessages` - message definitions
+- `useVIntl` - composable providing `formatMessage`
+- `IntlFormatted` - component for rich-text messages
+- `normalizeChildren` - helper for complex rich-text slot children
 
 ## Reference Examples
 

@@ -13,7 +13,7 @@ export interface LoadingStateProvider {
 	readonly barEnabled: Readonly<Ref<boolean>>
 	/** Begin a tracked load. Returns a unique token; pair with `end(token)`. */
 	begin(): symbol
-	/** End a previously-begun load. Idempotent — unknown or repeat tokens are silently ignored. */
+	/** End a previously-begun load. Idempotent - unknown or repeat tokens are silently ignored. */
 	end(token: symbol): void
 	/** Fire a synthetic load that auto-releases after `durationMs` (default 500ms). For manual-refresh buttons. */
 	beginManual(durationMs?: number): void

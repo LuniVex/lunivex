@@ -3570,7 +3570,7 @@
     "defaultMessage": "Ausstehend"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Avatar von {username}"
@@ -4389,13 +4389,13 @@
     "defaultMessage": "Groß"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideal für 15–25 Spieler, Modpacks oder umfangreiche Modding-Projekte."
+    "defaultMessage": "Ideal für 15-25 Spieler, Modpacks oder umfangreiche Modding-Projekte."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Mittel"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Ideal für 6–15 Spieler und mehrere Mods."
+    "defaultMessage": "Ideal für 6-15 Spieler und mehrere Mods."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Am beliebtesten"
@@ -4407,7 +4407,7 @@
     "defaultMessage": "Klein"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Perfekt für 1–5 Freunde mit ein paar kleinen Mods."
+    "defaultMessage": "Perfekt für 1-5 Freunde mit ein paar kleinen Mods."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

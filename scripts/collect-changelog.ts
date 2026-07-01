@@ -343,7 +343,7 @@ async function main() {
 
 		const products = [...parsed.entries.keys()]
 		const types = [...new Set([...parsed.entries.values()].flatMap((s) => [...s.keys()]))]
-		console.log(chalk.cyan(`PR #${pr.number}: ${products.join(', ')} — ${types.join(', ')}`))
+		console.log(chalk.cyan(`PR #${pr.number}: ${products.join(', ')} - ${types.join(', ')}`))
 
 		for (const [product, sections] of parsed.entries) {
 			if (!allEntries.has(product)) {
@@ -393,7 +393,7 @@ async function main() {
 
 	console.log()
 	if (args.dryRun) {
-		console.log(chalk.cyan('Dry run complete — no changes written'))
+		console.log(chalk.cyan('Dry run complete - no changes written'))
 	} else {
 		console.log(chalk.green('Done! Review the changes in packages/blog/changelog.ts'))
 	}

@@ -11,12 +11,9 @@ import {
 import {
 	ChangeSkinIcon,
 	CompassIcon,
-	ExternalIcon,
 	HomeIcon,
 	LeftArrowIcon,
 	LibraryIcon,
-	LogInIcon,
-	LogOutIcon,
 	NotepadTextIcon,
 	PlusIcon,
 	RefreshCwIcon,
@@ -29,7 +26,6 @@ import {
 } from '@modrinth/assets'
 import {
 	Admonition,
-	Avatar,
 	ButtonStyled,
 	commonMessages,
 	ContentInstallModal,
@@ -39,7 +35,6 @@ import {
 	I18nDebugPanel,
 	LoadingBar,
 	NotificationPanel,
-	OverflowMenu,
 	PopupNotificationPanel,
 	provideModalBehavior,
 	provideModrinthClient,
@@ -639,18 +634,12 @@ async function signIn() {
 	}
 }
 
-async function logOut() {
-	await logout().catch(handleError)
-	await fetchCredentials()
-}
-
 const hasPlus = computed(
 	() =>
 		!!credentials.value?.user &&
 		(hasMidasBadge(credentials.value.user) ||
 			hasActivePride26Midas(authenticatedModrinthUser.value?.campaigns?.pride_26)),
 )
-
 
 onMounted(() => {
 	invoke('show_window')
@@ -1333,7 +1322,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 				<LibraryIcon />
 			</NavButton>
 			<NavButton
-				v-tooltip.right="'Modrinth Hosting'"
+				v-tooltip.right="'Servers'"
 				to="/hosting/manage"
 				:is-primary="(r) => r.path === '/hosting/manage' || r.path === '/hosting/manage/'"
 				:is-subpage="(r) => r.path.startsWith('/hosting/manage/') && r.path !== '/hosting/manage/'"
@@ -1358,45 +1347,17 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 			>
 				<SettingsIcon />
 			</NavButton>
-			<OverflowMenu
-				v-if="credentials?.user"
-				v-tooltip.right="`Modrinth account`"
-				class="w-12 h-12 text-primary rounded-full flex items-center justify-center text-2xl transition-all bg-transparent hover:bg-button-bg hover:text-contrast border-0 cursor-pointer"
-				:options="[
-					{
-						id: 'view-profile',
-						action: () => openUrl('https://modrinth.com/user/' + credentials.user.username),
-					},
-					{
-						id: 'sign-out',
-						action: () => logOut(),
-						color: 'danger',
-					},
-				]"
-				placement="right-end"
+			<NavButton
+				v-tooltip.right="'LuniVex account - coming soon'"
+				:to="() => openUrl('https://lunivex.xyz/plus')"
 			>
-				<Avatar :src="credentials?.user?.avatar_url" alt="" size="32px" circle />
-				<template #view-profile>
-					<UserIcon />
-					<span class="inline-flex items-center gap-1">
-						Signed in as
-						<span class="inline-flex items-center gap-1 text-contrast font-semibold">
-							<Avatar :src="credentials?.user?.avatar_url" alt="" size="20px" circle />
-							{{ credentials?.user?.username }}
-						</span>
-					</span>
-					<ExternalIcon />
-				</template>
-				<template #sign-out> <LogOutIcon /> Sign out </template>
-			</OverflowMenu>
-			<NavButton v-else v-tooltip.right="'Sign in to a Modrinth account'" :to="() => signIn()">
-				<LogInIcon class="text-brand" />
+				<UserIcon class="opacity-40" />
 			</NavButton>
 		</div>
 		<div data-tauri-drag-region class="app-grid-statusbar bg-bg-raised h-[--top-bar-height] flex">
 			<div data-tauri-drag-region class="flex min-w-0 flex-1 overflow-hidden p-3">
 				<span class="flex items-center gap-2 shrink-0 select-none pointer-events-none">
-					<svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink:0">
+					<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink: 0">
 						<defs>
 							<mask id="lvCrescentMask">
 								<rect width="40" height="40" fill="black" />
@@ -1404,7 +1365,12 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 								<circle cx="27" cy="16" r="14" fill="black" />
 							</mask>
 						</defs>
-						<rect width="40" height="40" mask="url(#lvCrescentMask)" style="fill: var(--color-brand);" />
+						<rect
+							width="40"
+							height="40"
+							mask="url(#lvCrescentMask)"
+							style="fill: var(--color-brand)"
+						/>
 					</svg>
 					<span class="text-contrast font-semibold text-lg leading-none">LuniVex</span>
 				</span>
@@ -1546,7 +1512,10 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 							<AccountsCard ref="accounts" />
 						</suspense>
 					</div>
-					<div class="p-4 border-0 border-b-[1px] border-[--brand-gradient-border] border-solid">
+					<div
+						v-if="credentials?.user"
+						class="p-4 border-0 border-b-[1px] border-[--brand-gradient-border] border-solid"
+					>
 						<suspense>
 							<FriendsList :credentials="credentials" :sign-in="() => signIn()" />
 						</suspense>
@@ -1673,27 +1642,12 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	width: 300px;
 	position: relative;
 	height: calc(100vh - var(--top-bar-height));
-	background: var(--brand-gradient-bg);
+	background: transparent;
 
 	--color-button-bg: var(--brand-gradient-button);
 	--color-button-bg-hover: var(--brand-gradient-border);
 	--color-divider: var(--brand-gradient-border);
 	--color-divider-dark: var(--brand-gradient-border);
-}
-
-.app-sidebar::after {
-	content: '';
-	position: absolute;
-	bottom: 250px;
-	left: 0;
-	right: 0;
-	height: 5rem;
-	background: var(--brand-gradient-fade-out-color);
-	pointer-events: none;
-}
-
-.app-sidebar.has-plus::after {
-	display: none;
 }
 
 .disable-advanced-rendering {

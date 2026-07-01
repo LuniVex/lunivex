@@ -16,7 +16,7 @@ The [Modrinth Website], codename Knossos, is a Nuxt.js frontend. You will need t
 ### 2. Install dependencies & set up .env
 
 - Clone [`https://github.com/modrinth/code`](https://github.com/modrinth/code) and run `pnpm install` in the workspace root folder.
-- In `apps/frontend` you should be able to see `.env.prod`, `.env.staging` — for basic work, it's recommended to use `.env.prod`. Copy the relevant file into a new `.env` file within the `apps/frontend` folder.
+- In `apps/frontend` you should be able to see `.env.prod`, `.env.staging` - for basic work, it's recommended to use `.env.prod`. Copy the relevant file into a new `.env` file within the `apps/frontend` folder.
 
 ### 3. Run the frontend
 

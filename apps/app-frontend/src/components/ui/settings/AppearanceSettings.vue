@@ -99,7 +99,7 @@ const messages = defineMessages({
 	unknownPackWarningDescription: {
 		id: 'app.appearance-settings.unknown-pack-warning.description',
 		defaultMessage:
-			"If you attempt to install a Modrinth Pack file (.mrpack) that isn't hosted on Modrinth, we'll make sure you understand the risks before installing it.",
+			"If you attempt to install a modpack file (.mrpack) that isn't from a known source, we'll make sure you understand the risks before installing it.",
 	},
 	showPlayTimeTitle: {
 		id: 'app.appearance-settings.show-play-time.title',

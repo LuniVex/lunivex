@@ -15,7 +15,7 @@ const props = withDefaults(
 		pending: boolean | Ref<boolean>
 		/** Fade duration applied to the slot when content reveals. */
 		duration?: number
-		/** When true, do NOT register a token with the global loading bar — only fade locally. */
+		/** When true, do NOT register a token with the global loading bar - only fade locally. */
 		silent?: boolean
 	}>(),
 	{

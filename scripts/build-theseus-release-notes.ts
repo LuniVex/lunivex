@@ -35,7 +35,7 @@ interface HostingSectionAgg {
 	bullets: string[]
 }
 
-// Mirror scripts/collect-changelog.ts — used to order hosting-only sections at the end
+// Mirror scripts/collect-changelog.ts - used to order hosting-only sections at the end
 const KNOWN_SECTION_ORDER = ['added', 'changed', 'deprecated', 'removed', 'fixed', 'security'] as const
 
 function parseArgs(argv: string[]): { dryRun: boolean; version: string; outFile: string } {

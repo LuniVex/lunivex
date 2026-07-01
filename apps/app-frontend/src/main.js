@@ -20,6 +20,8 @@ const vueScan = new VueScanPlugin({
 	playSound: false, // Play sound on each render
 })
 
+document.addEventListener('contextmenu', (e) => e.preventDefault())
+
 const pinia = createPinia()
 
 let app = createApp(App)

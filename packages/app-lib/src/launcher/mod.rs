@@ -208,7 +208,7 @@ pub async fn resolve_minecraft_manifest(
         return Ok((minecraft, idx));
     }
 
-    // Version not found in cache — force a manifest refresh in case it was
+    // Version not found in cache - force a manifest refresh in case it was
     // released after the cache was populated.
     let refreshed = crate::state::CachedEntry::get_minecraft_manifest(
         Some(crate::state::CacheBehaviour::MustRevalidate),

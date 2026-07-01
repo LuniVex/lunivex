@@ -65,6 +65,6 @@ The properties page also got a big overhaul. We’ve split out many of the more 
 
 ![A screenshot of the new server settings pop-up](./server-settings.webp)
 
-—
+-
 
 That’s everything from us! Have a good week!

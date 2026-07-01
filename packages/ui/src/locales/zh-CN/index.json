@@ -3483,7 +3483,7 @@
     "defaultMessage": "待定"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "{username}的头像"
@@ -4284,13 +4284,13 @@
     "defaultMessage": "大型"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "适合 15–25 名玩家使用，加整合包或重度添加模组。"
+    "defaultMessage": "适合 15-25 名玩家使用，加整合包或重度添加模组。"
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "中型"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "适合 6–15 名玩家使用，加多个模组。"
+    "defaultMessage": "适合 6-15 名玩家使用，加多个模组。"
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "热门方案"
@@ -4302,7 +4302,7 @@
     "defaultMessage": "小型"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "适合 1–5 位朋友使用，加少量轻量模组。"
+    "defaultMessage": "适合 1-5 位朋友使用，加少量轻量模组。"
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "方案"

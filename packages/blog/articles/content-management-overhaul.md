@@ -112,6 +112,6 @@ Additionally, we brought the installation settings from instances over to server
 
 ![A screenshot of the updated "Platform" tab in the Modrinth Hosting panel options, allowing you to edit the modpack you have installed, unlink your server from the modpack, re-install, repair, or reset your server.](./installation-settings.webp)
 
-—
+-
 
 That’s everything from us! Thank you for choosing Modrinth Hosting.

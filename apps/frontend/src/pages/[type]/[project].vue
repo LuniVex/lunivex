@@ -1925,7 +1925,7 @@ async function invalidateProject() {
 		await queryClient.invalidateQueries({ queryKey: ['project', 'v2', projectId.value] })
 		await queryClient.invalidateQueries({ queryKey: ['project', 'v3', projectId.value] })
 	}
-	// Prefix match — invalidates members, versions, dependencies, organization
+	// Prefix match - invalidates members, versions, dependencies, organization
 	await queryClient.invalidateQueries({ queryKey: ['project', projectId.value] })
 }
 

@@ -287,7 +287,7 @@ function setInterval(newInterval: ServerBillingInterval) {
 								{
 									title:
 										isProratedCharge && prorationDays
-											? `Modrinth Hosting (${planName}) — prorated for ${prorationDays} day${
+											? `Modrinth Hosting (${planName}) - prorated for ${prorationDays} day${
 													prorationDays === 1 ? '' : 's'
 												}`
 											: `Modrinth Hosting (${planName})`,

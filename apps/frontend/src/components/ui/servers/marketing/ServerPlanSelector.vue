@@ -52,7 +52,7 @@ const plans: Record<
 		name: commonMessages.planSmallLabel,
 		description: defineMessage({
 			id: 'servers.plan.small.description',
-			defaultMessage: 'Perfect for 1–5 friends with a few light mods.',
+			defaultMessage: 'Perfect for 1-5 friends with a few light mods.',
 		}),
 		mostPopular: false,
 	},
@@ -63,7 +63,7 @@ const plans: Record<
 		name: commonMessages.planMediumLabel,
 		description: defineMessage({
 			id: 'servers.plan.medium.description',
-			defaultMessage: 'Great for 6–15 players and multiple mods.',
+			defaultMessage: 'Great for 6-15 players and multiple mods.',
 		}),
 		mostPopular: true,
 	},
@@ -74,7 +74,7 @@ const plans: Record<
 		name: commonMessages.planLargeLabel,
 		description: defineMessage({
 			id: 'servers.plan.large.description',
-			defaultMessage: 'Ideal for 15–25 players, modpacks, or heavy modding.',
+			defaultMessage: 'Ideal for 15-25 players, modpacks, or heavy modding.',
 		}),
 		mostPopular: false,
 	},

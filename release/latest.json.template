@@ -1,0 +1,11 @@
+{
+	"version": "VERSION",
+	"notes": "RELEASE_NOTES",
+	"pub_date": "PUB_DATE",
+	"platforms": {
+		"windows-x86_64": {
+			"url": "https://github.com/LuniVex/lunivex/releases/download/vVERSION/LuniVex_VERSION_x64_en-US.msi.zip",
+			"signature": "SIGNATURE"
+		}
+	}
+}

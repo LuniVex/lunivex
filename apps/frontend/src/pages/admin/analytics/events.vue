@@ -168,7 +168,7 @@
 						Open link
 						<ExternalIcon class="size-4" aria-hidden="true" />
 					</a>
-					<span v-else class="text-xs font-medium text-primary">—</span>
+					<span v-else class="text-xs font-medium text-primary">-</span>
 				</template>
 
 				<template #cell-date="{ row }">

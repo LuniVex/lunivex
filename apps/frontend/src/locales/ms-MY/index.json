@@ -3117,7 +3117,7 @@
     "message": "Projek dikemas kini"
   },
   "project.settings.general.name.description": {
-    "message": "Elakkan awalan, akhiran, kurungan atau perihalan tambahan—hanya nama sebenar projek."
+    "message": "Elakkan awalan, akhiran, kurungan atau perihalan tambahan-hanya nama sebenar projek."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "cth. Nether Overhaul 2"
@@ -3585,13 +3585,13 @@
     "message": "Tiada notis"
   },
   "servers.plan.large.description": {
-    "message": "Sesuai untuk 15–25 pemain, pek mod atau pengubahsuaian yang berat."
+    "message": "Sesuai untuk 15-25 pemain, pek mod atau pengubahsuaian yang berat."
   },
   "servers.plan.medium.description": {
-    "message": "Bagus untuk 6–15 pemain dan berbilang mod."
+    "message": "Bagus untuk 6-15 pemain dan berbilang mod."
   },
   "servers.plan.small.description": {
-    "message": "Sesuai untuk 1–5 rakan dengan beberapa mod ringan."
+    "message": "Sesuai untuk 1-5 rakan dengan beberapa mod ringan."
   },
   "servers.purchase.step.plan.billed": {
     "message": "dibilkan {interval, select, monthly {monthly} quarterly {quarterly} yearly {yearly} other {{interval}}}"

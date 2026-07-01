@@ -3315,7 +3315,7 @@
     "message": "Proje güncellendi"
   },
   "project.settings.general.name.description": {
-    "message": "Önek, ek veya açıklayıcılardan kaçının—sadece projenin asıl adı."
+    "message": "Önek, ek veya açıklayıcılardan kaçının-sadece projenin asıl adı."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "ör. Nether Overhaul 2"
@@ -3825,13 +3825,13 @@
     "message": "Bildiriler yok"
   },
   "servers.plan.large.description": {
-    "message": "15–25 oyuncu, mod paketleri veya ağır modlu sunucu için ideal."
+    "message": "15-25 oyuncu, mod paketleri veya ağır modlu sunucu için ideal."
   },
   "servers.plan.medium.description": {
-    "message": "6–15 oyuncu ve birden fazla mod için iyi."
+    "message": "6-15 oyuncu ve birden fazla mod için iyi."
   },
   "servers.plan.small.description": {
-    "message": "1–5 arkadaş ve birkaç hafif mod için mükemmel."
+    "message": "1-5 arkadaş ve birkaç hafif mod için mükemmel."
   },
   "servers.purchase.step.plan.billed": {
     "message": "{interval, select, monthly {monthly} quarterly {quarterly} yearly {yearly} other {{interval}}} faturalandırıldı"

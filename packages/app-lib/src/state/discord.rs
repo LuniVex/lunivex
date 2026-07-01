@@ -9,6 +9,10 @@ use tokio::sync::RwLock;
 use crate::State;
 use crate::state::Profile;
 
+// Register a Discord application at https://discord.com/developers/applications
+// and replace this ID with your LuniVex application's Client ID.
+const DISCORD_APP_ID: &str = "1519982098843439204";
+
 pub struct DiscordGuard {
     client: Arc<RwLock<DiscordIpcClient>>,
     connected: Arc<AtomicBool>,
@@ -18,7 +22,7 @@ impl DiscordGuard {
     /// Initialize discord IPC client, and attempt to connect to it
     /// If it fails, it will still return a DiscordGuard, but the client will be unconnected
     pub fn init() -> crate::Result<DiscordGuard> {
-        let dipc = DiscordIpcClient::new("1518404669242867853");
+        let dipc = DiscordIpcClient::new(DISCORD_APP_ID);
 
         Ok(DiscordGuard {
             client: Arc::new(RwLock::new(dipc)),
@@ -71,10 +75,11 @@ impl DiscordGuard {
             return Ok(());
         }
 
+        // "lunivex" must be uploaded as a Rich Presence asset in your Discord Developer Portal app.
         let activity = Activity::new().state(msg).assets(
             Assets::new()
-                .large_image("modrinth_simple")
-                .large_text("Modrinth Logo"),
+                .large_image("lunivex")
+                .large_text("LuniVex"),
         );
 
         // Attempt to set the activity

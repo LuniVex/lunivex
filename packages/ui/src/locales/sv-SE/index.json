@@ -2904,10 +2904,10 @@
     "defaultMessage": "Kom igång"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideal för 15–25 spelare, modpaket, eller tungt moddande."
+    "defaultMessage": "Ideal för 15-25 spelare, modpaket, eller tungt moddande."
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Bra för 6–15 spelare och flera moddar."
+    "defaultMessage": "Bra för 6-15 spelare och flera moddar."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Populärast"
@@ -2916,7 +2916,7 @@
     "defaultMessage": "Välj plan"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Perfekt för 1–5 vänner med några få lätta moddar."
+    "defaultMessage": "Perfekt för 1-5 vänner med några få lätta moddar."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

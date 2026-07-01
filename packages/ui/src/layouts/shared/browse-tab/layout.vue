@@ -82,6 +82,8 @@ const messages = defineMessages({
 
 	<NavTabs v-if="ctx.showProjectTypeTabs.value" :links="ctx.selectableProjectTypes.value" />
 
+	<slot name="before-search" />
+
 	<StyledInput
 		v-model="ctx.query.value"
 		:icon="SearchIcon"

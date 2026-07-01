@@ -191,29 +191,29 @@
 		<p>Every user is entitled to the following:</p>
 		<ul>
 			<li>
-				<strong>The right to access</strong> – You have the right to request copies of your personal
+				<strong>The right to access</strong> - You have the right to request copies of your personal
 				data. We may charge you a small fee for this service.
 			</li>
 			<li>
-				<strong>The right to rectification</strong> – You have the right to request that we correct
+				<strong>The right to rectification</strong> - You have the right to request that we correct
 				any information you believe is inaccurate. You also have the right to request us to complete
 				the information you believe is incomplete.
 			</li>
 			<li>
-				<strong>The right to erasure</strong> – You have the right to request that we erase your
+				<strong>The right to erasure</strong> - You have the right to request that we erase your
 				personal data, under certain conditions.
 			</li>
 			<li>
-				<strong>The right to restrict processing</strong> – You have the right to request that we
+				<strong>The right to restrict processing</strong> - You have the right to request that we
 				restrict the processing of your personal data, under certain conditions.
 			</li>
 			<li>
-				<strong>The right to data portability</strong> – You have the right to request that we
+				<strong>The right to data portability</strong> - You have the right to request that we
 				transfer the data that we have collected to another organization, or directly to you, under
 				certain conditions.
 			</li>
 			<li>
-				<strong>The right to object to processing</strong> – You have the right to object to our
+				<strong>The right to object to processing</strong> - You have the right to object to our
 				processing of your personal data, under certain conditions.
 			</li>
 		</ul>

@@ -33,17 +33,17 @@
 	--color-orange-950: #3f1509;
 	--color-orange: var(--color-orange-500);
 
-	--color-green-50: #F4F2FC;
-	--color-green-100: #E9E5F9;
-	--color-green-200: #D7D1F2;
-	--color-green-300: #BFB6EA;
-	--color-green-400: #A89FE0;
-	--color-green-500: #8E84CF;
-	--color-green-600: #6A5DB8;
-	--color-green-700: #564BA0;
-	--color-green-800: #4A4078;
-	--color-green-900: #342C58;
-	--color-green-950: #1F1A3A;
+	--color-green-50: #f4f2fc;
+	--color-green-100: #e9e5f9;
+	--color-green-200: #d7d1f2;
+	--color-green-300: #bfb6ea;
+	--color-green-400: #a89fe0;
+	--color-green-500: #8e84cf;
+	--color-green-600: #6a5db8;
+	--color-green-700: #564ba0;
+	--color-green-800: #4a4078;
+	--color-green-900: #342c58;
+	--color-green-950: #1f1a3a;
 	--color-green: var(--color-green-600);
 
 	--color-blue-50: #f2f7fd;
@@ -158,7 +158,7 @@
 
 	--color-gradient-button-bg: linear-gradient(180deg, #f8f9fa 0%, #dce0e6 100%);
 
-	--loading-bar-gradient: linear-gradient(to right, var(--color-brand) 0%, #B6A6F2 100%);
+	--loading-bar-gradient: linear-gradient(to right, var(--color-brand) 0%, #b6a6f2 100%);
 
 	--color-platform-fabric: #8a7b71;
 	--color-platform-quilt: #8b61b4;
@@ -224,12 +224,12 @@ html {
 .dark-mode,
 .dark,
 :root[data-theme='dark'] {
-	--surface-1: #0E0D16;
+	--surface-1: #0e0d16;
 	--surface-1-5: #121019;
-	--surface-2: #16131F;
-	--surface-2-5: #1B1726;
-	--surface-3: #221C33;
-	--surface-4: #2A2440;
+	--surface-2: #16131f;
+	--surface-2-5: #1b1726;
+	--surface-3: #221c33;
+	--surface-4: #2a2440;
 	--surface-5: #353052;
 
 	--color-red-50: #fff0f1;
@@ -258,17 +258,17 @@ html {
 	--color-orange-950: #441606;
 	--color-orange: var(--color-orange-400);
 
-	--color-green-50: #F4F2FC;
-	--color-green-100: #E9E5F9;
-	--color-green-200: #D7D1F2;
-	--color-green-300: #BFB6EA;
-	--color-green-400: #A89FE0;
-	--color-green-500: #8E84CF;
-	--color-green-600: #7A6FBE;
-	--color-green-700: #62569C;
-	--color-green-800: #4A4078;
-	--color-green-900: #342C58;
-	--color-green-950: #1F1A3A;
+	--color-green-50: #f4f2fc;
+	--color-green-100: #e9e5f9;
+	--color-green-200: #d7d1f2;
+	--color-green-300: #bfb6ea;
+	--color-green-400: #a89fe0;
+	--color-green-500: #8e84cf;
+	--color-green-600: #7a6fbe;
+	--color-green-700: #62569c;
+	--color-green-800: #4a4078;
+	--color-green-900: #342c58;
+	--color-green-950: #1f1a3a;
 	--color-green: var(--color-green-500);
 
 	--color-blue-50: #eef6ff;
@@ -361,7 +361,11 @@ html {
 
 	--shadow-card: rgba(0, 0, 0, 0.25) 0px 2px 4px 0px;
 
-	--brand-gradient-bg: linear-gradient(0deg, rgba(20, 18, 45, 0.2) 0%, rgba(100, 90, 180, 0.1) 100%);
+	--brand-gradient-bg: linear-gradient(
+		0deg,
+		rgba(20, 18, 45, 0.2) 0%,
+		rgba(100, 90, 180, 0.1) 100%
+	);
 	--brand-gradient-strong-bg: linear-gradient(270deg, #0d0b1a 10%, #15122a 100%);
 	--brand-gradient-button: rgba(255, 255, 255, 0.08);
 	--brand-gradient-border: rgba(175, 165, 224, 0.08);
@@ -372,7 +376,7 @@ html {
 
 	--color-gradient-button-bg: linear-gradient(180deg, #3a3d47 0%, #33363d 100%);
 
-	--loading-bar-gradient: linear-gradient(to right, var(--color-brand) 0%, #B6A6F2 100%);
+	--loading-bar-gradient: linear-gradient(to right, var(--color-brand) 0%, #b6a6f2 100%);
 
 	--color-platform-fabric: #dbb69b;
 	--color-platform-quilt: #c796f9;
@@ -401,9 +405,9 @@ html {
 	--surface-1-5: #050506;
 	--surface-2: #09090a;
 	--surface-2-5: #0c0d11;
-	--surface-3: #0E0C14;
-	--surface-4: #15121E;
-	--surface-5: #221E30;
+	--surface-3: #0e0c14;
+	--surface-4: #15121e;
+	--surface-5: #221e30;
 
 	--color-ad: #0d1828;
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Dark rounded-square background -->
+  <rect width="512" height="512" rx="96" ry="96" fill="#0E0D16"/>
+  <!-- Crescent: outer circle minus inner offset circle, 65% of icon area -->
+  <!-- outer radius = 0.325 * 512 = 166.4, inner radius = 145.6 (0.875 * outer) -->
+  <!-- inner center offset: +0.4375*outer_r right, -0.25*outer_r up from center -->
+  <defs>
+    <mask id="crescentMask">
+      <rect width="512" height="512" fill="black"/>
+      <circle cx="256" cy="256" r="166" fill="white"/>
+      <circle cx="329" cy="215" r="145" fill="black"/>
+    </mask>
+  </defs>
+  <rect width="512" height="512" mask="url(#crescentMask)" fill="#B8B0E8"/>
+</svg>

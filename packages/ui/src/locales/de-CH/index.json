@@ -3570,7 +3570,7 @@
     "defaultMessage": "Ausstehend"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Avatar von {username}"

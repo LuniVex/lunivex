@@ -719,7 +719,7 @@ const messages = defineMessages({
 					</span>
 				</div>
 
-				<!-- Repair (hidden for local file modpacks — reinstall covers this) -->
+				<!-- Repair (hidden for local file modpacks - reinstall covers this) -->
 				<div v-if="!isLocalFile" class="flex flex-col gap-2.5">
 					<span class="text-lg font-semibold text-contrast">
 						{{

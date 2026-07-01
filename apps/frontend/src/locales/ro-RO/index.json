@@ -1563,7 +1563,7 @@
     "message": "Proiect actualizat"
   },
   "project.settings.general.name.description": {
-    "message": "Nu folosi prefixe, sufixe, paranteze sau descrieri adăugate—doar numele real al proiectului."
+    "message": "Nu folosi prefixe, sufixe, paranteze sau descrieri adăugate-doar numele real al proiectului."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "ex. Nether Overhaul 2"
@@ -1962,13 +1962,13 @@
     "message": "Nicio notificare"
   },
   "servers.plan.large.description": {
-    "message": "Ideal pentru 15–25 de jucători, pachete de moduri sau moduri complexe."
+    "message": "Ideal pentru 15-25 de jucători, pachete de moduri sau moduri complexe."
   },
   "servers.plan.medium.description": {
-    "message": "Bun pentru 6–15 jucători și multiple moduri."
+    "message": "Bun pentru 6-15 jucători și multiple moduri."
   },
   "servers.plan.small.description": {
-    "message": "Perfect pentru 1–5 prieteni cu câteva moduri ușoare."
+    "message": "Perfect pentru 1-5 prieteni cu câteva moduri ușoare."
   },
   "settings.applications.about": {
     "message": "Despre"

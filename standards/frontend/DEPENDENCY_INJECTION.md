@@ -33,9 +33,9 @@ interface MyContext {
 export const [injectMyContext, provideMyContext] = createContext<MyContext>('MyComponent')
 ```
 
-- **`provideMyContext(value)`** — call in a parent component's `setup()`.
-- **`injectMyContext()`** — call in any descendant's `setup()`. Throws if never provided.
-- **`injectMyContext(null)`** — returns `null` instead of throwing (for optional contexts).
+- **`provideMyContext(value)`** - call in a parent component's `setup()`.
+- **`injectMyContext()`** - call in any descendant's `setup()`. Throws if never provided.
+- **`injectMyContext(null)`** - returns `null` instead of throwing (for optional contexts).
 
 ## When to Use DI
 
@@ -57,7 +57,7 @@ Use DI when:
 
 ### Page-Level Context
 
-Sharing data between a page and deeply nested children — e.g. project page data consumed by sidebar, header, and version components.
+Sharing data between a page and deeply nested children - e.g. project page data consumed by sidebar, header, and version components.
 
 ## Creating a New Provider
 
@@ -163,12 +163,12 @@ const { items, addItem } = injectMyFeature()
 
 ## When NOT to Use DI
 
-Default to props and emits. DI adds indirection — only use it with a concrete reason.
+Default to props and emits. DI adds indirection - only use it with a concrete reason.
 
-- **Parent to direct child** — use props.
-- **Data only exists in one frontend** — keep context local to that app, not in `packages/ui`.
-- **Shallow prop drilling (1–2 levels)** — passing through one intermediate is fine.
-- **Component-local state** — use `ref()` / `reactive()` locally.
+- **Parent to direct child** - use props.
+- **Data only exists in one frontend** - keep context local to that app, not in `packages/ui`.
+- **Shallow prop drilling (1-2 levels)** - passing through one intermediate is fine.
+- **Component-local state** - use `ref()` / `reactive()` locally.
 
 ## Existing Providers
 
@@ -183,8 +183,8 @@ Default to props and emits. DI adds indirection — only use it with a concrete 
 
 ## Key Files
 
-- `packages/ui/src/providers/index.ts` — `createContext` factory + barrel exports
-- `packages/ui/src/providers/*.ts` — Provider definitions
-- `apps/frontend/src/app.vue` — Nuxt root provider setup
-- `apps/app-frontend/src/App.vue` — Tauri root provider setup
-- `apps/app-frontend/src/providers/setup/` — App provider setup functions
+- `packages/ui/src/providers/index.ts` - `createContext` factory + barrel exports
+- `packages/ui/src/providers/*.ts` - Provider definitions
+- `apps/frontend/src/app.vue` - Nuxt root provider setup
+- `apps/app-frontend/src/App.vue` - Tauri root provider setup
+- `apps/app-frontend/src/providers/setup/` - App provider setup functions

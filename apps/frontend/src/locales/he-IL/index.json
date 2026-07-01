@@ -1263,7 +1263,7 @@
     "message": "התשתיות שלנו לעולם אינן עמוסות, מה שאומר שכל שרת ב-Modrinth תמיד פועל בשיא הביצועים שלו."
   },
   "hosting-marketing.why.description": {
-    "message": "בחרו מתוך אלפי חבילות מודים ב-Modrinth או צרו אחת משלכם. כשתהיו מוכנים לשחק – הזמינו את החברים."
+    "message": "בחרו מתוך אלפי חבילות מודים ב-Modrinth או צרו אחת משלכם. כשתהיו מוכנים לשחק - הזמינו את החברים."
   },
   "hosting-marketing.why.heading": {
     "message": "מוצאים מודפאק. וזהו, יש לכם שרת."
@@ -2178,7 +2178,7 @@
     "message": "סמל הפרויקט שלך עודכן."
   },
   "project.settings.general.name.description": {
-    "message": "הימנע מקידומות, סיומות, סוגריים או תיאורים נוספים — רק שמו האמיתי של הפרויקט."
+    "message": "הימנע מקידומות, סיומות, סוגריים או תיאורים נוספים - רק שמו האמיתי של הפרויקט."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "למשל: נת'ר אוברהול 2"
@@ -2463,13 +2463,13 @@
     "message": "אין הודעות"
   },
   "servers.plan.large.description": {
-    "message": "אידיאלי עבור 15–25 שחקנים, חבילות מודים (Modpacks) או מודים כבדים."
+    "message": "אידיאלי עבור 15-25 שחקנים, חבילות מודים (Modpacks) או מודים כבדים."
   },
   "servers.plan.medium.description": {
-    "message": "נהדר עבור 6–15 שחקנים ומספר מודים."
+    "message": "נהדר עבור 6-15 שחקנים ומספר מודים."
   },
   "servers.plan.small.description": {
-    "message": "מושלם ל‑1–5 חברים עם מספר מועט של מודים קלים."
+    "message": "מושלם ל‑1-5 חברים עם מספר מועט של מודים קלים."
   },
   "settings.account.data-export.description": {
     "message": "תבקש עותק של כל הדאטה האישי שהעלית ל-Modrinth. זה יכול לקחת כמה דקות."

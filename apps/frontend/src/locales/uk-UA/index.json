@@ -420,7 +420,7 @@
     "message": "Знімок екрана з Modrinth App зі збіркою Cobblemon, відкритою на сторінці «Уміст»."
   },
   "app-marketing.hero.description": {
-    "message": "Modrinth App — це унікальний запускач з відкритим кодом, що дозволяє вам грати з вашими улюбленими модами та швидко оновлювати їх в одному легкому застосунку."
+    "message": "Modrinth App - це унікальний запускач з відкритим кодом, що дозволяє вам грати з вашими улюбленими модами та швидко оновлювати їх в одному легкому застосунку."
   },
   "app-marketing.hero.download-button": {
     "message": "Завантажити Modrinth App"
@@ -612,7 +612,7 @@
     "message": "Ви впевнені, що хочете видалити цю добірку?"
   },
   "collection.description": {
-    "message": "{description} — Дивіться добірку «{name}» від {username} на Modrinth"
+    "message": "{description} - Дивіться добірку «{name}» від {username} на Modrinth"
   },
   "collection.description.following": {
     "message": "Автоматична добірка з усіх проєктів, які ви відстежуєте."
@@ -645,7 +645,7 @@
     "message": "Профіль {user}"
   },
   "collection.title": {
-    "message": "{name} — добірка"
+    "message": "{name} - добірка"
   },
   "conversation-thread.action.add-private-note": {
     "message": "Додати приватну нотатку"
@@ -1737,7 +1737,7 @@
     "message": "Чи можна збільшити обсяг пам’яті на сервері?"
   },
   "hosting-marketing.faq.increase-storage.answer": {
-    "message": "Так, обсяг пам’яті на вашому сервері можна збільшити без додаткових витрат. Якщо вам потрібно більше пам’яті — зверніться до підтримки Modrinth."
+    "message": "Так, обсяг пам’яті на вашому сервері можна збільшити без додаткових витрат. Якщо вам потрібно більше пам’яті - зверніться до підтримки Modrinth."
   },
   "hosting-marketing.faq.location": {
     "message": "Де розташовані сервери Modrinth Hosting? Чи зможу я вибрати регіон?"
@@ -1767,7 +1767,7 @@
     "message": "Оберіть Modrinth Hosting для свого наступного сервера"
   },
   "hosting-marketing.hero.hosting-description": {
-    "message": "Modrinth Hosting — це найпростіший спосіб запустити власний сервер Minecraft: Java Edition. Без проблем установлюйте та грайте у свої улюблені моди та збірки, і все це на платформі Modrinth."
+    "message": "Modrinth Hosting - це найпростіший спосіб запустити власний сервер Minecraft: Java Edition. Без проблем установлюйте та грайте у свої улюблені моди та збірки, і все це на платформі Modrinth."
   },
   "hosting-marketing.included.advanced-networking": {
     "message": "Просунуте керування мережею"
@@ -1842,7 +1842,7 @@
     "message": "Керуйте всім на Modrinth"
   },
   "hosting-marketing.why.all-on-modrinth.description": {
-    "message": "Ваш сервер, моди, гравці тощо — все це знаходиться на Modrinth. Нема потреби переходити між платформами."
+    "message": "Ваш сервер, моди, гравці тощо - все це знаходиться на Modrinth. Нема потреби переходити між платформами."
   },
   "hosting-marketing.why.consistently-fast": {
     "message": "Постійно швидкий"
@@ -1875,7 +1875,7 @@
     "message": "Усі ваші улюблені моди"
   },
   "hosting-marketing.why.your-favorite-mods.description": {
-    "message": "Вибирайте між ванільною грою, Fabric, Forge, Quilt і NeoForge. Якщо воно є Modrinth — значить воно працюватиме на вашому сервері."
+    "message": "Вибирайте між ванільною грою, Fabric, Forge, Quilt і NeoForge. Якщо воно є Modrinth - значить воно працюватиме на вашому сервері."
   },
   "hosting.plan.out-of-stock": {
     "message": "Немає в наявності"
@@ -2004,7 +2004,7 @@
     "message": "Діліться вашим умістом зі світом"
   },
   "landing.section.for-players.description": {
-    "message": "Від чарівних біомів до проклятих підземель — ви обов’язково знайдете вміст, який виведе вашу гру на новий рівень."
+    "message": "Від чарівних біомів до проклятих підземель - ви обов’язково знайдете вміст, який виведе вашу гру на новий рівень."
   },
   "landing.section.for-players.label": {
     "message": "Для гравців"
@@ -2538,7 +2538,7 @@
     "message": "Банківський переказ (PEN)"
   },
   "muralpay.rail.fiat-usd-peru.name": {
-    "message": "Банківський переказ (USD — Перу)"
+    "message": "Банківський переказ (USD - Перу)"
   },
   "muralpay.rail.fiat-usd.name": {
     "message": "Банківський переказ (USD)"
@@ -2646,7 +2646,7 @@
     "message": "Завантажте проєкти {username} на Modrinth"
   },
   "profile.meta.description-with-bio": {
-    "message": "{bio} — Завантажуйте проєкти {username} на Modrinth"
+    "message": "{bio} - Завантажуйте проєкти {username} на Modrinth"
   },
   "profile.user-id": {
     "message": "ID користувача: {id}"
@@ -2796,7 +2796,7 @@
     "message": "Переглянути проєкт"
   },
   "project.actions.servers-promo.description": {
-    "message": "Modrinth Hosting — це найпростіший спосіб грати з друзями без клопоту!"
+    "message": "Modrinth Hosting - це найпростіший спосіб грати з друзями без клопоту!"
   },
   "project.actions.servers-promo.pricing": {
     "message": "Починаючи з {price}<small> / місяць</small>"
@@ -2949,7 +2949,7 @@
     "message": "Ви все ще можете змінити свій проєкт, це не вплине на вашу позицію в черзі."
   },
   "project.moderation.admonition.under-review.body.4": {
-    "message": "Ми прагнемо розглядати подання протягом 24–48 годин, але деякі проєкти можуть затримуватися. Це не свідчить про проблему з вашим поданням."
+    "message": "Ми прагнемо розглядати подання протягом 24-48 годин, але деякі проєкти можуть затримуватися. Це не свідчить про проблему з вашим поданням."
   },
   "project.moderation.admonition.under-review.body.5": {
     "message": "<emphasis>Ми цінуємо ваше терпіння, поки наші модератори наполегливо працюють над безпекою Modrinth, і сподіваємося допомогти вам поділитися своїм умістом! 💚</emphasis>"
@@ -3003,7 +3003,7 @@
     "message": "Проєкт оновлено"
   },
   "project.settings.general.name.description": {
-    "message": "Уникайте префіксів, суфіксів, вставних речень або додаткових описів — вписуйте лише ім’я проєкту."
+    "message": "Уникайте префіксів, суфіксів, вставних речень або додаткових описів - вписуйте лише ім’я проєкту."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "наприклад, Nether Overhaul 2"
@@ -3444,7 +3444,7 @@
     "message": "Синхронізувати з сервером"
   },
   "servers.manage.content.title": {
-    "message": "Уміст — {serverName} — Modrinth"
+    "message": "Уміст - {serverName} - Modrinth"
   },
   "servers.notice.actions": {
     "message": "Дії"
@@ -3474,13 +3474,13 @@
     "message": "Немає приміток"
   },
   "servers.plan.large.description": {
-    "message": "Ідеально підходить для 15–25 гравців, збірок або важких модів."
+    "message": "Ідеально підходить для 15-25 гравців, збірок або важких модів."
   },
   "servers.plan.medium.description": {
-    "message": "Чудово підходить для 6–15 гравців та кількох модів."
+    "message": "Чудово підходить для 6-15 гравців та кількох модів."
   },
   "servers.plan.small.description": {
-    "message": "Прекрасно підходить для 1–5 друзів із кількома легкими модами."
+    "message": "Прекрасно підходить для 1-5 друзів із кількома легкими модами."
   },
   "settings.account.button.complete-setup": {
     "message": "Завершити налаштування"
@@ -3780,7 +3780,7 @@
     "message": "Значок оновлено"
   },
   "settings.applications.secret.disclaimer": {
-    "message": "Збережіть ваш секрет зараз — його буде приховано після того, як ви залишите цю сторінку!"
+    "message": "Збережіть ваш секрет зараз - його буде приховано після того, як ви залишите цю сторінку!"
   },
   "settings.authorizations.about-this-app": {
     "message": "Про застосунок"
@@ -3921,7 +3921,7 @@
     "message": "{shared} спільних ЦП (з можливістю посилення до {bursts} ЦП)"
   },
   "settings.billing.pyro.linked-server.not-found": {
-    "message": "Не вдалося знайти підключений до цієї підписки сервер. Це може бути пов’язано з кількома причинами. Якщо ви щойно придбали сервер — це нормально, налаштування сервера може зайняти до години. Якщо ж ви придбали цей сервер деякий час тому, ймовірно, його було призупинено. Якщо це не те, чого ви очікували, зверніться до служби підтримки Modrinth, надавши таку інформацію:"
+    "message": "Не вдалося знайти підключений до цієї підписки сервер. Це може бути пов’язано з кількома причинами. Якщо ви щойно придбали сервер - це нормально, налаштування сервера може зайняти до години. Якщо ж ви придбали цей сервер деякий час тому, ймовірно, його було призупинено. Якщо це не те, чого ви очікували, зверніться до служби підтримки Modrinth, надавши таку інформацію:"
   },
   "settings.billing.pyro.linked-server.server-id": {
     "message": "ID сервера: {id}"
@@ -4059,7 +4059,7 @@
     "message": "Розширене промальовування"
   },
   "settings.display.sidebar.external-links-new-tab.description": {
-    "message": "Робить так, аби посилання за межі Modrinth, відкривалися в новій вкладці. Незалежно від цього налаштування, посилання в одному домені та в описах з Markdown відкриватимуться в тій же вкладці, а посилання в рекламах і на сторінках редагування — в новій вкладці."
+    "message": "Робить так, аби посилання за межі Modrinth, відкривалися в новій вкладці. Незалежно від цього налаштування, посилання в одному домені та в описах з Markdown відкриватимуться в тій же вкладці, а посилання в рекламах і на сторінках редагування - в новій вкладці."
   },
   "settings.display.sidebar.external-links-new-tab.title": {
     "message": "Відкривати зовнішні посилання в новій вкладці"

@@ -177,10 +177,10 @@ async function initiatePayment(
 				dry && typeof dry === 'object' && 'requires_payment' in dry && dry.requires_payment
 
 			if (requiresPayment) {
-				// Upgrade: requires payment — finalize to create the payment intent
+				// Upgrade: requires payment - finalize to create the payment intent
 				return await finalizeImmediate(transformedBody)
 			} else {
-				// Downgrade or no payment change — defer until user confirms
+				// Downgrade or no payment change - defer until user confirms
 				pendingDowngradeBody.value = transformedBody
 				return null
 			}

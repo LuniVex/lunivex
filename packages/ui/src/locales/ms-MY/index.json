@@ -3330,7 +3330,7 @@
     "defaultMessage": "Menunggu"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Avatar {username}"
@@ -3873,13 +3873,13 @@
     "defaultMessage": "Besar"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Sesuai untuk 15–25 pemain, pek mod atau pengubahsuaian yang berat."
+    "defaultMessage": "Sesuai untuk 15-25 pemain, pek mod atau pengubahsuaian yang berat."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Sederhana"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Bagus untuk 6–15 pemain dan berbilang mod."
+    "defaultMessage": "Bagus untuk 6-15 pemain dan berbilang mod."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Paling Popular"
@@ -3891,7 +3891,7 @@
     "defaultMessage": "Kecil"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Sesuai untuk 1–5 rakan dengan beberapa mod ringan."
+    "defaultMessage": "Sesuai untuk 1-5 rakan dengan beberapa mod ringan."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Pelan"

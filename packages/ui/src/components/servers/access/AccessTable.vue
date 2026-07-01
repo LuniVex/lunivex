@@ -353,7 +353,7 @@ const messages = defineMessages({
 	},
 	unknownJoinedDate: {
 		id: 'servers.access-table.unknown-joined-date',
-		defaultMessage: '—',
+		defaultMessage: '-',
 	},
 	resendInvite: {
 		id: 'servers.access-table.action.resend-invite',

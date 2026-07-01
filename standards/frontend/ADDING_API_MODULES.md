@@ -153,15 +153,15 @@ export * from './<service>/types'
 
 | Convention     | Example                                              |
 | -------------- | ---------------------------------------------------- |
-| Module class   | `LabrinthThingsV3Module` — `{Api}{Domain}V{N}Module` |
-| Module ID      | `labrinth_things_v3` — `{api}_{domain}_v{n}`         |
+| Module class   | `LabrinthThingsV3Module` - `{Api}{Domain}V{N}Module` |
+| Module ID      | `labrinth_things_v3` - `{api}_{domain}_v{n}`         |
 | Type namespace | `Labrinth.MyDomain.v3.Thing`                         |
 | File path      | `modules/labrinth/things/v3.ts`                      |
 
 ## Key Files
 
-- `src/core/abstract-module.ts` — base class all modules extend
-- `src/core/abstract-client.ts` — `request()` and `upload()` methods
-- `src/modules/index.ts` — `MODULE_REGISTRY` and `buildModuleStructure()`
-- `src/modules/<api>/types.ts` — type definitions per API
-- `src/types/upload.ts` — `UploadHandle`, `UploadProgress`, `UploadRequestOptions`
+- `src/core/abstract-module.ts` - base class all modules extend
+- `src/core/abstract-client.ts` - `request()` and `upload()` methods
+- `src/modules/index.ts` - `MODULE_REGISTRY` and `buildModuleStructure()`
+- `src/modules/<api>/types.ts` - type definitions per API
+- `src/types/upload.ts` - `UploadHandle`, `UploadProgress`, `UploadRequestOptions`

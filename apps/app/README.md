@@ -1,29 +1,34 @@
-# ![Modrinth App](/.github/assets/app_cover.png)
+# LuniVex - Desktop App
 
-## Modrinth App
+The Tauri + Vue desktop app for LuniVex. Built on Modrinth's open-source [Theseus](https://github.com/modrinth/theseus) launcher (GPLv3).
 
-The Modrinth App is a desktop application for managing your Minecraft mods. It is built with [Tauri](https://tauri.app/) and [Vue](https://vuejs.org/).
+## Prerequisites
 
-If you're not a developer and you've stumbled upon this repository, you can download the latest release of the app from the [Modrinth website](https://modrinth.com/app).
-
-## Development
-
-### Pre-requisites
-
-Before you begin, ensure you have the following installed on your machine:
-
-- [Node.js](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/)
 - [pnpm](https://pnpm.io/)
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Tauri](https://v2.tauri.app/start/prerequisites/)
+- [Tauri CLI](https://tauri.app/start/prerequisites/)
 
-### Setup
+## Setup
 
-Follow these steps to set up your development environment:
+Install dependencies from the repo root:
 
-```bash
+```
 pnpm install
+```
+
+Start the dev server:
+
+```
 pnpm app:dev
 ```
 
-You should now have a development build of the app running with hot-reloading enabled. Any changes you make to the code will automatically refresh the app.
+## Building
+
+For a signed release build with the auto-updater:
+
+```
+cargo tauri build --features updater
+```
+
+See [RELEASING.md](../../RELEASING.md) for the full release process including signing key setup and publishing a GitHub release.

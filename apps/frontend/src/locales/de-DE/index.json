@@ -855,7 +855,7 @@
     "message": "Möchtest du diese Kollektion wirklich löschen?"
   },
   "collection.description": {
-    "message": "{description} – Schau dir die Kollektion {name} von {username} auf Modrinth an"
+    "message": "{description} - Schau dir die Kollektion {name} von {username} auf Modrinth an"
   },
   "collection.description.following": {
     "message": "Automatisch generierte Kollektion aller Projekte, denen du folgst."
@@ -3330,7 +3330,7 @@
     "message": "Projekt aktualisiert"
   },
   "project.settings.general.name.description": {
-    "message": "Vermeide Präfixe, Suffixe, Klammern oder zusätzliche Beschreibungen—nur der tatsächliche Projektname."
+    "message": "Vermeide Präfixe, Suffixe, Klammern oder zusätzliche Beschreibungen-nur der tatsächliche Projektname."
   },
   "project.settings.general.name.placeholder.1": {
     "message": "z.B. Nether Overhaul 2"
@@ -3840,13 +3840,13 @@
     "message": "Keine Mitteilungen"
   },
   "servers.plan.large.description": {
-    "message": "Ideal für 15–25 Spieler, Modpacks oder intensives Modding."
+    "message": "Ideal für 15-25 Spieler, Modpacks oder intensives Modding."
   },
   "servers.plan.medium.description": {
-    "message": "Geeignet für 6–15 Spieler und mehrere Mods."
+    "message": "Geeignet für 6-15 Spieler und mehrere Mods."
   },
   "servers.plan.small.description": {
-    "message": "Perfekt für 1–5 Freunde mit ein paar kleinen Mods."
+    "message": "Perfekt für 1-5 Freunde mit ein paar kleinen Mods."
   },
   "servers.purchase.step.plan.billed": {
     "message": "{interval, select, monthly {monatlich} quarterly {vierteljährlich} yearly {jährlich} other {{interval}}} abgerechnet"

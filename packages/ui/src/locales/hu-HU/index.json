@@ -324,7 +324,7 @@
     "defaultMessage": "{action, select, downgrade {A verzió visszaváltása} other {A frissítés}} kompatibilitási problémákat okozhat. A modcsomaghoz hozzáadott modok vagy tartalmak megmaradnak, de előfordulhat, hogy nem lesznek kompatibilisek az új verzióval."
   },
   "content.confirm-modpack-update.admonition-header": {
-    "defaultMessage": "{action, select, downgrade {Visszaváltás korábbi verzióra – figyelmeztetés} other {Frissítési figyelmeztetés}}"
+    "defaultMessage": "{action, select, downgrade {Visszaváltás korábbi verzióra - figyelmeztetés} other {Frissítési figyelmeztetés}}"
   },
   "content.confirm-modpack-update.confirm-button": {
     "defaultMessage": "{action, select, downgrade {Visszaváltás korábbi verzióra} other {Frissítés}}"
@@ -954,10 +954,10 @@
     "defaultMessage": "Hiba - A fájl már létezik"
   },
   "files.upload-dropdown.failed-generic": {
-    "defaultMessage": "Hiba – {error}"
+    "defaultMessage": "Hiba - {error}"
   },
   "files.upload-dropdown.failed-incorrect-type": {
-    "defaultMessage": "Hiba – Helytelen fájltípus"
+    "defaultMessage": "Hiba - Helytelen fájltípus"
   },
   "files.upload-dropdown.failed-to-upload": {
     "defaultMessage": "A feltöltés nem sikerült ({fileName})"
@@ -3231,13 +3231,13 @@
     "defaultMessage": "Nagy"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Ideális 15–25 játékos számára, modcsomagokhoz vagy intenzív moddoláshoz."
+    "defaultMessage": "Ideális 15-25 játékos számára, modcsomagokhoz vagy intenzív moddoláshoz."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Közepes"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Nagyszerű 6–15 játékos számára, többféle moddal."
+    "defaultMessage": "Nagyszerű 6-15 játékos számára, többféle moddal."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Legnépszerűbb"
@@ -3249,7 +3249,7 @@
     "defaultMessage": "Kicsi"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Tökéletes 1–5 barát számára, néhány kisebb moddal."
+    "defaultMessage": "Tökéletes 1-5 barát számára, néhány kisebb moddal."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Előfizetés"

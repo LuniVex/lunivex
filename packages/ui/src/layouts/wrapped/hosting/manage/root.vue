@@ -238,7 +238,7 @@
 										</ButtonStyled>
 									</div>
 									<div v-if="errorMessage.toLocaleLowerCase() === 'internal error'">
-										An internal error occurred while installing your server. Don't fret — try
+										An internal error occurred while installing your server. Don't fret - try
 										reinstalling your server, and if the problem persists, please contact Modrinth
 										support with your server's debug information.
 									</div>

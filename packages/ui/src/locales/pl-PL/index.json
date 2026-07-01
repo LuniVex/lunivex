@@ -3447,7 +3447,7 @@
     "defaultMessage": "Oczekujące"
   },
   "servers.access-table.unknown-joined-date": {
-    "defaultMessage": "—"
+    "defaultMessage": "-"
   },
   "servers.access-table.user-avatar-alt": {
     "defaultMessage": "Awatar użytkownika {username}"
@@ -4218,13 +4218,13 @@
     "defaultMessage": "Duży"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Idealne dla 15–25 graczy, paczek modów, lub dużej ilości modów."
+    "defaultMessage": "Idealne dla 15-25 graczy, paczek modów, lub dużej ilości modów."
   },
   "servers.purchase.step.plan.medium": {
     "defaultMessage": "Średni"
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Świetne dla 6–15 graczy i wielu modów."
+    "defaultMessage": "Świetne dla 6-15 graczy i wielu modów."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Najbardziej popularny"
@@ -4236,7 +4236,7 @@
     "defaultMessage": "Mały"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Idealny dla 1–5 przyjaciół z kilkoma lekkimi modami."
+    "defaultMessage": "Idealny dla 1-5 przyjaciół z kilkoma lekkimi modami."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Plan"

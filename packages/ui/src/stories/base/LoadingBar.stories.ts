@@ -43,7 +43,7 @@ export const SinglePending: Story = {
 		template: `
 			<div class="relative h-32 w-full">
 				<LoadingBar />
-				<p class="text-secondary">One token registered — bar fills to 100% over 1s.</p>
+				<p class="text-secondary">One token registered - bar fills to 100% over 1s.</p>
 			</div>
 		`,
 	}),
@@ -67,7 +67,7 @@ export const StackedPending: Story = {
 		template: `
 			<div class="relative h-32 w-full">
 				<LoadingBar />
-				<p class="text-secondary">Two tokens. First releases at 1.5s, second at 3s — bar stays visible until both end.</p>
+				<p class="text-secondary">Two tokens. First releases at 1.5s, second at 3s - bar stays visible until both end.</p>
 			</div>
 		`,
 	}),

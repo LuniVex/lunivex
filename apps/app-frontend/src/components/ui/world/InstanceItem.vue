@@ -134,7 +134,7 @@ onUnmounted(() => {
 			/>
 		</template>
 		<div
-			class="grid grid-cols-[auto_minmax(0,3fr)_minmax(0,4fr)_auto] items-center gap-2 p-3 bg-bg-raised card-shadow rounded-xl smart-clickable:highlight-on-hover"
+			class="lv-item-card grid grid-cols-[auto_minmax(0,3fr)_minmax(0,4fr)_auto] items-center gap-2 p-3 rounded-2xl smart-clickable:highlight-on-hover"
 		>
 			<Avatar
 				:src="instanceIcon ? convertFileSrc(instanceIcon) : undefined"
@@ -143,11 +143,11 @@ onUnmounted(() => {
 			/>
 			<div class="flex flex-col col-span-2 justify-between h-full">
 				<div class="flex items-center gap-2">
-					<div class="text-lg text-contrast font-bold truncate smart-clickable:underline-on-hover">
+					<div class="lv-name text-lg font-bold truncate smart-clickable:underline-on-hover">
 						{{ instance.name }}
 					</div>
 				</div>
-				<div class="flex items-center gap-2 text-sm text-secondary">
+				<div class="flex items-center gap-2 text-sm lv-meta">
 					<div
 						v-tooltip="instance.last_played ? formatDateTime(instance.last_played) : null"
 						class="w-fit shrink-0"
@@ -163,9 +163,9 @@ onUnmounted(() => {
 						<template v-else> Not played yet </template>
 					</div>
 					•
-					<span v-if="modpack" class="flex items-center gap-1 truncate text-secondary">
+					<span v-if="modpack" class="flex items-center gap-1 truncate">
 						<router-link
-							class="inline-flex items-center gap-1 truncate hover:underline text-secondary smart-clickable:allow-pointer-events"
+							class="inline-flex items-center gap-1 truncate hover:underline lv-meta smart-clickable:allow-pointer-events"
 							:to="`/project/${modpack.id}`"
 						>
 							<Avatar :src="modpack.icon_url" size="16px" class="shrink-0" />
@@ -173,11 +173,11 @@ onUnmounted(() => {
 						</router-link>
 						({{ loader }} {{ instance.game_version }})
 					</span>
-					<span v-else-if="loadingModpack" class="flex items-center gap-1 truncate text-secondary">
+					<span v-else-if="loadingModpack" class="flex items-center gap-1 truncate">
 						<SpinnerIcon class="animate-spin shrink-0" />
 						<span class="truncate">Loading modpack...</span>
 					</span>
-					<span v-else class="flex items-center gap-1 truncate text-secondary">
+					<span v-else class="flex items-center gap-1 truncate">
 						{{ loader }}
 						{{ instance.game_version }}
 					</span>
@@ -190,17 +190,17 @@ onUnmounted(() => {
 						{{ formatMessage(commonMessages.stopButton) }}
 					</button>
 				</ButtonStyled>
-				<ButtonStyled v-else>
-					<button
-						v-tooltip="playing ? 'Instance is already open' : null"
-						:disabled="playing || loading"
-						@click="play"
-					>
-						<SpinnerIcon v-if="loading" class="animate-spin" />
-						<PlayIcon v-else aria-hidden="true" />
-						{{ formatMessage(commonMessages.playButton) }}
-					</button>
-				</ButtonStyled>
+				<button
+					v-else
+					v-tooltip="playing ? 'Instance is already open' : null"
+					class="lv-play-btn"
+					:disabled="playing || loading"
+					@click="play"
+				>
+					<SpinnerIcon v-if="loading" class="animate-spin lv-btn-icon" aria-hidden="true" />
+					<PlayIcon v-else class="lv-btn-icon translate-x-[1px]" aria-hidden="true" />
+					{{ formatMessage(commonMessages.playButton) }}
+				</button>
 				<ButtonStyled circular type="transparent">
 					<OverflowMenu
 						:options="[
@@ -230,3 +230,55 @@ onUnmounted(() => {
 		</div>
 	</SmartClickable>
 </template>
+
+<style lang="scss" scoped>
+.lv-item-card {
+	background: #221c33;
+	border: 1px solid #2a2440;
+	border-radius: 16px;
+	transition: border-color 0.15s;
+
+	&:hover {
+		border-color: #8e84cf;
+	}
+}
+
+.lv-name {
+	color: #f3f5ff;
+}
+
+.lv-meta {
+	color: #9892b0;
+}
+
+.lv-play-btn {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 7px 14px;
+	background: #8e84cf;
+	color: #0e0d16;
+	border: none;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.15s;
+	white-space: nowrap;
+
+	&:hover:not(:disabled) {
+		background: #a89fe0;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.lv-btn-icon {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+}
+</style>

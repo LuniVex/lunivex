@@ -139,7 +139,7 @@ export const WithProgressBar: Story = {
 					:progress="0.7"
 					progress-color="blue"
 				>
-					24 MB extracted — config/settings.yml
+					24 MB extracted - config/settings.yml
 					<template #top-right-actions>
 						<ButtonStyled type="outlined" color="blue">
 							<button class="!border" type="button">Cancel</button>
@@ -148,7 +148,7 @@ export const WithProgressBar: Story = {
 				</Admonition>
 				<Admonition
 					type="success"
-					header="Extraction complete — Done"
+					header="Extraction complete - Done"
 					:dismissible="true"
 					:progress="1"
 					progress-color="green"

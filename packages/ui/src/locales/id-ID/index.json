@@ -2364,10 +2364,10 @@
     "defaultMessage": "Mulai"
   },
   "servers.purchase.step.plan.large.desc": {
-    "defaultMessage": "Cocok untuk 15—25 pemain, paket mod, atau pemodifikasian berat."
+    "defaultMessage": "Cocok untuk 15-25 pemain, paket mod, atau pemodifikasian berat."
   },
   "servers.purchase.step.plan.medium.desc": {
-    "defaultMessage": "Cocok untuk 6—15 pemain dan mod berganda."
+    "defaultMessage": "Cocok untuk 6-15 pemain dan mod berganda."
   },
   "servers.purchase.step.plan.most-popular": {
     "defaultMessage": "Paling Populer"
@@ -2376,7 +2376,7 @@
     "defaultMessage": "Pilih Berlangganan"
   },
   "servers.purchase.step.plan.small.desc": {
-    "defaultMessage": "Cocok untuk 1—5 orang teman dengan beberapa mod ringan."
+    "defaultMessage": "Cocok untuk 1-5 orang teman dengan beberapa mod ringan."
   },
   "servers.purchase.step.plan.title": {
     "defaultMessage": "Langganan"
