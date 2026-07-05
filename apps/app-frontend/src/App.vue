@@ -64,7 +64,6 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs.vue'
 import ErrorModal from '@/components/ui/ErrorModal.vue'
 import FriendsList from '@/components/ui/friends/FriendsList.vue'
 import AddServerToInstanceModal from '@/components/ui/install_flow/AddServerToInstanceModal.vue'
-import UnknownPackWarningModal from '@/components/ui/install_flow/UnknownPackWarningModal.vue'
 import MinecraftAuthErrorModal from '@/components/ui/minecraft-auth-error-modal/MinecraftAuthErrorModal.vue'
 import AppSettingsModal from '@/components/ui/modal/AppSettingsModal.vue'
 import AuthGrantFlowWaitModal from '@/components/ui/modal/AuthGrantFlowWaitModal.vue'
@@ -196,7 +195,6 @@ provideModalBehavior({
 
 const {
 	installationModal,
-	unknownPackWarningModal,
 	fetchExistingInstanceNames,
 	handleCreate,
 	handleBrowseModpacks,
@@ -746,9 +744,7 @@ async function handleCommand(e) {
 	if (e.event === 'RunMRPack') {
 		// RunMRPack should directly install a local mrpack given a path
 		if (e.path.endsWith('.mrpack')) {
-			await create_profile_and_install_from_file(e.path, (createProfile, fileName) =>
-				unknownPackWarningModal.value?.show(createProfile, fileName),
-			).catch(handleError)
+			await create_profile_and_install_from_file(e.path).catch(handleError)
 			trackEvent('InstanceCreate', {
 				source: 'CreationModalFileDrop',
 			})
@@ -1287,7 +1283,6 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 			@create="handleCreate"
 			@browse-modpacks="handleBrowseModpacks"
 		/>
-		<UnknownPackWarningModal ref="unknownPackWarningModal" />
 		<div
 			class="app-grid-navbar bg-bg-raised flex flex-col p-[0.5rem] pt-0 gap-[0.5rem] w-[--left-bar-width]"
 		>
@@ -1357,19 +1352,24 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		<div data-tauri-drag-region class="app-grid-statusbar bg-bg-raised h-[--top-bar-height] flex">
 			<div data-tauri-drag-region class="flex min-w-0 flex-1 overflow-hidden p-3">
 				<span class="flex items-center gap-2 shrink-0 select-none pointer-events-none">
-					<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink: 0">
+					<svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" style="flex-shrink: 0">
 						<defs>
+							<linearGradient id="lvCrescentGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+								<stop offset="0%" stop-color="#8E84CF" />
+								<stop offset="50%" stop-color="#A89FE0" />
+								<stop offset="100%" stop-color="#E8E4F7" />
+							</linearGradient>
 							<mask id="lvCrescentMask">
-								<rect width="40" height="40" fill="black" />
-								<circle cx="20" cy="20" r="16" fill="white" />
-								<circle cx="27" cy="16" r="14" fill="black" />
+								<rect width="48" height="48" fill="black" />
+								<circle cx="24" cy="24" r="20" fill="white" />
+								<circle cx="32.57" cy="19" r="17.14" fill="black" />
 							</mask>
 						</defs>
 						<rect
-							width="40"
-							height="40"
+							width="48"
+							height="48"
 							mask="url(#lvCrescentMask)"
-							style="fill: var(--color-brand)"
+							fill="url(#lvCrescentGrad)"
 						/>
 					</svg>
 					<span class="text-contrast font-semibold text-lg leading-none">LuniVex</span>

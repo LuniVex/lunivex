@@ -50,6 +50,10 @@
     "node": ">=24.15.0"
   },
   "pnpm": {
+    "overrides": {
+      "simple-git": "3.36.0",
+      "shell-quote": "1.9.0"
+    },
     "patchedDependencies": {
       "readable-stream@2.3.8": "patches/readable-stream@2.3.8.patch"
     },

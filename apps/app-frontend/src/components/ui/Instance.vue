@@ -1,3 +1,8 @@
+<script>
+// Shared across all instances — only one context menu can be open at a time
+let activeCloseContextMenu = null
+</script>
+
 <script setup>
 import {
 	DownloadIcon,
@@ -146,12 +151,6 @@ onMounted(async () => {
 	}
 })
 
-onUnmounted(() => {
-	unlisten()
-	document.removeEventListener('click', closeContextMenu)
-	document.removeEventListener('contextmenu', closeContextMenu)
-})
-
 // ── Context menu ─────────────────────────────────────────────────────────────
 
 const contextMenuVisible = ref(false)
@@ -159,8 +158,22 @@ const contextMenuX = ref(0)
 const contextMenuY = ref(0)
 const confirmingDelete = ref(false)
 
+const handleEscapeKey = (e) => {
+	if (e.key === 'Escape') closeContextMenu()
+}
+
+const closeContextMenu = () => {
+	if (!contextMenuVisible.value) return
+	contextMenuVisible.value = false
+	confirmingDelete.value = false
+	if (activeCloseContextMenu === closeContextMenu) activeCloseContextMenu = null
+	document.removeEventListener('keydown', handleEscapeKey)
+}
+
 const showContextMenu = (e) => {
 	e.stopPropagation()
+	// Close any other open instance context menu first
+	activeCloseContextMenu?.()
 	confirmingDelete.value = false
 	const vw = window.innerWidth
 	const vh = window.innerHeight
@@ -169,14 +182,17 @@ const showContextMenu = (e) => {
 	contextMenuX.value = e.clientX + menuW > vw ? e.clientX - menuW : e.clientX
 	contextMenuY.value = e.clientY + menuH > vh ? e.clientY - menuH : e.clientY
 	contextMenuVisible.value = true
+	activeCloseContextMenu = closeContextMenu
 	document.addEventListener('click', closeContextMenu, { once: true })
 	document.addEventListener('contextmenu', closeContextMenu, { once: true })
+	document.addEventListener('keydown', handleEscapeKey)
+	window.addEventListener('scroll', closeContextMenu, { capture: true, once: true })
 }
 
-const closeContextMenu = () => {
-	contextMenuVisible.value = false
-	confirmingDelete.value = false
-}
+onUnmounted(() => {
+	unlisten()
+	closeContextMenu()
+})
 
 const openSettings = async () => {
 	closeContextMenu()

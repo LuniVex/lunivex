@@ -2,7 +2,7 @@ use std::sync::{Arc, atomic::AtomicBool};
 
 use discord_rich_presence::{
     DiscordIpc, DiscordIpcClient,
-    activity::{Activity, Assets},
+    activity::{Activity, Assets, Button},
 };
 use tokio::sync::RwLock;
 
@@ -76,11 +76,14 @@ impl DiscordGuard {
         }
 
         // "lunivex" must be uploaded as a Rich Presence asset in your Discord Developer Portal app.
-        let activity = Activity::new().state(msg).assets(
-            Assets::new()
-                .large_image("lunivex")
-                .large_text("LuniVex"),
-        );
+        let activity = Activity::new()
+            .state(msg)
+            .assets(
+                Assets::new()
+                    .large_image("lunivex")
+                    .large_text("LuniVex"),
+            )
+            .buttons(vec![Button::new("Download LuniVex", "https://lunivex.xyz/download")]);
 
         // Attempt to set the activity
         // If the existing connection fails, attempt to reconnect and try again
