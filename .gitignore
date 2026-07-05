@@ -57,6 +57,10 @@ Thumbs.db
 apps/frontend/src/generated
 
 .turbo
+
+# Tauri signing keys (never commit these)
+*.key
+*.key.pub
 target
 generated
 .env

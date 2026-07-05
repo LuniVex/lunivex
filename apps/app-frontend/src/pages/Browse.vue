@@ -1147,7 +1147,7 @@ provideBrowseManager({
 
 <template>
 	<div class="browse-page flex flex-col gap-3 p-6">
-		<p class="syl-tip">{{ sylTip }}</p>
+		<p v-if="!instance" class="syl-tip">{{ sylTip }}</p>
 		<div v-if="showFeaturedSections" class="flex flex-col gap-3">
 			<BrowseFeaturedSection :slugs="featuredSlugs" label="Featured" />
 			<BrowseFeaturedSection

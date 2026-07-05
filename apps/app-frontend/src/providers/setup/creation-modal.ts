@@ -9,7 +9,6 @@ import { provide, ref, useTemplateRef } from 'vue'
 import type { ComponentExposed } from 'vue-component-type-helpers'
 import { useRouter } from 'vue-router'
 
-import type UnknownPackWarningModal from '@/components/ui/install_flow/UnknownPackWarningModal.vue'
 import type ModpackAlreadyInstalledModal from '@/components/ui/modal/ModpackAlreadyInstalledModal.vue'
 import { trackEvent } from '@/helpers/analytics'
 import { get_project_versions, get_search_results } from '@/helpers/cache.js'
@@ -40,8 +39,6 @@ export function setupCreationModal(
 
 	const installationModal =
 		useTemplateRef<ComponentExposed<typeof CreationFlowModal>>('installationModal')
-	const unknownPackWarningModal =
-		useTemplateRef<InstanceType<typeof UnknownPackWarningModal>>('unknownPackWarningModal')
 	const modpackAlreadyInstalledModal = ref<InstanceType<typeof ModpackAlreadyInstalledModal>>()
 
 	function setModpackAlreadyInstalledModal(
@@ -118,13 +115,9 @@ export function setupCreationModal(
 					waiting: true,
 				})
 
-				await create_profile_and_install_from_file(
-					config.modpackFilePath.value,
-					(createProfile, fileName) => {
-						popupNotificationManager.removeNotification(waitingNotification.id)
-						unknownPackWarningModal.value?.show(createProfile, fileName)
-					},
-				).catch(handleError)
+				await create_profile_and_install_from_file(config.modpackFilePath.value).catch(
+					handleError,
+				)
 				popupNotificationManager.removeNotification(waitingNotification.id)
 				trackEvent('InstanceCreate', { source: 'CreationModalModpackFile' })
 				return
@@ -198,7 +191,6 @@ export function setupCreationModal(
 
 	return {
 		installationModal,
-		unknownPackWarningModal,
 		fetchExistingInstanceNames,
 		handleCreate,
 		handleBrowseModpacks,

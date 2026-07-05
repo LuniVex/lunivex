@@ -1,19 +1,9 @@
 <script setup>
-import {
-	ClipboardCopyIcon,
-	EyeIcon,
-	FolderOpenIcon,
-	PlayIcon,
-	PlusIcon,
-	SearchIcon,
-	StopCircleIcon,
-	TrashIcon,
-} from '@modrinth/assets'
+import { SearchIcon } from '@modrinth/assets'
 import {
 	Accordion,
 	DropdownSelect,
 	formatLoader,
-	injectNotificationManager,
 	StyledInput,
 	useVIntl,
 } from '@modrinth/ui'
@@ -21,12 +11,7 @@ import { useStorage } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 
-import ContextMenu from '@/components/ui/ContextMenu.vue'
 import Instance from '@/components/ui/Instance.vue'
-import ConfirmDeleteInstanceModal from '@/components/ui/modal/ConfirmDeleteInstanceModal.vue'
-import { duplicate, remove } from '@/helpers/profile.js'
-
-const { handleError } = injectNotificationManager()
 
 const { formatMessage } = useVIntl()
 
@@ -42,92 +27,6 @@ const props = defineProps({
 		default: '',
 	},
 })
-const instanceOptions = ref(null)
-const instanceComponents = ref(null)
-
-const currentDeleteInstance = ref(null)
-const confirmModal = ref(null)
-
-async function deleteProfile() {
-	if (currentDeleteInstance.value) {
-		instanceComponents.value = instanceComponents.value.filter(
-			(x) => x.instance.path !== currentDeleteInstance.value,
-		)
-		await remove(currentDeleteInstance.value).catch(handleError)
-	}
-}
-
-async function duplicateProfile(p) {
-	await duplicate(p).catch(handleError)
-}
-
-const handleRightClick = (event, profilePathId) => {
-	const item = instanceComponents.value.find((x) => x.instance.path === profilePathId)
-	const baseOptions = [
-		{ name: 'add_content' },
-		{ type: 'divider' },
-		{ name: 'edit' },
-		{ name: 'duplicate' },
-		{ name: 'open' },
-		{ name: 'copy' },
-		{ type: 'divider' },
-		{
-			name: 'delete',
-			color: 'danger',
-		},
-	]
-
-	instanceOptions.value.showMenu(
-		event,
-		item,
-		item.playing
-			? [
-					{
-						name: 'stop',
-						color: 'danger',
-					},
-					...baseOptions,
-				]
-			: [
-					{
-						name: 'play',
-						color: 'primary',
-					},
-					...baseOptions,
-				],
-	)
-}
-
-const handleOptionsClick = async (args) => {
-	switch (args.option) {
-		case 'play':
-			args.item.play(null, 'InstanceGridContextMenu')
-			break
-		case 'stop':
-			args.item.stop(null, 'InstanceGridContextMenu')
-			break
-		case 'add_content':
-			await args.item.addContent()
-			break
-		case 'edit':
-			await args.item.seeInstance()
-			break
-		case 'duplicate':
-			if (args.item.instance.install_stage == 'installed')
-				await duplicateProfile(args.item.instance.path)
-			break
-		case 'open':
-			await args.item.openFolder()
-			break
-		case 'copy':
-			await navigator.clipboard.writeText(args.item.instance.path)
-			break
-		case 'delete':
-			currentDeleteInstance.value = args.item.instance.path
-			confirmModal.value.show()
-			break
-	}
-}
 
 const state = useStorage(
 	`${props.label}-grid-display-state`,
@@ -320,24 +219,11 @@ const filteredResults = computed(() => {
 		<section class="instances">
 			<Instance
 				v-for="instance in instanceSection.value"
-				ref="instanceComponents"
 				:key="instance.path + instance.install_stage"
 				:instance="instance"
-				@contextmenu.prevent.stop="(event) => handleRightClick(event, instance.path)"
 			/>
 		</section>
 	</Accordion>
-	<ConfirmDeleteInstanceModal ref="confirmModal" @delete="deleteProfile" />
-	<ContextMenu ref="instanceOptions" @option-clicked="handleOptionsClick">
-		<template #play> <PlayIcon /> Play </template>
-		<template #stop> <StopCircleIcon /> Stop </template>
-		<template #add_content> <PlusIcon /> Add content </template>
-		<template #edit> <EyeIcon /> View instance </template>
-		<template #duplicate> <ClipboardCopyIcon /> Duplicate instance</template>
-		<template #delete> <TrashIcon /> Delete </template>
-		<template #open> <FolderOpenIcon /> Open folder </template>
-		<template #copy> <ClipboardCopyIcon /> Copy path </template>
-	</ContextMenu>
 </template>
 <style lang="scss" scoped>
 .row {

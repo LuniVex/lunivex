@@ -8,6 +8,7 @@
 	},
 	"bundle": {
 		"active": true,
+		"createUpdaterArtifacts": true,
 		"category": "Game",
 		"copyright": "Copyright © 2026 LuniVex",
 		"targets": "all",
@@ -70,7 +71,7 @@
 			"endpoints": [
 				"https://github.com/LuniVex/lunivex/releases/latest/download/latest.json"
 			],
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJFNkIxQjhGNjA1QUMyREYKUldUZndscGdqeHRydmhLd3FJaFN2a05WeXNPNWFXMys5MDhzb1l1NkE3Tlo2RWk1QmtMY3lwRTQK"
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJGMjlEMEZDODExNTcwQjgKUldTNGNCV0IvTkFwdjhqWHJ3RkRYT3dGYmdTeFE1TndqU3ZaazlLQ3ZIcTlIMTFnZVQrVGNIRzgK"
 		}
 	},
 	"app": {
