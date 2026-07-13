@@ -245,6 +245,7 @@ fn main() {
         .plugin(api::tags::init())
         .plugin(api::utils::init())
         .plugin(api::cache::init())
+        .plugin(api::curseforge::init())
         .plugin(api::files::init())
         .plugin(api::ads::init())
         .plugin(api::friends::init())

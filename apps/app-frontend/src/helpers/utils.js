@@ -1,4 +1,4 @@
-import { invoke } from '@tauri-apps/api/core'
+import { convertFileSrc, invoke } from '@tauri-apps/api/core'
 
 import { get_full_path, get_mod_full_path } from '@/helpers/profile'
 
@@ -77,4 +77,12 @@ export const releaseColor = (releaseType) => {
 
 export async function copyToClipboard(text) {
 	await navigator.clipboard.writeText(text)
+}
+
+/** Resolve an instance icon path to a displayable URL.
+ * HTTPS/HTTP URLs are returned as-is; local file paths go through convertFileSrc. */
+export function resolveIconUrl(iconPath) {
+	if (!iconPath) return null
+	if (iconPath.startsWith('https://') || iconPath.startsWith('http://')) return iconPath
+	return convertFileSrc(iconPath)
 }

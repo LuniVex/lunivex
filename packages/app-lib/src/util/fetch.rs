@@ -5,6 +5,7 @@ use crate::event::LoadingBarId;
 use crate::event::emit::emit_loading;
 use bytes::Bytes;
 use chrono::{DateTime, TimeDelta, Utc};
+use image::GenericImageView;
 use parking_lot::Mutex;
 use rand::Rng;
 use reqwest::Method;
@@ -590,18 +591,53 @@ pub async fn write_cached_icon(
     bytes: Bytes,
     semaphore: &IoSemaphore,
 ) -> crate::Result<PathBuf> {
-    let extension = Path::new(&icon_path).extension().and_then(OsStr::to_str);
-    let hash = sha1_async(bytes.clone()).await?;
-    let path = cache_dir.join("icons").join(if let Some(ext) = extension {
-        format!("{hash}.{ext}")
+    let normalized = {
+        let b = bytes.clone();
+        tokio::task::spawn_blocking(move || normalize_icon_to_square(&b))
+            .await
+            .unwrap_or(None)
+    };
+
+    let (final_bytes, extension) = if let Some(png_bytes) = normalized {
+        (Bytes::from(png_bytes), "png".to_string())
     } else {
+        let ext = Path::new(icon_path)
+            .extension()
+            .and_then(OsStr::to_str)
+            .unwrap_or("")
+            .to_string();
+        (bytes, ext)
+    };
+
+    let hash = sha1_async(final_bytes.clone()).await?;
+    let path = cache_dir.join("icons").join(if extension.is_empty() {
         hash
+    } else {
+        format!("{hash}.{extension}")
     });
 
-    write(&path, &bytes, semaphore).await?;
+    write(&path, &final_bytes, semaphore).await?;
 
     let path = io::canonicalize(path)?;
     Ok(path)
+}
+
+fn normalize_icon_to_square(bytes: &[u8]) -> Option<Vec<u8>> {
+    let img = image::load_from_memory(bytes).ok()?;
+    let (w, h) = (img.width(), img.height());
+    if w == 0 || h == 0 {
+        return None;
+    }
+    let size = w.min(h);
+    let x = (w - size) / 2;
+    let y = (h - size) / 2;
+    let cropped = img.crop_imm(x, y, size, size);
+    let resized = cropped.resize_exact(512, 512, image::imageops::FilterType::Lanczos3);
+    let mut buf = std::io::Cursor::new(Vec::new());
+    resized
+        .write_to(&mut buf, image::ImageFormat::Png)
+        .ok()?;
+    Some(buf.into_inner())
 }
 
 pub async fn sha1_async(bytes: Bytes) -> crate::Result<String> {

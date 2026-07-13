@@ -6,6 +6,7 @@ export interface BrowseSearchResponse {
 	projectHits: (Labrinth.Search.v2.ResultSearchProject & {
 		installed?: boolean
 		installing?: boolean
+		_source?: string
 	})[]
 	serverHits: Labrinth.Search.v3.ResultSearchProject[]
 	total_hits: number

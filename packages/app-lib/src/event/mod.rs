@@ -180,6 +180,10 @@ pub enum LoadingBarType {
         version: String,
         current_version: String,
     },
+    CfModpackInstall {
+        pack_name: String,
+        icon: Option<String>,
+    },
 }
 
 #[derive(Serialize, Clone)]

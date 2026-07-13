@@ -16,7 +16,6 @@ import {
 	TrashIcon,
 } from '@modrinth/assets'
 import { Avatar, ButtonStyled, injectNotificationManager, useRelativeTime } from '@modrinth/ui'
-import { convertFileSrc } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -26,7 +25,7 @@ import { get_project } from '@/helpers/cache'
 import { process_listener } from '@/helpers/events'
 import { get_by_profile_path } from '@/helpers/process'
 import { finish_install, kill, remove, run } from '@/helpers/profile'
-import { showProfileInFolder } from '@/helpers/utils.js'
+import { resolveIconUrl, showProfileInFolder } from '@/helpers/utils.js'
 import { handleSevereError } from '@/store/error.js'
 
 const { handleError } = injectNotificationManager()
@@ -219,7 +218,7 @@ const deleteInstance = async () => {
 		>
 			<Avatar
 				size="48px"
-				:src="instance.icon_path ? convertFileSrc(instance.icon_path) : null"
+				:src="resolveIconUrl(instance.icon_path)"
 				:tint-by="instance.path"
 				alt="Mod card"
 			/>
@@ -271,7 +270,7 @@ const deleteInstance = async () => {
 			<div v-else class="thumbnail-icon-wrap">
 				<img
 					v-if="instance.icon_path"
-					:src="convertFileSrc(instance.icon_path)"
+					:src="resolveIconUrl(instance.icon_path)"
 					:alt="instance.name"
 					class="thumbnail-icon"
 				/>
@@ -418,10 +417,10 @@ const deleteInstance = async () => {
 }
 
 .thumbnail-icon {
-	width: 56px;
-	height: 56px;
-	object-fit: contain;
-	border-radius: 10px;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
 }
 
 .fallback-icon {

@@ -813,9 +813,24 @@ pub async fn launch_minecraft(
         }
     }
 
+    let discord_icon: Option<String> = {
+        let is_remote = profile.icon_path.as_deref()
+            .map(|p| p.starts_with("https://") || p.starts_with("http://"))
+            .unwrap_or(false);
+        if is_remote {
+            profile.icon_path.clone()
+        } else if let Some(ref linked_data) = profile.linked_data {
+            crate::api::cache::get_project(&linked_data.project_id, None).await
+                .ok()
+                .flatten()
+                .and_then(|p| p.icon_url)
+        } else {
+            None
+        }
+    };
     let _ = state
         .discord_rpc
-        .set_activity(&format!("Playing {}", profile.name), true)
+        .set_activity_playing(&profile.name, discord_icon.as_deref(), true)
         .await;
 
     let _ = state

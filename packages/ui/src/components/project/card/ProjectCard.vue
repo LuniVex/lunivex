@@ -36,6 +36,7 @@
 									<ProjectCardTitle :title="title" compact />
 									<ProjectCardAuthor v-if="author" :author="author" />
 									<ProjectStatusBadge v-if="status" :status="status" class="text-sm" />
+									<span v-if="sourceBadge" class="source-badge" :data-source="sourceBadge.toLowerCase()">{{ sourceBadge }}</span>
 								</div>
 								<div class="m-0 font-normal line-clamp-2">
 									{{ summary }}
@@ -120,6 +121,7 @@
 					<ProjectCardTitle :title="title" />
 					<ProjectCardAuthor v-if="author" :author="author" />
 					<ProjectStatusBadge v-if="status" :status="status" />
+					<span v-if="sourceBadge" class="source-badge" :data-source="sourceBadge.toLowerCase()">{{ sourceBadge }}</span>
 				</div>
 				<div class="project-card-summary m-0 font-normal line-clamp-2">
 					{{ summary }}
@@ -260,6 +262,7 @@ const props = defineProps<{
 	environment?: ProjectCardEnvironmentProps
 	status?: ProjectStatus
 	maxTags?: number
+	sourceBadge?: string
 }>()
 
 const baseCardStyle =
@@ -428,5 +431,30 @@ const cssColor = computed(() => {
 
 .placeholder-banner {
 	opacity: 0.7;
+}
+
+.source-badge {
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 0.15rem 0.45rem;
+	border-radius: 9999px;
+	white-space: nowrap;
+	border: 1px solid currentColor;
+	flex-shrink: 0;
+	line-height: 1.4;
+}
+
+.source-badge[data-source='modrinth'] {
+	color: var(--color-green, #1bd96a);
+	border-color: rgba(27, 217, 106, 0.35);
+	background: rgba(27, 217, 106, 0.08);
+}
+
+.source-badge[data-source='curseforge'] {
+	color: #f16436;
+	border-color: rgba(241, 100, 54, 0.35);
+	background: rgba(241, 100, 54, 0.08);
 }
 </style>

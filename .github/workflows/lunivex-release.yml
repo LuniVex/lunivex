@@ -1,0 +1,187 @@
+name: LuniVex Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build (${{ matrix.artifact-target-name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            artifact-target-name: universal-apple-darwin
+            extra-rust-target: x86_64-apple-darwin
+          - platform: windows-latest
+            artifact-target-name: x86_64-pc-windows-msvc
+          - platform: ubuntu-24.04
+            artifact-target-name: x86_64-unknown-linux-gnu
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          rustflags: ''
+          target: ${{ matrix.extra-rust-target || '' }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+
+      - name: Install Dasel
+        uses: jaxxstorm/action-install-gh-release@25e24d2d23ae098373794ef1d6faecb48ee52da8 # v3.0.0
+        with:
+          repo: TomWright/dasel
+          tag: v2.8.1
+          extension-matching: disable
+          rename-to: ${{ runner.os == 'Windows' && 'dasel.exe' || 'dasel' }}
+          chmod: 0755
+
+      - name: Set application version and environment
+        shell: bash
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          echo "Setting version to $VERSION"
+          dasel put -f apps/app/Cargo.toml -t string -v "$VERSION" 'package.version'
+          dasel put -f packages/app-lib/Cargo.toml -t string -v "$VERSION" 'package.version'
+          dasel put -f apps/app-frontend/package.json -t string -v "$VERSION" 'version'
+          cp packages/app-lib/.env.prod packages/app-lib/.env
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build macOS app
+        if: runner.os == 'macOS'
+        run: pnpm --filter=@modrinth/app run tauri build --target universal-apple-darwin --config tauri-release.conf.json
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+
+      - name: Build Linux app
+        if: runner.os == 'Linux'
+        run: pnpm --filter=@modrinth/app run tauri build --config tauri-release.conf.json
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: Build Windows app
+        if: runner.os == 'Windows'
+        run: pnpm --filter=@modrinth/app run tauri build --config tauri-release.conf.json --bundles nsis,updater
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: App bundle (${{ matrix.artifact-target-name }})
+          path: |
+            target/release/bundle/appimage/LuniVex_*.AppImage*
+            target/release/bundle/deb/LuniVex_*.deb*
+            target/release/bundle/rpm/LuniVex-*.rpm*
+            target/universal-apple-darwin/release/bundle/macos/LuniVex.app.tar.gz*
+            target/universal-apple-darwin/release/bundle/dmg/LuniVex_*.dmg*
+            target/release/bundle/nsis/LuniVex_*-setup.exe*
+            target/release/bundle/nsis/LuniVex_*-setup.nsis.zip*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Set version from tag
+        run: |
+          VERSION="${{ github.ref_name }}"
+          echo "VERSION=${VERSION#v}" >> "$GITHUB_ENV"
+          echo "VERSION_TAG=${{ github.ref_name }}" >> "$GITHUB_ENV"
+
+      - name: Generate latest.json
+        run: |
+          jq -nc \
+            --arg version "$VERSION" \
+            --arg tag "$VERSION_TAG" \
+            --arg repo "${{ github.repository }}" \
+            --rawfile macSig "App bundle (universal-apple-darwin)/target/universal-apple-darwin/release/bundle/macos/LuniVex.app.tar.gz.sig" \
+            --rawfile linuxSig "App bundle (x86_64-unknown-linux-gnu)/target/release/bundle/appimage/LuniVex_${VERSION}_amd64.AppImage.tar.gz.sig" \
+            --rawfile winSig "App bundle (x86_64-pc-windows-msvc)/target/release/bundle/nsis/LuniVex_${VERSION}_x64-setup.nsis.zip.sig" \
+          '{
+            "version": $version,
+            "pub_date": (now | todateiso8601),
+            "platforms": {
+              "darwin-aarch64": {
+                "signature": $macSig,
+                "url": "https://github.com/\($repo)/releases/download/\($tag)/LuniVex.app.tar.gz"
+              },
+              "darwin-x86_64": {
+                "signature": $macSig,
+                "url": "https://github.com/\($repo)/releases/download/\($tag)/LuniVex.app.tar.gz"
+              },
+              "linux-x86_64": {
+                "signature": $linuxSig,
+                "url": "https://github.com/\($repo)/releases/download/\($tag)/LuniVex_\($version)_amd64.AppImage.tar.gz"
+              },
+              "windows-x86_64": {
+                "signature": $winSig,
+                "url": "https://github.com/\($repo)/releases/download/\($tag)/LuniVex_\($version)_x64-setup.nsis.zip"
+              }
+            }
+          }' > latest.json
+          cat latest.json
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$VERSION_TAG" \
+            --repo "${{ github.repository }}" \
+            --title "LuniVex ${VERSION}" \
+            --draft \
+            latest.json \
+            "App bundle (x86_64-pc-windows-msvc)/target/release/bundle/nsis/LuniVex_${VERSION}_x64-setup.exe" \
+            "App bundle (x86_64-pc-windows-msvc)/target/release/bundle/nsis/LuniVex_${VERSION}_x64-setup.nsis.zip" \
+            "App bundle (x86_64-pc-windows-msvc)/target/release/bundle/nsis/LuniVex_${VERSION}_x64-setup.nsis.zip.sig" \
+            "App bundle (universal-apple-darwin)/target/universal-apple-darwin/release/bundle/dmg/LuniVex_${VERSION}_universal.dmg" \
+            "App bundle (universal-apple-darwin)/target/universal-apple-darwin/release/bundle/macos/LuniVex.app.tar.gz" \
+            "App bundle (universal-apple-darwin)/target/universal-apple-darwin/release/bundle/macos/LuniVex.app.tar.gz.sig" \
+            "App bundle (x86_64-unknown-linux-gnu)/target/release/bundle/appimage/LuniVex_${VERSION}_amd64.AppImage" \
+            "App bundle (x86_64-unknown-linux-gnu)/target/release/bundle/appimage/LuniVex_${VERSION}_amd64.AppImage.tar.gz" \
+            "App bundle (x86_64-unknown-linux-gnu)/target/release/bundle/appimage/LuniVex_${VERSION}_amd64.AppImage.tar.gz.sig" \
+            "App bundle (x86_64-unknown-linux-gnu)/target/release/bundle/deb/LuniVex_${VERSION}_amd64.deb" \
+            "App bundle (x86_64-unknown-linux-gnu)/target/release/bundle/rpm/LuniVex-${VERSION}-1.x86_64.rpm"

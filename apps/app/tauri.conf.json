@@ -52,7 +52,10 @@
 		"fileAssociations": [
 			{
 				"ext": ["mrpack"],
-				"mimeType": "application/x-modrinth-modpack+zip"
+				"name": "LuniVex Modpack",
+				"description": "Minecraft Modpack",
+				"mimeType": "application/x-modrinth-modpack+zip",
+				"role": "Editor"
 			}
 		]
 	},
@@ -111,7 +114,7 @@
 				"default-src": "'self' customprotocol: asset:",
 				"connect-src": "ipc: http://ipc.localhost https://modrinth.com https://*.modrinth.com https://*.nodes.modrinth.com wss://*.nodes.modrinth.com https://api.mclo.gs http://textures.minecraft.net https://textures.minecraft.net https://fill.papermc.io https://api.purpurmc.org https://downloads.essential.gg 'self' data: blob:",
 				"font-src": ["https://cdn-raw.modrinth.com/fonts/"],
-				"img-src": "https: 'unsafe-inline' 'self' asset: http://asset.localhost http://textures.minecraft.net blob: data:",
+				"img-src": "https: 'unsafe-inline' 'self' asset: http://asset.localhost http://textures.minecraft.net https://media.forgecdn.net https://cdn.curseforge.com blob: data:",
 				"style-src": "'unsafe-inline' 'self'",
 				"script-src": "'self'",
 				"frame-src": "https://www.youtube.com https://www.youtube-nocookie.com https://discord.com 'self'",

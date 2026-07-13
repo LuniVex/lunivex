@@ -1,13 +1,13 @@
 <script setup>
 import { SpinnerIcon } from '@modrinth/assets'
 import { Avatar, injectNotificationManager } from '@modrinth/ui'
-import { convertFileSrc } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import { onUnmounted, ref } from 'vue'
 
 import NavButton from '@/components/ui/NavButton.vue'
 import { profile_listener } from '@/helpers/events.js'
 import { list } from '@/helpers/profile'
+import { resolveIconUrl } from '@/helpers/utils.js'
 
 const { handleError } = injectNotificationManager()
 
@@ -52,7 +52,7 @@ onUnmounted(() => {
 	<div v-for="instance in recentInstances" :key="instance.id" v-tooltip.right="instance.name">
 		<NavButton :to="`/instance/${encodeURIComponent(instance.path)}`" class="relative">
 			<Avatar
-				:src="instance.icon_path ? convertFileSrc(instance.icon_path) : null"
+				:src="resolveIconUrl(instance.icon_path)"
 				size="28px"
 				:tint-by="instance.path"
 				:class="`transition-all ${instance.install_stage !== 'installed' ? `brightness-[0.25] scale-[0.85]` : `group-hover:brightness-75`}`"

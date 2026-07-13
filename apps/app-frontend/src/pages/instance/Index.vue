@@ -305,7 +305,6 @@ import {
 	useLoadingBarToken,
 } from '@modrinth/ui'
 import { useQueryClient } from '@tanstack/vue-query'
-import { convertFileSrc } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -324,7 +323,7 @@ import { type InstanceContentData, loadInstanceContentData } from '@/helpers/ins
 import { get_by_profile_path } from '@/helpers/process'
 import { finish_install, get, get_full_path, kill, run } from '@/helpers/profile'
 import type { GameInstance } from '@/helpers/types'
-import { showProfileInFolder } from '@/helpers/utils.js'
+import { resolveIconUrl, showProfileInFolder } from '@/helpers/utils.js'
 import { get_server_status, refreshWorlds } from '@/helpers/worlds'
 import { injectServerInstall } from '@/providers/server-install'
 import { handleSevereError } from '@/store/error.js'
@@ -673,7 +672,7 @@ const unlistenProcesses = await process_listener(
 )
 
 const icon = computed(() =>
-	instance.value?.icon_path ? convertFileSrc(instance.value.icon_path) : null,
+	resolveIconUrl(instance.value?.icon_path),
 )
 
 const settingsModal = ref<InstanceType<typeof InstanceSettingsModal>>()

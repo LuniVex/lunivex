@@ -145,7 +145,7 @@ function navigate(slug: string) {
 	font-size: 1rem;
 	font-weight: 700;
 	color: #f3f5ff;
-	border-left: 3px solid #8e84cf;
+	border-left: 3px solid var(--source-accent, #8e84cf);
 	padding-left: 10px;
 }
 
@@ -173,7 +173,7 @@ function navigate(slug: string) {
 	transition: border-color 0.125s;
 
 	&:hover {
-		border-color: #8e84cf;
+		border-color: var(--source-accent, #8e84cf);
 	}
 }
 
@@ -250,7 +250,7 @@ function navigate(slug: string) {
 	gap: 0.375rem;
 	height: 2.25rem;
 	padding: 0.5rem 0.625rem;
-	background: #8e84cf;
+	background: var(--source-accent, #8e84cf);
 	color: #0e0d16;
 	border: none;
 	border-radius: 0.75rem;
@@ -264,7 +264,7 @@ function navigate(slug: string) {
 		opacity 0.15s;
 
 	&:hover:not(:disabled) {
-		background: #a89fe0;
+		filter: brightness(1.12);
 	}
 
 	&:disabled {

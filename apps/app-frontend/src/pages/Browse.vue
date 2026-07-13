@@ -27,13 +27,15 @@ import {
 	useVIntl,
 } from '@modrinth/ui'
 import { useQueryClient } from '@tanstack/vue-query'
-import { convertFileSrc } from '@tauri-apps/api/core'
 import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { LocationQuery } from 'vue-router'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 
 import BrowseFeaturedSection from '@/components/ui/BrowseFeaturedSection.vue'
+import CfBrowseFeaturedSection, {
+	type CfFeaturedMod,
+} from '@/components/ui/CfBrowseFeaturedSection.vue'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
 import { useAppServerBrowse } from '@/composables/browse/use-app-server-browse'
 import {
@@ -47,7 +49,14 @@ import { get_loader_versions as getLoaderManifest } from '@/helpers/metadata'
 import {
 	get as getInstance,
 	get_installed_project_ids as getInstalledProjectIds,
+	list as listProfiles,
 } from '@/helpers/profile.js'
+import {
+	curseforge_install_mod,
+	curseforge_install_modpack,
+	curseforge_search,
+} from '@/helpers/curseforge.js'
+import { resolveIconUrl } from '@/helpers/utils.js'
 import { get_categories, get_game_versions, get_loaders } from '@/helpers/tags'
 import { get_profile_worlds } from '@/helpers/worlds'
 import { injectContentInstall } from '@/providers/content-install'
@@ -468,6 +477,27 @@ onBeforeRouteLeave(() => {
 
 const projectType = ref<ProjectType>(route.params.projectType as ProjectType)
 
+const cfBetaTooltip =
+	"CurseForge integration is new - some pages may not match Modrinth's layout exactly yet, and bugs are possible. Report issues on Discord."
+
+const CF_SUPPORTED_TYPES = new Set(['mod', 'modpack', 'resourcepack', 'shader'])
+const CF_CLASS_IDS: Record<string, number> = { mod: 6, modpack: 4471, resourcepack: 12, shader: 6552 }
+
+type BrowseSource = 'modrinth' | 'curseforge'
+const source = ref<BrowseSource>(
+	route.query.src === 'curseforge' && CF_SUPPORTED_TYPES.has(projectType.value)
+		? 'curseforge'
+		: 'modrinth',
+)
+
+const showCurseForgeToggle = computed(
+	() =>
+		CF_SUPPORTED_TYPES.has(projectType.value) &&
+		!isServerContext.value &&
+		!isFromWorlds.value &&
+		!instance.value,
+)
+
 watch(
 	() => route.params.projectType as ProjectType,
 	async (newType) => {
@@ -480,6 +510,10 @@ watch(
 
 		debugLog('projectType route param changed', { from: projectType.value, to: newType })
 		projectType.value = newType
+
+		if (!CF_SUPPORTED_TYPES.has(newType)) {
+			source.value = 'modrinth'
+		}
 
 		if (!route.query.i && instance.value) {
 			debugLog('instance context removed, resetting')
@@ -578,7 +612,7 @@ const installContext = computed(() => {
 			name: instance.value.name,
 			loader: instance.value.loader,
 			gameVersion: instance.value.game_version,
-			iconSrc: instance.value.icon_path ? convertFileSrc(instance.value.icon_path) : null,
+			iconSrc: resolveIconUrl(instance.value.icon_path),
 			backUrl: `/instance/${encodeURIComponent(instance.value.path)}${isFromWorlds.value ? '/worlds' : ''}`,
 			backLabel: formatMessage(messages.backToInstance),
 			heading: formatMessage(
@@ -594,6 +628,51 @@ const installContext = computed(() => {
 })
 
 const installingProjectIds = ref<Set<string>>(new Set())
+const installedCfProjectIds = ref<Set<string>>(new Set())
+
+type CfPickerMod = { modId: number; projectType: string; title: string; iconUrl?: string }
+const cfPicker = ref<CfPickerMod | null>(null)
+const cfPickerInstances = ref<{ path: string; name: string; loader: string; gameVersion: string; iconPath?: string }[]>([])
+
+async function openCfInstancePicker(modId: number, projectTypeVal: string, title: string, iconUrl?: string) {
+	try {
+		const all = await listProfiles()
+		cfPickerInstances.value = all
+			.filter((p) => p.install_stage === 'installed')
+			.map((p) => ({
+				path: p.path,
+				name: p.name,
+				loader: p.loader,
+				gameVersion: p.game_version,
+				iconPath: p.icon_path,
+			}))
+	} catch {
+		cfPickerInstances.value = []
+	}
+	cfPicker.value = { modId, projectType: projectTypeVal, title, iconUrl }
+}
+
+async function cfPickerInstall(instancePath: string, instanceLoader: string, instanceGameVersion: string) {
+	const pending = cfPicker.value
+	if (!pending) return
+	cfPicker.value = null
+	const cfId = `cf_${pending.modId}`
+	setProjectInstalling(cfId, true)
+	try {
+		await curseforge_install_mod({
+			profilePath: instancePath,
+			modId: pending.modId,
+			gameVersion: instanceGameVersion,
+			loader: pending.projectType === 'mod' ? instanceLoader : null,
+			projectType: pending.projectType,
+		})
+		installedCfProjectIds.value = new Set([...installedCfProjectIds.value, cfId])
+	} catch (err) {
+		handleError(err as Error)
+	} finally {
+		setProjectInstalling(cfId, false)
+	}
+}
 
 function setProjectInstalling(projectId: string, installing: boolean) {
 	const next = new Set(installingProjectIds.value)
@@ -683,8 +762,114 @@ function getCardActions(
 		return getServerCardActions(result as Labrinth.Search.v3.ResultSearchProject)
 	}
 
-	// Non-server project actions
-	const projectResult = result as (Labrinth.Search.v2.ResultSearchProject &
+	// CurseForge result — separate install path
+	const anyResult = result as Labrinth.Search.v2.ResultSearchProject & {
+		_source?: string
+		_cfModId?: number
+		_allowDist?: boolean
+		installed?: boolean
+		installing?: boolean
+	}
+	if (anyResult._source === 'curseforge') {
+		const cfId = anyResult.project_id
+		const cfModId = anyResult._cfModId!
+		const isInstalling = installingProjectIds.value.has(cfId)
+		const isInstalled = installedCfProjectIds.value.has(cfId)
+		const canInstall = anyResult._allowDist !== false
+
+		if (!instance.value) {
+			// Modpacks: install directly as a new instance (classId 4471)
+			if (currentProjectType === 'modpack') {
+				return [
+					{
+						key: 'install',
+						label: isInstalling ? 'Installing…' : isInstalled ? 'Installed' : 'Install Modpack',
+						icon: isInstalling ? SpinnerIcon : isInstalled ? CheckIcon : PlusIcon,
+						iconClass: isInstalling ? 'animate-spin' : undefined,
+						disabled: isInstalling || isInstalled || !canInstall,
+						tooltip: !canInstall ? 'Author has disabled distribution' : undefined,
+						color: 'brand' as const,
+						type: 'standard' as const,
+						onClick: async () => {
+							if (!canInstall) return
+							setProjectInstalling(cfId, true)
+							try {
+								await curseforge_install_modpack(cfModId)
+								installedCfProjectIds.value = new Set([...installedCfProjectIds.value, cfId])
+							} catch (err) {
+								handleError(err as Error)
+							} finally {
+								setProjectInstalling(cfId, false)
+							}
+						},
+					},
+				]
+			}
+
+			// Mods/other: show instance picker
+			return [
+				{
+					key: 'install',
+					label: isInstalling ? formatMessage(messages.installingToServer) : 'Add to Instance',
+					icon: isInstalling ? SpinnerIcon : PlusIcon,
+					iconClass: isInstalling ? 'animate-spin' : undefined,
+					disabled: isInstalling || isInstalled || !canInstall,
+					tooltip: !canInstall ? 'Author has disabled distribution' : undefined,
+					color: 'brand' as const,
+					type: 'standard' as const,
+					onClick: async () => {
+						if (!canInstall) return
+						await openCfInstancePicker(
+							cfModId,
+							currentProjectType,
+							anyResult.title,
+							anyResult.icon_url ?? undefined,
+						)
+					},
+				},
+			]
+		}
+
+		return [
+			{
+				key: 'install',
+				label: formatMessage(
+					isInstalling
+						? messages.installingToServer
+						: isInstalled
+							? commonMessages.installedLabel
+							: commonMessages.installButton,
+				),
+				icon: isInstalling ? SpinnerIcon : isInstalled ? CheckIcon : PlusIcon,
+				iconClass: isInstalling ? 'animate-spin' : undefined,
+				disabled: isInstalled || isInstalling || !canInstall,
+				tooltip: !canInstall ? 'Author has disabled distribution' : undefined,
+				color: 'brand' as const,
+				type: 'standard' as const,
+				onClick: async () => {
+					if (!instance.value) return
+					setProjectInstalling(cfId, true)
+					try {
+						await curseforge_install_mod({
+							profilePath: instance.value.path,
+							modId: cfModId,
+							gameVersion: instance.value.game_version,
+							loader: currentProjectType === 'mod' ? instance.value.loader : null,
+							projectType: currentProjectType,
+						})
+						installedCfProjectIds.value = new Set([...installedCfProjectIds.value, cfId])
+					} catch (err) {
+						handleError(err as Error)
+					} finally {
+						setProjectInstalling(cfId, false)
+					}
+				},
+			},
+		]
+	}
+
+	// Non-server Modrinth project actions
+	const projectResult = anyResult as (Labrinth.Search.v2.ResultSearchProject &
 		Labrinth.Search.v3.ResultSearchProject) & {
 		installed?: boolean
 		installing?: boolean
@@ -857,8 +1042,96 @@ function onSearchResultsInstalled(ids: string[]) {
 }
 
 async function search(requestParams: string) {
-	debugLog('searching v3', requestParams)
+	debugLog('searching', requestParams)
 	const isServer = projectType.value === 'server'
+	const isCfMode =
+		source.value === 'curseforge' &&
+		CF_SUPPORTED_TYPES.has(projectType.value) &&
+		!isServerContext.value &&
+		!isFromWorlds.value
+
+	const urlParams = new URLSearchParams(
+		requestParams.startsWith('?') ? requestParams.slice(1) : requestParams,
+	)
+	const offset = parseInt(urlParams.get('offset') ?? '0')
+	const limit = parseInt(urlParams.get('limit') ?? '20')
+	const queryText = urlParams.get('query') ? decodeURIComponent(urlParams.get('query')!) : undefined
+
+	if (isCfMode) {
+		let cfResults: {
+			data: {
+				id: number
+				name: string
+				slug: string
+				summary: string
+				downloadCount: number
+				categories: { id: number; name: string }[]
+				authors: { id: number; name: string }[]
+				logo?: { thumbnailUrl?: string }
+				links?: { websiteUrl?: string }
+				allowModDistribution?: boolean
+			}[]
+			pagination: { index: number; pageSize: number; resultCount: number; totalCount: number }
+		} | null = null
+
+		try {
+			cfResults = await curseforge_search({
+				query: queryText ?? null,
+				gameVersion: instance.value?.game_version ?? null,
+				loader: projectType.value === 'mod' ? (instance.value?.loader ?? null) : null,
+				categoryId: route.query.cfcat ? Number(route.query.cfcat) : null,
+				classId: CF_CLASS_IDS[projectType.value] ?? 6,
+				page: Math.floor(offset / limit),
+				pageSize: limit,
+			})
+		} catch (e: unknown) {
+			debugLog('CF search error', e)
+			return { projectHits: [], serverHits: [], total_hits: 0, per_page: limit }
+		}
+
+		if (!cfResults?.data?.length) {
+			return { projectHits: [], serverHits: [], total_hits: 0, per_page: limit }
+		}
+
+		const cfHits = cfResults.data.map((cf) => {
+			const cats = cf.categories.map((c) => c.name.toLowerCase().replace(/[\s&+/]+/g, '-'))
+			return {
+				project_id: `cf_${cf.id}`,
+				project_types: [projectType.value],
+				slug: cf.slug,
+				author: cf.authors[0]?.name ?? '',
+				organization: null,
+				author_id: null,
+				organization_id: null,
+				title: cf.name,
+				description: cf.summary,
+				categories: cats,
+				display_categories: cats,
+				downloads: cf.downloadCount,
+				follows: 0,
+				icon_url: cf.logo?.thumbnailUrl ?? undefined,
+				date_created: '',
+				date_modified: '',
+				latest_version: '',
+				license: 'arr',
+				client_side: 'optional',
+				server_side: 'optional',
+				featured_gallery: null,
+				color: undefined,
+				_source: 'curseforge',
+				_cfModId: cf.id,
+				_cfWebsiteUrl: cf.links?.websiteUrl ?? undefined,
+				_allowDist: cf.allowModDistribution !== false,
+			} as unknown as Labrinth.Search.v2.ResultSearchProject & { _source: string }
+		})
+
+		return {
+			projectHits: cfHits,
+			serverHits: [],
+			total_hits: cfResults.pagination.totalCount,
+			per_page: cfResults.pagination.pageSize,
+		}
+	}
 
 	const rawResults = await queryClient.fetchQuery({
 		queryKey: ['search', 'v3', requestParams],
@@ -872,12 +1145,7 @@ async function search(requestParams: string) {
 	})
 
 	if (!rawResults) {
-		return {
-			projectHits: [],
-			serverHits: [],
-			total_hits: 0,
-			per_page: 20,
-		}
+		return { projectHits: [], serverHits: [], total_hits: 0, per_page: 20 }
 	}
 
 	if (isServer) {
@@ -891,7 +1159,7 @@ async function search(requestParams: string) {
 		}
 	}
 
-	const hits = rawResults.result.hits.map((hit) => {
+	const mrHits = rawResults.result.hits.map((hit) => {
 		const mapped = {
 			...hit,
 			title: hit.name,
@@ -909,7 +1177,7 @@ async function search(requestParams: string) {
 	})
 
 	return {
-		projectHits: hits,
+		projectHits: mrHits,
 		serverHits: [],
 		total_hits: rawResults.result.total_hits,
 		per_page: rawResults.result.hits_per_page,
@@ -941,8 +1209,9 @@ const searchState = useBrowseSearch({
 	tags,
 	providedFilters: combinedProvidedFilters,
 	search,
-	persistentQueryParams: ['i', 'ai', 'shi', 'sid', 'wid', 'from'],
+	persistentQueryParams: ['i', 'ai', 'shi', 'sid', 'wid', 'from', 'src', 'cfcat'],
 	getExtraQueryParams: () => ({
+		src: source.value === 'curseforge' ? 'curseforge' : undefined,
 		sid: serverIdQuery.value || undefined,
 		wid: effectiveServerWorldId.value || undefined,
 		ai: instanceHideInstalled.value ? 'true' : undefined,
@@ -950,8 +1219,22 @@ const searchState = useBrowseSearch({
 	}),
 })
 
+watch(source, () => {
+	searchState.refreshSearch()
+})
+
+watch(
+	() => route.query.cfcat,
+	() => {
+		if (source.value === 'curseforge') searchState.refreshSearch()
+	},
+)
+
 const showFeaturedSections = computed(
-	() => projectType.value === 'modpack' && !searchState.query.value,
+	() => projectType.value === 'modpack' && !searchState.query.value && source.value === 'modrinth',
+)
+const showCfFeaturedSections = computed(
+	() => projectType.value === 'modpack' && !searchState.query.value && source.value === 'curseforge',
 )
 
 // ── Daily-rotating featured modpacks ────────────────────────────────────────
@@ -991,6 +1274,54 @@ const dailyShuffled = seededShuffle(FEATURED_POOL, todayNum)
 const featuredSlugs = dailyShuffled.slice(0, 3)
 const staffPicksSlugs = dailyShuffled.slice(3, 6)
 
+// Dynamic CF featured modpacks — fetched from the CF API when the section is visible
+const cfFeaturedMods = ref<CfFeaturedMod[]>([])
+const cfPicksMods = ref<CfFeaturedMod[]>([])
+
+watch(
+	showCfFeaturedSections,
+	async (visible) => {
+		if (!visible || cfFeaturedMods.value.length > 0) return
+		try {
+			const results = await curseforge_search({
+				query: null,
+				gameVersion: null,
+				loader: null,
+				categoryId: null,
+				classId: 4471,
+				page: 0,
+				pageSize: 50,
+			})
+			if (!results?.data?.length) return
+			const all: CfFeaturedMod[] = results.data
+				.filter((cf: { allowModDistribution?: boolean }) => cf.allowModDistribution !== false)
+				.map(
+					(cf: {
+						id: number
+						name: string
+						summary: string
+						logo?: { thumbnailUrl?: string }
+						screenshots?: { url?: string; thumbnailUrl?: string }[]
+					}) => ({
+						id: cf.id,
+						name: cf.name,
+						summary: cf.summary,
+						logoUrl: cf.logo?.thumbnailUrl ?? null,
+						bannerUrl: cf.screenshots?.[0]?.url ?? cf.screenshots?.[0]?.thumbnailUrl ?? null,
+					}),
+				)
+			// Featured: daily-seeded shuffle of top 15 by popularity -> pick 3
+			cfFeaturedMods.value = seededShuffle(all.slice(0, 15), todayNum).slice(0, 3)
+			// Syl's Picks: positions 15-40 (moderate downloads, not the giants) -> pick 3
+			cfPicksMods.value = seededShuffle(all.slice(15, 40), todayNum + 1).slice(0, 3)
+		} catch {
+			// best-effort, fail silently
+		}
+	},
+	{ immediate: true },
+)
+
+
 const SYL_COMMENTS: Record<string, string> = {
 	'fabulously-optimized': 'makes vanilla feel like it was always supposed to run this fast',
 	'adrenaline': 'bare minimum optimization pack - no excuses not to use it',
@@ -1013,7 +1344,32 @@ const SYL_TIPS = [
 	'if a pack feels slow, it\'s usually one mod hogging RAM, not all of them',
 	'when in doubt, allocate 6 GB and see if the stuttering goes away',
 ]
-const sylTip = SYL_TIPS[Math.floor(Math.random() * SYL_TIPS.length)]
+const CF_SYL_TIPS = [
+	'CurseForge modpacks update often - check the changelog before hitting that update button',
+	'most CurseForge packs need at least 6 GB RAM - 8 GB is safer for anything ATM-sized',
+	'if a mod requires a specific Forge version, the pack version matters as much as the MC version',
+	'CurseForge mods with distribution disabled can still be downloaded from CurseForge directly',
+	'when something crashes, find the "caused by" line in the log - that\'s almost always the culprit',
+]
+const sylTipMr = SYL_TIPS[Math.floor(Math.random() * SYL_TIPS.length)]
+const sylTipCf = CF_SYL_TIPS[Math.floor(Math.random() * CF_SYL_TIPS.length)]
+const sylTip = computed(() => (source.value === 'curseforge' ? sylTipCf : sylTipMr))
+
+const browsePageStyle = computed(() =>
+	source.value === 'curseforge'
+		? {
+				'--source-accent': '#e07428',
+				'--color-brand': '#e07428',
+				'--color-brand-highlight': '#e07428',
+				'--color-button-text-selected': 'rgba(0, 0, 0, 0.85)',
+			}
+		: {
+				'--source-accent': '#1bd96a',
+				'--color-brand': '#1bd96a',
+				'--color-brand-highlight': '#1bd96a',
+				'--color-button-text-selected': 'rgba(0, 0, 0, 0.85)',
+			},
+)
 
 watch(
 	[
@@ -1094,10 +1450,20 @@ provideBrowseManager({
 	tags,
 	projectType,
 	...searchState,
-	getProjectLink: (result: Labrinth.Search.v2.ResultSearchProject) => ({
-		path: `/project/${result.project_id ?? result.slug}`,
-		query: getProjectBrowseQuery(),
-	}),
+	getProjectLink: (result: Labrinth.Search.v2.ResultSearchProject) => {
+		const r = result as { _source?: string; _cfModId?: number }
+		if (r._source === 'curseforge') {
+			if (!r._cfModId) return ''
+			return {
+				path: `/cf-project/${r._cfModId}`,
+				query: getProjectBrowseQuery(),
+			}
+		}
+		return {
+			path: `/project/${result.project_id ?? result.slug}`,
+			query: getProjectBrowseQuery(),
+		}
+	},
 	getServerProjectLink: (result: Labrinth.Search.v3.ResultSearchProject) => ({
 		path: `/project/${result.slug ?? result.project_id}`,
 		query: getProjectBrowseQuery(),
@@ -1139,14 +1505,20 @@ provideBrowseManager({
 	onInstalled: onSearchResultInstalled,
 	serverPings,
 	getServerModpackContent,
-	onContextMenu: handleRightClick,
+	onContextMenu: (
+		event: MouseEvent,
+		result: Labrinth.Search.v2.ResultSearchProject | Labrinth.Search.v3.ResultSearchProject,
+	) => {
+		if ((result as { _source?: string })._source === 'curseforge') return
+		handleRightClick(event, result as Labrinth.Search.v3.ResultSearchProject)
+	},
 	offline,
 	lockedFilterMessages,
 })
 </script>
 
 <template>
-	<div class="browse-page flex flex-col gap-3 p-6">
+	<div class="browse-page flex flex-col gap-3 p-6" :style="browsePageStyle">
 		<p v-if="!instance" class="syl-tip">{{ sylTip }}</p>
 		<div v-if="showFeaturedSections" class="flex flex-col gap-3">
 			<BrowseFeaturedSection :slugs="featuredSlugs" label="Featured" />
@@ -1157,6 +1529,26 @@ provideBrowseManager({
 				:comments="SYL_COMMENTS"
 			/>
 			<hr class="browse-section-divider" />
+		</div>
+		<div v-if="showCfFeaturedSections" class="flex flex-col gap-3">
+			<CfBrowseFeaturedSection :mods="cfFeaturedMods" label="Featured" />
+			<CfBrowseFeaturedSection
+				:mods="cfPicksMods"
+				label="Syl's Picks"
+				subtitle="Curated by Syl"
+			/>
+			<hr class="browse-section-divider" />
+		</div>
+		<div v-if="showCurseForgeToggle" class="source-toggle">
+			<button
+				:class="['source-toggle__btn', source === 'modrinth' && 'source-toggle__btn--active-mr']"
+				@click="source = 'modrinth'"
+			>Modrinth</button>
+			<button
+				v-tooltip="cfBetaTooltip"
+				:class="['source-toggle__btn', source === 'curseforge' && 'source-toggle__btn--active-cf']"
+				@click="source = 'curseforge'"
+			>CurseForge<span class="source-toggle__beta">Beta</span></button>
 		</div>
 		<BrowsePageLayout>
 			<template #after>
@@ -1170,6 +1562,53 @@ provideBrowseManager({
 				</ContextMenu>
 			</template>
 		</BrowsePageLayout>
+		<Teleport to="#sidebar-teleport-target">
+			<BrowseSidebar />
+		</Teleport>
+
+		<Teleport to="body">
+			<div v-if="cfPicker" class="cf-picker-overlay" @click.self="cfPicker = null">
+				<div class="cf-picker">
+					<div class="cf-picker__header">
+						<img
+							v-if="cfPicker.iconUrl"
+							:src="cfPicker.iconUrl"
+							class="cf-picker__mod-icon"
+							alt=""
+						/>
+						<div class="cf-picker__mod-info">
+							<p class="cf-picker__mod-title">{{ cfPicker.title }}</p>
+							<p class="cf-picker__mod-subtitle">Select an instance to install to</p>
+						</div>
+						<button class="cf-picker__close" @click="cfPicker = null">✕</button>
+					</div>
+					<div v-if="cfPickerInstances.length === 0" class="cf-picker__empty">
+						No installed instances found. Create one first.
+					</div>
+					<div v-else class="cf-picker__list">
+						<button
+							v-for="inst in cfPickerInstances"
+							:key="inst.path"
+							class="cf-picker__instance"
+							@click="cfPickerInstall(inst.path, inst.loader, inst.gameVersion)"
+						>
+							<img
+								v-if="inst.iconPath"
+								:src="resolveIconUrl(inst.iconPath)"
+								class="cf-picker__instance-icon"
+								alt=""
+							/>
+							<div v-else class="cf-picker__instance-icon cf-picker__instance-icon--placeholder" />
+							<div class="cf-picker__instance-info">
+								<span class="cf-picker__instance-name">{{ inst.name }}</span>
+								<span class="cf-picker__instance-meta">{{ inst.loader }} {{ inst.gameVersion }}</span>
+							</div>
+						</button>
+					</div>
+				</div>
+			</div>
+		</Teleport>
+
 		<CreationFlowModal
 			v-if="isServerContext && projectType === 'modpack'"
 			ref="serverSetupModalRef"
@@ -1184,9 +1623,6 @@ provideBrowseManager({
 			@browse-modpacks="() => {}"
 			@create="handleServerModpackFlowCreate"
 		/>
-		<Teleport to="#sidebar-teleport-target">
-			<BrowseSidebar />
-		</Teleport>
 	</div>
 </template>
 
@@ -1196,6 +1632,56 @@ provideBrowseManager({
 	font-size: 0.8125rem;
 	color: #6b6485;
 	font-style: italic;
+}
+
+
+.source-toggle {
+	display: flex;
+	gap: 0.25rem;
+	padding: 0.25rem;
+	background: var(--color-surface-3, rgba(142, 132, 207, 0.08));
+	border-radius: 0.75rem;
+	width: fit-content;
+
+	&__btn {
+		padding: 0.35rem 0.9rem;
+		border-radius: 0.5rem;
+		border: none;
+		background: transparent;
+		color: var(--color-secondary, #9e98b8);
+		font-size: 0.8125rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background 0.15s, color 0.15s;
+
+		&:hover:not(.source-toggle__btn--active-mr):not(.source-toggle__btn--active-cf) {
+			background: rgba(142, 132, 207, 0.12);
+			color: var(--color-primary, #c1bed1);
+		}
+
+		&--active-mr {
+			background: #1bd96a;
+			color: rgba(0, 0, 0, 0.85);
+		}
+
+		&--active-cf {
+			background: #e07428;
+			color: rgba(0, 0, 0, 0.85);
+		}
+	}
+
+	&__beta {
+		display: inline-block;
+		margin-left: 0.375rem;
+		padding: 0.0625rem 0.375rem;
+		border-radius: 0.375rem;
+		background: rgba(0, 0, 0, 0.18);
+		font-size: 0.625rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		vertical-align: middle;
+	}
 }
 
 .browse-page {
@@ -1214,6 +1700,165 @@ provideBrowseManager({
 	/* More breathing room between search result rows */
 	.search [role='list'] {
 		gap: 0.875rem;
+	}
+
+	/* Source-accent hover border on all search result cards */
+	.smart-clickable:hover .project-card-container > div {
+		border-color: var(--source-accent);
+	}
+
+	/* NavTabs active slider and SSR fallback — solid source-accent with dark readable text */
+	nav .bg-button-bgSelected {
+		background-color: var(--source-accent) !important;
+	}
+	nav .text-button-textSelected {
+		color: rgba(0, 0, 0, 0.85) !important;
+	}
+
+	/* Pagination active page number — dark text beats the !text-brand override */
+	.page-number-container:not(.page-number) :is(a, button) {
+		color: rgba(0, 0, 0, 0.85) !important;
+	}
+}
+
+.cf-picker-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(2px);
+}
+
+.cf-picker {
+	background: var(--color-raised-bg, #1a1626);
+	border: 1px solid rgba(142, 132, 207, 0.15);
+	border-radius: 1rem;
+	width: min(420px, calc(100vw - 2rem));
+	max-height: min(480px, calc(100vh - 4rem));
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 1rem 1rem 0.875rem;
+		border-bottom: 1px solid rgba(142, 132, 207, 0.1);
+		flex-shrink: 0;
+	}
+
+	&__mod-icon {
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 0.4rem;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	&__mod-info {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__mod-title {
+		margin: 0;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: var(--color-base, #e2dff0);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__mod-subtitle {
+		margin: 0;
+		font-size: 0.75rem;
+		color: var(--color-secondary, #9e98b8);
+	}
+
+	&__close {
+		background: none;
+		border: none;
+		color: var(--color-secondary, #9e98b8);
+		cursor: pointer;
+		font-size: 1rem;
+		padding: 0.25rem;
+		flex-shrink: 0;
+		line-height: 1;
+
+		&:hover {
+			color: var(--color-base, #e2dff0);
+		}
+	}
+
+	&__empty {
+		padding: 2rem 1rem;
+		text-align: center;
+		color: var(--color-secondary, #9e98b8);
+		font-size: 0.875rem;
+	}
+
+	&__list {
+		overflow-y: auto;
+		padding: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	&__instance {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		padding: 0.5rem 0.625rem;
+		border-radius: 0.5rem;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		text-align: left;
+		width: 100%;
+		transition: background 0.1s;
+
+		&:hover {
+			background: rgba(142, 132, 207, 0.1);
+		}
+	}
+
+	&__instance-icon {
+		width: 2rem;
+		height: 2rem;
+		border-radius: 0.3rem;
+		object-fit: cover;
+		flex-shrink: 0;
+
+		&--placeholder {
+			background: rgba(142, 132, 207, 0.15);
+		}
+	}
+
+	&__instance-info {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	&__instance-name {
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: var(--color-base, #e2dff0);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__instance-meta {
+		font-size: 0.75rem;
+		color: var(--color-secondary, #9e98b8);
+		text-transform: capitalize;
 	}
 }
 </style>

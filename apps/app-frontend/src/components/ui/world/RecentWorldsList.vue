@@ -21,7 +21,7 @@ const jumpBackInItems = ref<InstanceJumpBackInItem[]>([])
 const loading = ref(true)
 
 const MIN_JUMP_BACK_IN = 3
-const MAX_JUMP_BACK_IN = 6
+const MAX_JUMP_BACK_IN = 4
 const TWO_WEEKS_AGO = dayjs().subtract(14, 'day')
 
 const MAX_LINUX_POPULATES = 3

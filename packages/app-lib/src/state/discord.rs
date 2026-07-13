@@ -70,18 +70,30 @@ impl DiscordGuard {
         msg: &str,
         reconnect_if_fail: bool,
     ) -> crate::Result<()> {
+        self.force_set_activity_with_icon(msg, "lunivex", "LuniVex", reconnect_if_fail).await
+    }
+
+    /// Like force_set_activity but lets the caller supply a custom large_image and large_text.
+    /// Pass an https:// URL as large_image to use an external image (Discord supports this for
+    /// local RPC as of Discord client 199311+).
+    pub async fn force_set_activity_with_icon(
+        &self,
+        msg: &str,
+        large_image: &str,
+        large_text: &str,
+        reconnect_if_fail: bool,
+    ) -> crate::Result<()> {
         // Attempt to connect if not connected. Do not continue if it fails, as the client.set_activity can panic if it never was connected
         if !self.retry_if_not_ready().await {
             return Ok(());
         }
 
-        // "lunivex" must be uploaded as a Rich Presence asset in your Discord Developer Portal app.
         let activity = Activity::new()
             .state(msg)
             .assets(
                 Assets::new()
-                    .large_image("lunivex")
-                    .large_text("LuniVex"),
+                    .large_image(large_image)
+                    .large_text(large_text),
             )
             .buttons(vec![Button::new("Download LuniVex", "https://lunivex.xyz/download")]);
 
@@ -101,6 +113,39 @@ impl DiscordGuard {
         }
 
         Ok(())
+    }
+
+    /// Convenience method for when a profile starts playing.
+    /// Uses the profile's icon as large_image when it's an https:// URL (e.g. a CF modpack icon),
+    /// otherwise falls back to the static "lunivex" portal asset.
+    pub async fn set_activity_playing(
+        &self,
+        profile_name: &str,
+        icon_path: Option<&str>,
+        reconnect_if_fail: bool,
+    ) -> crate::Result<()> {
+        let state = State::get().await?;
+        let settings = crate::state::Settings::get(&state.pool).await?;
+        if !settings.discord_rpc {
+            return self.clear_activity(true).await;
+        }
+
+        let is_remote = icon_path
+            .map(|p| p.starts_with("https://") || p.starts_with("http://"))
+            .unwrap_or(false);
+        let (large_image, large_text): (&str, &str) = if is_remote {
+            (icon_path.unwrap(), profile_name)
+        } else {
+            ("lunivex", "LuniVex")
+        };
+
+        self.force_set_activity_with_icon(
+            &format!("Playing {profile_name}"),
+            large_image,
+            large_text,
+            reconnect_if_fail,
+        )
+        .await
     }
 
     /// Clear the activity entirely ('disabling' the RPC until the next set_activity)
@@ -147,8 +192,9 @@ impl DiscordGuard {
             let prof =
                 Profile::get(&existing_child.profile_path, &state.pool).await?;
             if let Some(prof) = prof {
-                self.set_activity(
-                    &format!("Playing {}", prof.name),
+                self.set_activity_playing(
+                    &prof.name,
+                    prof.icon_path.as_deref(),
                     reconnect_if_fail,
                 )
                 .await?;

@@ -24,6 +24,27 @@ fn main() {
                     ),
             )
             .plugin(
+                "curseforge",
+                InlinedPlugin::new()
+                    .commands(&[
+                        "curseforge_search",
+                        "curseforge_get_categories",
+                        "curseforge_get_mod",
+                        "curseforge_get_mods",
+                        "curseforge_get_mod_files",
+                        "curseforge_get_file",
+                        "curseforge_get_file_changelog",
+                        "curseforge_install_mod",
+                        "curseforge_install_mod_file",
+                        "curseforge_get_mod_description",
+                        "curseforge_install_modpack",
+                        "curseforge_install_modpack_file",
+                    ])
+                    .default_permission(
+                        DefaultPermissionRule::AllowAllCommands,
+                    ),
+            )
+            .plugin(
                 "cache",
                 InlinedPlugin::new()
                     .commands(&[

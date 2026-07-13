@@ -93,6 +93,24 @@ export default new createRouter({
 			},
 		},
 		{
+			path: '/cf-project/:id',
+			name: 'CurseForge Project',
+			component: Pages.CfProject,
+			meta: {
+				useContext: true,
+				breadcrumb: [{ name: '?CfProject' }],
+			},
+		},
+		{
+			path: '/cf-project/:id/version/:fileId',
+			name: 'CurseForge Version',
+			component: Pages.CfVersion,
+			meta: {
+				useContext: true,
+				breadcrumb: [{ name: '?CfProject', link: '/cf-project/{id}' }, { name: '?CfVersion' }],
+			},
+		},
+		{
 			path: '/skins',
 			name: 'Skin selector',
 			component: Pages.Skins,
