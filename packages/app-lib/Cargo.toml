@@ -44,6 +44,7 @@ futures = { workspace = true, features = ["alloc", "async-await"] }
 futures-lite = { workspace = true }
 heck = { workspace = true }
 hickory-resolver = { workspace = true }
+image = { workspace = true, features = ["jpeg", "png", "webp"] }
 indicatif = { workspace = true, optional = true }
 itertools = { workspace = true }
 notify = { workspace = true }
@@ -51,7 +52,6 @@ notify-debouncer-mini = { workspace = true }
 p256 = { workspace = true, features = ["ecdsa"] }
 parking_lot = { workspace = true }
 paste = { workspace = true }
-image = { workspace = true, features = ["jpeg", "png", "webp"] }
 path-util = { workspace = true }
 phf = { workspace = true }
 png = { workspace = true }
