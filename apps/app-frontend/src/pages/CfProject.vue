@@ -88,9 +88,21 @@ type CfMod = {
 	authors: { id: number; name: string; url?: string }[]
 	logo?: { thumbnailUrl?: string }
 	links?: { websiteUrl?: string; wikiUrl?: string; issuesUrl?: string; sourceUrl?: string }
-	screenshots?: { id?: number; title?: string; description?: string; thumbnailUrl?: string; url?: string }[]
+	screenshots?: {
+		id?: number
+		title?: string
+		description?: string
+		thumbnailUrl?: string
+		url?: string
+	}[]
 	latestFiles?: CfFile[]
-	latestFilesIndexes: { gameVersion: string; fileId: number; filename: string; releaseType: number; modLoader?: number }[]
+	latestFilesIndexes: {
+		gameVersion: string
+		fileId: number
+		filename: string
+		releaseType: number
+		modLoader?: number
+	}[]
 	dateCreated?: string
 	dateModified: string
 	gamePopularityRank?: number
@@ -151,7 +163,9 @@ const envSampleFiles = ref<CfFile[]>([])
 const installing = ref(false)
 const installed = ref(false)
 
-const instance = ref<{ path: string; name: string; game_version: string; loader: string } | null>(null)
+const instance = ref<{ path: string; name: string; game_version: string; loader: string } | null>(
+	null,
+)
 const instanceFull = ref<{
 	path: string
 	name: string
@@ -167,6 +181,7 @@ const FILES_PAGE_SIZE = 20
 const files = ref<CfFile[]>([])
 const filesLoading = ref(false)
 const filesLoaded = ref(false)
+let filesRequestId = 0
 const filesPage = ref(1)
 const filesTotalCount = ref(0)
 const filterGameVersion = ref<string | null>(null)
@@ -178,7 +193,12 @@ const gameVersionTags = ref<{ version: string; version_type: string; date: strin
 const activeTab = ref<'description' | 'versions' | 'gallery'>('description')
 
 // Gallery expand state
-const expandedImage = ref<{ title?: string; description?: string; url?: string; thumbnailUrl?: string } | null>(null)
+const expandedImage = ref<{
+	title?: string
+	description?: string
+	url?: string
+	thumbnailUrl?: string
+} | null>(null)
 const expandedIndex = ref(0)
 const zoomedIn = ref(false)
 
@@ -298,9 +318,7 @@ const activeTabIndex = computed(() => {
 })
 
 const sortedFiles = computed(() =>
-	[...files.value].sort(
-		(a, b) => new Date(b.fileDate).getTime() - new Date(a.fileDate).getTime(),
-	),
+	[...files.value].sort((a, b) => new Date(b.fileDate).getTime() - new Date(a.fileDate).getTime()),
 )
 
 const displayedFiles = computed(() =>
@@ -313,8 +331,12 @@ const filesPageCount = computed(() =>
 	Math.max(1, Math.ceil(filesTotalCount.value / FILES_PAGE_SIZE)),
 )
 
-const filterLoaderOptions = computed(() =>
-	supportedLoaders.value.filter((l) => ['Forge', 'Fabric', 'Quilt', 'NeoForge'].includes(l)),
+const filterLoaderOptions = computed(() => ['Forge', 'Fabric', 'Quilt', 'NeoForge'])
+
+const filterGameVersionOptions = computed(() =>
+	Array.from(
+		new Set([...gameVersionTags.value.map((tag) => tag.version), ...supportedGameVersions.value]),
+	),
 )
 
 // ── Lifecycle ─────────────────────────────────────────────────────────────────
@@ -324,6 +346,8 @@ const filterLoaderOptions = computed(() =>
 // must be callable again on param change, not just once in onMounted —
 // mirroring project/Index.vue's fetchProjectData + route.params.id watcher.
 async function fetchModData() {
+	filesRequestId++
+	filesLoading.value = false
 	loading.value = true
 	loadError.value = null
 	mod.value = null
@@ -435,7 +459,8 @@ function onTabClick(_index: number, link: { label: string }) {
 // ── File loading ──────────────────────────────────────────────────────────────
 
 async function loadFiles(page = filesPage.value) {
-	if (filesLoading.value || !mod.value) return
+	if (!mod.value) return
+	const requestId = ++filesRequestId
 	filesLoading.value = true
 	try {
 		const result = await curseforge_get_mod_files(
@@ -445,19 +470,20 @@ async function loadFiles(page = filesPage.value) {
 			page - 1,
 			FILES_PAGE_SIZE,
 		)
+		if (requestId !== filesRequestId) return
 		files.value = result.data
 		filesTotalCount.value = result.pagination.totalCount
 		filesPage.value = page
 		filesLoaded.value = true
 	} catch (err) {
-		handleError(err as Error)
+		if (requestId === filesRequestId) handleError(err as Error)
 	} finally {
-		filesLoading.value = false
+		if (requestId === filesRequestId) filesLoading.value = false
 	}
 }
 
 watch([filterGameVersion, filterLoader], () => {
-	if (filesLoaded.value) loadFiles(1)
+	if (activeTab.value === 'versions') loadFiles(1)
 })
 
 function switchFilesPage(page: number) {
@@ -626,7 +652,9 @@ function authorInitial(name: string): string {
 }
 
 function authorUrl(author: { name: string; url?: string }): string {
-	return author.url ?? `https://www.curseforge.com/members/${encodeURIComponent(author.name)}/projects`
+	return (
+		author.url ?? `https://www.curseforge.com/members/${encodeURIComponent(author.name)}/projects`
+	)
 }
 
 function goToCategory(cat: { id: number }) {
@@ -740,7 +768,12 @@ function loaderNames(gv: string[]): string[] {
 
 			<!-- 2. Links (matches ProjectSidebarLinks' order + heading) -->
 			<div
-				v-if="mod.links?.websiteUrl || mod.links?.issuesUrl || mod.links?.sourceUrl || mod.links?.wikiUrl"
+				v-if="
+					mod.links?.websiteUrl ||
+					mod.links?.issuesUrl ||
+					mod.links?.sourceUrl ||
+					mod.links?.wikiUrl
+				"
 				class="project-sidebar-section flex flex-col gap-3"
 			>
 				<h2 class="text-lg m-0">Links</h2>
@@ -828,15 +861,9 @@ function loaderNames(gv: string[]): string[] {
 				<div
 					class="flex flex-col gap-3 font-semibold [&>div]:flex [&>div]:gap-2 [&>div]:items-center"
 				>
-					<div
-						v-tooltip="
-							formatCompactNumber(Math.round(mod.downloadCount)) + ' downloads'
-						"
-					>
+					<div v-tooltip="formatCompactNumber(Math.round(mod.downloadCount)) + ' downloads'">
 						<DownloadIcon aria-hidden="true" />
-						<div>
-							{{ formatCompactNumber(Math.round(mod.downloadCount)) }} downloads
-						</div>
+						<div>{{ formatCompactNumber(Math.round(mod.downloadCount)) }} downloads</div>
 					</div>
 					<div v-if="mod.dateCreated" v-tooltip="formatDateTime(mod.dateCreated)">
 						<CalendarIcon aria-hidden="true" />
@@ -868,9 +895,7 @@ function loaderNames(gv: string[]): string[] {
 				<template #summary>{{ mod.summary }}</template>
 				<template #stats>
 					<div
-						v-tooltip="
-							formatCompactNumber(Math.round(mod.downloadCount)) + ' downloads'
-						"
+						v-tooltip="formatCompactNumber(Math.round(mod.downloadCount)) + ' downloads'"
 						class="flex items-center gap-2 font-semibold cursor-help"
 						:class="{
 							'md:border-r md:border-divider md:pr-3':
@@ -951,9 +976,7 @@ function loaderNames(gv: string[]): string[] {
 							aria-label="More options"
 						>
 							<MoreVerticalIcon aria-hidden="true" />
-							<template #open-in-browser>
-								<ExternalIcon /> Open on CurseForge
-							</template>
+							<template #open-in-browser> <ExternalIcon /> Open on CurseForge </template>
 							<template #report> <ReportIcon /> Report </template>
 						</OverflowMenu>
 					</ButtonStyled>
@@ -982,7 +1005,7 @@ function loaderNames(gv: string[]): string[] {
 							v-model="filterGameVersion"
 							name="Game version filter"
 							class="!w-44"
-							:options="[null, ...supportedGameVersions]"
+							:options="[null, ...filterGameVersionOptions]"
 							:display-name="(v: string | null) => v ?? 'All game versions'"
 						/>
 						<DropdownSelect
@@ -999,8 +1022,7 @@ function loaderNames(gv: string[]): string[] {
 							class="!w-36"
 							:options="[null, 'release', 'beta', 'alpha']"
 							:display-name="
-								(v: string | null) =>
-									v ? v.charAt(0).toUpperCase() + v.slice(1) : 'All channels'
+								(v: string | null) => (v ? v.charAt(0).toUpperCase() + v.slice(1) : 'All channels')
 							"
 						/>
 					</div>
@@ -1022,10 +1044,26 @@ function loaderNames(gv: string[]): string[] {
 					<div class="cf-vrow">
 						<div class="w-9 max-sm:hidden" />
 						<div class="text-sm font-bold text-contrast max-sm:hidden">Name</div>
-						<div class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden">Game version</div>
-						<div class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden">Platforms</div>
-						<div class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden">Published</div>
-						<div class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden">Downloads</div>
+						<div
+							class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden"
+						>
+							Game version
+						</div>
+						<div
+							class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden"
+						>
+							Platforms
+						</div>
+						<div
+							class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden"
+						>
+							Published
+						</div>
+						<div
+							class="text-sm font-bold text-contrast max-sm:hidden sm:max-xl:collapse sm:max-xl:hidden"
+						>
+							Downloads
+						</div>
 						<div class="w-9 max-sm:hidden" />
 					</div>
 
@@ -1048,7 +1086,9 @@ function loaderNames(gv: string[]): string[] {
 										</div>
 									</div>
 									<!-- Version name -->
-									<div class="pointer-events-none relative z-[1] flex flex-col justify-center overflow-hidden min-w-32 group-hover:underline">
+									<div
+										class="pointer-events-none relative z-[1] flex flex-col justify-center overflow-hidden min-w-32 group-hover:underline"
+									>
 										<div class="font-bold text-contrast text-ellipsis overflow-hidden">
 											{{ file.displayName }}
 										</div>
@@ -1069,10 +1109,7 @@ function loaderNames(gv: string[]): string[] {
 												>
 													{{ v }}
 												</TagItem>
-												<TagItem
-													v-if="mcVersions(file.gameVersions).length > 6"
-													class="z-[1]"
-												>
+												<TagItem v-if="mcVersions(file.gameVersions).length > 6" class="z-[1]">
 													+{{ mcVersions(file.gameVersions).length - 6 }}
 												</TagItem>
 											</div>
@@ -1092,7 +1129,9 @@ function loaderNames(gv: string[]): string[] {
 											</div>
 										</div>
 									</div>
-									<div class="flex flex-col justify-center gap-1 max-sm:flex-row max-sm:justify-start max-sm:gap-3 xl:contents">
+									<div
+										class="flex flex-col justify-center gap-1 max-sm:flex-row max-sm:justify-start max-sm:gap-3 xl:contents"
+									>
 										<!-- Published -->
 										<div
 											v-tooltip="formatDateTime(file.fileDate)"
@@ -1102,7 +1141,9 @@ function loaderNames(gv: string[]): string[] {
 											{{ formatRelativeTime(file.fileDate) }}
 										</div>
 										<!-- Downloads -->
-										<div class="pointer-events-none z-[1] flex items-center gap-1 font-medium xl:self-center">
+										<div
+											class="pointer-events-none z-[1] flex items-center gap-1 font-medium xl:self-center"
+										>
 											<DownloadIcon class="xl:hidden" />
 											{{ formatCompactNumber(Math.round(file.downloadCount)) }}
 										</div>
@@ -1110,12 +1151,33 @@ function loaderNames(gv: string[]): string[] {
 								</div>
 							</div>
 							<!-- Actions -->
-							<div class="flex items-start justify-end gap-1 sm:items-center z-[1] max-[400px]:flex-col max-[400px]:justify-start">
+							<div
+								class="flex items-start justify-end gap-1 sm:items-center z-[1] max-[400px]:flex-col max-[400px]:justify-start"
+							>
 								<ButtonStyled circular type="transparent">
 									<button
-										v-tooltip="!canInstall ? 'Distribution disabled by author' : instanceFileNames.has(file.fileName) ? 'Installed' : installingFileIds.has(file.id) ? 'Installing…' : isModpack ? 'Install modpack' : 'Install'"
-										:class="{ 'group-hover:!bg-brand group-hover:[&>svg]:!text-brand-inverted': !installingFileIds.has(file.id) && canInstall && !instanceFileNames.has(file.fileName) }"
-										:disabled="installingFileIds.has(file.id) || !canInstall || instanceFileNames.has(file.fileName)"
+										v-tooltip="
+											!canInstall
+												? 'Distribution disabled by author'
+												: instanceFileNames.has(file.fileName)
+													? 'Installed'
+													: installingFileIds.has(file.id)
+														? 'Installing…'
+														: isModpack
+															? 'Install modpack'
+															: 'Install'
+										"
+										:class="{
+											'group-hover:!bg-brand group-hover:[&>svg]:!text-brand-inverted':
+												!installingFileIds.has(file.id) &&
+												canInstall &&
+												!instanceFileNames.has(file.fileName),
+										}"
+										:disabled="
+											installingFileIds.has(file.id) ||
+											!canInstall ||
+											instanceFileNames.has(file.fileName)
+										"
 										@click.stop="handleVersionInstall(file)"
 									>
 										<SpinnerIcon v-if="installingFileIds.has(file.id)" class="animate-spin" />
@@ -1128,7 +1190,13 @@ function loaderNames(gv: string[]): string[] {
 										v-tooltip="'Open on CurseForge'"
 										class="group-hover:!bg-button-bg"
 										href="#"
-										@click.prevent="openUrl(mod.links?.websiteUrl ? `${mod.links.websiteUrl}/files/${file.id}` : `https://www.curseforge.com/minecraft/mc-mods/${mod!.slug}/files/${file.id}`)"
+										@click.prevent="
+											openUrl(
+												mod.links?.websiteUrl
+													? `${mod.links.websiteUrl}/files/${file.id}`
+													: `https://www.curseforge.com/minecraft/mc-mods/${mod!.slug}/files/${file.id}`,
+											)
+										"
 									>
 										<ExternalIcon />
 									</a>
@@ -1153,11 +1221,7 @@ function loaderNames(gv: string[]): string[] {
 			<!-- Gallery tab -->
 			<template v-if="activeTab === 'gallery'">
 				<div class="gallery">
-					<Card
-						v-for="(img, i) in screenshots"
-						:key="i"
-						class="gallery-item"
-					>
+					<Card v-for="(img, i) in screenshots" :key="i" class="gallery-item">
 						<a @click="expandImage(img, i)">
 							<img
 								:src="img.url ?? img.thumbnailUrl"
@@ -1177,11 +1241,7 @@ function loaderNames(gv: string[]): string[] {
 		</div>
 
 		<!-- Gallery expand modal (matches Gallery.vue exactly) -->
-		<div
-			v-if="expandedImage"
-			class="expanded-image-modal"
-			@click="closeExpand"
-		>
+		<div v-if="expandedImage" class="expanded-image-modal" @click="closeExpand">
 			<div class="content">
 				<img
 					class="image"
@@ -1201,10 +1261,7 @@ function loaderNames(gv: string[]): string[] {
 								<button @click="closeExpand"><XIcon aria-hidden="true" /></button>
 							</ButtonStyled>
 							<ButtonStyled circular>
-								<a
-									target="_blank"
-									:href="expandedImage.url ?? expandedImage.thumbnailUrl"
-								>
+								<a target="_blank" :href="expandedImage.url ?? expandedImage.thumbnailUrl">
 									<ExternalIcon aria-hidden="true" />
 								</a>
 							</ButtonStyled>

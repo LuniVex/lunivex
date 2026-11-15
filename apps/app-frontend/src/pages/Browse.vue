@@ -44,6 +44,12 @@ import {
 	get_search_results_v3,
 	get_version_many,
 } from '@/helpers/cache.js'
+import {
+	curseforge_install_mod,
+	curseforge_install_modpack,
+	curseforge_search,
+	parseCurseForgeSearchParams,
+} from '@/helpers/curseforge.js'
 import { profile_listener } from '@/helpers/events.js'
 import { get_loader_versions as getLoaderManifest } from '@/helpers/metadata'
 import {
@@ -51,13 +57,8 @@ import {
 	get_installed_project_ids as getInstalledProjectIds,
 	list as listProfiles,
 } from '@/helpers/profile.js'
-import {
-	curseforge_install_mod,
-	curseforge_install_modpack,
-	curseforge_search,
-} from '@/helpers/curseforge.js'
-import { resolveIconUrl } from '@/helpers/utils.js'
 import { get_categories, get_game_versions, get_loaders } from '@/helpers/tags'
+import { resolveIconUrl } from '@/helpers/utils.js'
 import { get_profile_worlds } from '@/helpers/worlds'
 import { injectContentInstall } from '@/providers/content-install'
 import { injectServerInstall } from '@/providers/server-install'
@@ -481,7 +482,12 @@ const cfBetaTooltip =
 	"CurseForge integration is new - some pages may not match Modrinth's layout exactly yet, and bugs are possible. Report issues on Discord."
 
 const CF_SUPPORTED_TYPES = new Set(['mod', 'modpack', 'resourcepack', 'shader'])
-const CF_CLASS_IDS: Record<string, number> = { mod: 6, modpack: 4471, resourcepack: 12, shader: 6552 }
+const CF_CLASS_IDS: Record<string, number> = {
+	mod: 6,
+	modpack: 4471,
+	resourcepack: 12,
+	shader: 6552,
+}
 
 type BrowseSource = 'modrinth' | 'curseforge'
 const source = ref<BrowseSource>(
@@ -632,9 +638,16 @@ const installedCfProjectIds = ref<Set<string>>(new Set())
 
 type CfPickerMod = { modId: number; projectType: string; title: string; iconUrl?: string }
 const cfPicker = ref<CfPickerMod | null>(null)
-const cfPickerInstances = ref<{ path: string; name: string; loader: string; gameVersion: string; iconPath?: string }[]>([])
+const cfPickerInstances = ref<
+	{ path: string; name: string; loader: string; gameVersion: string; iconPath?: string }[]
+>([])
 
-async function openCfInstancePicker(modId: number, projectTypeVal: string, title: string, iconUrl?: string) {
+async function openCfInstancePicker(
+	modId: number,
+	projectTypeVal: string,
+	title: string,
+	iconUrl?: string,
+) {
 	try {
 		const all = await listProfiles()
 		cfPickerInstances.value = all
@@ -652,7 +665,11 @@ async function openCfInstancePicker(modId: number, projectTypeVal: string, title
 	cfPicker.value = { modId, projectType: projectTypeVal, title, iconUrl }
 }
 
-async function cfPickerInstall(instancePath: string, instanceLoader: string, instanceGameVersion: string) {
+async function cfPickerInstall(
+	instancePath: string,
+	instanceLoader: string,
+	instanceGameVersion: string,
+) {
 	const pending = cfPicker.value
 	if (!pending) return
 	cfPicker.value = null
@@ -1050,14 +1067,9 @@ async function search(requestParams: string) {
 		!isServerContext.value &&
 		!isFromWorlds.value
 
-	const urlParams = new URLSearchParams(
-		requestParams.startsWith('?') ? requestParams.slice(1) : requestParams,
-	)
-	const offset = parseInt(urlParams.get('offset') ?? '0')
-	const limit = parseInt(urlParams.get('limit') ?? '20')
-	const queryText = urlParams.get('query') ? decodeURIComponent(urlParams.get('query')!) : undefined
-
 	if (isCfMode) {
+		const searchParams = parseCurseForgeSearchParams(requestParams)
+		const limit = searchParams.pageSize
 		let cfResults: {
 			data: {
 				id: number
@@ -1075,21 +1087,21 @@ async function search(requestParams: string) {
 		} | null = null
 
 		try {
+			const preferences = getCurrentSelectedInstallPreferences(projectType.value)
 			cfResults = await curseforge_search({
-				query: queryText ?? null,
-				gameVersion: instance.value?.game_version ?? null,
-				loader: projectType.value === 'mod' ? (instance.value?.loader ?? null) : null,
+				...searchParams,
+				gameVersions: preferences.gameVersions ?? null,
+				loaders: projectType.value === 'mod' ? (preferences.loaders ?? null) : null,
 				categoryId: route.query.cfcat ? Number(route.query.cfcat) : null,
 				classId: CF_CLASS_IDS[projectType.value] ?? 6,
-				page: Math.floor(offset / limit),
-				pageSize: limit,
 			})
 		} catch (e: unknown) {
 			debugLog('CF search error', e)
-			return { projectHits: [], serverHits: [], total_hits: 0, per_page: limit }
+			handleError(e as Error)
+			throw e
 		}
 
-		if (!cfResults?.data?.length) {
+		if (!cfResults) {
 			return { projectHits: [], serverHits: [], total_hits: 0, per_page: limit }
 		}
 
@@ -1220,6 +1232,7 @@ const searchState = useBrowseSearch({
 })
 
 watch(source, () => {
+	searchState.currentPage.value = 1
 	searchState.refreshSearch()
 })
 
@@ -1234,7 +1247,8 @@ const showFeaturedSections = computed(
 	() => projectType.value === 'modpack' && !searchState.query.value && source.value === 'modrinth',
 )
 const showCfFeaturedSections = computed(
-	() => projectType.value === 'modpack' && !searchState.query.value && source.value === 'curseforge',
+	() =>
+		projectType.value === 'modpack' && !searchState.query.value && source.value === 'curseforge',
 )
 
 // ── Daily-rotating featured modpacks ────────────────────────────────────────
@@ -1321,10 +1335,9 @@ watch(
 	{ immediate: true },
 )
 
-
 const SYL_COMMENTS: Record<string, string> = {
 	'fabulously-optimized': 'makes vanilla feel like it was always supposed to run this fast',
-	'adrenaline': 'bare minimum optimization pack - no excuses not to use it',
+	adrenaline: 'bare minimum optimization pack - no excuses not to use it',
 	'better-mc-fabric-bmc2': 'vanilla but actually good, hard to go back after this',
 	'prominence-2-fabric': 'one of the better kitchen-sink packs right now, genuinely',
 	'cobblemon-fabric': 'Pokémon in Minecraft done right - took long enough',
@@ -1332,7 +1345,7 @@ const SYL_COMMENTS: Record<string, string> = {
 	'better-mc-forge-bmc4': 'the Forge version holds up just as well',
 	'create-above-and-beyond': 'Create is peak Minecraft and this is the best Create pack',
 	'the-pixelmon-modpack': 'the original Pokémon mod, still going strong',
-	'rlcraft': 'genuinely hard - don\'t say I didn\'t warn you',
+	rlcraft: "genuinely hard - don't say I didn't warn you",
 	'sky-factory-4': 'skyblock with automation, you could lose weeks to this',
 	'magic-and-monsters': 'covers basically every magic mod worth playing',
 }
@@ -1341,7 +1354,7 @@ const SYL_TIPS = [
 	'if your modpack crashes on launch, the Fabric API version is usually the culprit',
 	'Sodium makes almost everything run better - just saying',
 	'always check the changelog before updating a modpack, breaking changes happen more than they should',
-	'if a pack feels slow, it\'s usually one mod hogging RAM, not all of them',
+	"if a pack feels slow, it's usually one mod hogging RAM, not all of them",
 	'when in doubt, allocate 6 GB and see if the stuttering goes away',
 ]
 const CF_SYL_TIPS = [
@@ -1532,23 +1545,23 @@ provideBrowseManager({
 		</div>
 		<div v-if="showCfFeaturedSections" class="flex flex-col gap-3">
 			<CfBrowseFeaturedSection :mods="cfFeaturedMods" label="Featured" />
-			<CfBrowseFeaturedSection
-				:mods="cfPicksMods"
-				label="Syl's Picks"
-				subtitle="Curated by Syl"
-			/>
+			<CfBrowseFeaturedSection :mods="cfPicksMods" label="Syl's Picks" subtitle="Curated by Syl" />
 			<hr class="browse-section-divider" />
 		</div>
 		<div v-if="showCurseForgeToggle" class="source-toggle">
 			<button
 				:class="['source-toggle__btn', source === 'modrinth' && 'source-toggle__btn--active-mr']"
 				@click="source = 'modrinth'"
-			>Modrinth</button>
+			>
+				Modrinth
+			</button>
 			<button
 				v-tooltip="cfBetaTooltip"
 				:class="['source-toggle__btn', source === 'curseforge' && 'source-toggle__btn--active-cf']"
 				@click="source = 'curseforge'"
-			>CurseForge<span class="source-toggle__beta">Beta</span></button>
+			>
+				CurseForge<span class="source-toggle__beta">Beta</span>
+			</button>
 		</div>
 		<BrowsePageLayout>
 			<template #after>
@@ -1601,7 +1614,9 @@ provideBrowseManager({
 							<div v-else class="cf-picker__instance-icon cf-picker__instance-icon--placeholder" />
 							<div class="cf-picker__instance-info">
 								<span class="cf-picker__instance-name">{{ inst.name }}</span>
-								<span class="cf-picker__instance-meta">{{ inst.loader }} {{ inst.gameVersion }}</span>
+								<span class="cf-picker__instance-meta"
+									>{{ inst.loader }} {{ inst.gameVersion }}</span
+								>
 							</div>
 						</button>
 					</div>
@@ -1634,7 +1649,6 @@ provideBrowseManager({
 	font-style: italic;
 }
 
-
 .source-toggle {
 	display: flex;
 	gap: 0.25rem;
@@ -1652,7 +1666,9 @@ provideBrowseManager({
 		font-size: 0.8125rem;
 		font-weight: 600;
 		cursor: pointer;
-		transition: background 0.15s, color 0.15s;
+		transition:
+			background 0.15s,
+			color 0.15s;
 
 		&:hover:not(.source-toggle__btn--active-mr):not(.source-toggle__btn--active-cf) {
 			background: rgba(142, 132, 207, 0.12);

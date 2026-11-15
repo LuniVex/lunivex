@@ -32,8 +32,11 @@ pub async fn curseforge_search(
 	class_id: u32,
 	page: u32,
 	page_size: u32,
+	game_versions: Option<Vec<String>>,
+	loaders: Option<Vec<String>>,
+	sort: Option<String>,
 ) -> Result<CfSearchResult> {
-	Ok(theseus::curseforge::search(
+	Ok(theseus::curseforge::search_filtered(
 		query,
 		game_version,
 		loader,
@@ -41,6 +44,9 @@ pub async fn curseforge_search(
 		class_id,
 		page,
 		page_size,
+		game_versions,
+		loaders,
+		sort,
 	)
 	.await?)
 }
@@ -147,12 +153,22 @@ pub async fn curseforge_install_mod_file(
 		"shader" => Some(ProjectType::ShaderPack),
 		_ => None,
 	});
-	Ok(theseus::curseforge::install_mod_file(profile_path, mod_id, file_id, file_name, pt).await?)
+	Ok(theseus::curseforge::install_mod_file(
+		profile_path,
+		mod_id,
+		file_id,
+		file_name,
+		pt,
+	)
+	.await?)
 }
 
 /// Install a specific CurseForge modpack file (by file ID) as a new instance.
 /// Returns the path of the newly created profile.
 #[tauri::command]
-pub async fn curseforge_install_modpack_file(mod_id: u32, file_id: u32) -> Result<String> {
+pub async fn curseforge_install_modpack_file(
+	mod_id: u32,
+	file_id: u32,
+) -> Result<String> {
 	Ok(theseus::curseforge::install_modpack_file(mod_id, file_id).await?)
 }

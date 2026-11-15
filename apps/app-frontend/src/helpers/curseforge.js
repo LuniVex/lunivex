@@ -1,13 +1,38 @@
 import { invoke } from '@tauri-apps/api/core'
 
+export function parseCurseForgeSearchParams(requestParams) {
+	const params = new URLSearchParams(requestParams)
+	const pageSize = Number(params.get('limit') ?? 20)
+	const offset = Number(params.get('offset') ?? 0)
+	if (
+		!Number.isInteger(pageSize) ||
+		pageSize < 1 ||
+		pageSize > 100 ||
+		!Number.isInteger(offset) ||
+		offset < 0 ||
+		offset % pageSize !== 0
+	) {
+		throw new Error('Invalid CurseForge search page')
+	}
+	return {
+		query: params.get('query'),
+		page: offset / pageSize,
+		pageSize,
+		sort: params.get('index'),
+	}
+}
+
 export async function curseforge_search({
-	query,
-	gameVersion,
-	loader,
-	categoryId,
+	query = null,
+	gameVersion = null,
+	loader = null,
+	categoryId = null,
 	classId,
 	page,
 	pageSize,
+	gameVersions = null,
+	loaders = null,
+	sort = null,
 }) {
 	return await invoke('plugin:curseforge|curseforge_search', {
 		query,
@@ -17,6 +42,9 @@ export async function curseforge_search({
 		classId,
 		page,
 		pageSize,
+		gameVersions,
+		loaders,
+		sort,
 	})
 }
 
@@ -99,7 +127,13 @@ export async function curseforge_install_modpack(modId) {
 	return await invoke('plugin:curseforge|curseforge_install_modpack', { modId })
 }
 
-export async function curseforge_install_mod_file({ profilePath, modId, fileId, fileName, projectType }) {
+export async function curseforge_install_mod_file({
+	profilePath,
+	modId,
+	fileId,
+	fileName,
+	projectType,
+}) {
 	return await invoke('plugin:curseforge|curseforge_install_mod_file', {
 		profilePath,
 		modId,
