@@ -1,7 +1,19 @@
 use bytes::Bytes;
 use reqwest::header::{HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 use std::io::Read as _;
+use std::path::{Path, PathBuf};
+use std::time::Duration;
+
+mod client;
+mod recovery;
+
+pub use recovery::{
+	CfImportResult, CfMissingFile, CfPackInstallResult, CfPendingInstall,
+	discard_install, import_install_files, pending_installs, resume_install,
+	start_install,
+};
 
 const CF_API_URL: &str = "https://api.curseforge.com";
 const MINECRAFT_GAME_ID: u32 = 432;
@@ -31,6 +43,9 @@ fn cf_client(api_key: &str) -> crate::Result<reqwest::Client> {
 	reqwest::Client::builder()
 		.https_only(true)
 		.default_headers(headers)
+		.redirect(reqwest::redirect::Policy::none())
+		.connect_timeout(Duration::from_secs(15))
+		.timeout(Duration::from_secs(30))
 		.user_agent(crate::launcher_user_agent())
 		.build()
 		.map_err(|e| {
@@ -137,6 +152,12 @@ pub struct CfFileDependency {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CfFileHash {
+	pub value: String,
+	pub algo: u8,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct CfFile {
 	pub id: u32,
@@ -148,6 +169,10 @@ pub struct CfFile {
 	pub download_count: f64,
 	pub file_date: String,
 	pub file_length: Option<u64>,
+	#[serde(default)]
+	pub hashes: Vec<CfFileHash>,
+	#[serde(default)]
+	pub is_server_pack: bool,
 	pub download_url: Option<String>,
 	pub dependencies: Option<Vec<CfFileDependency>>,
 	pub is_available: bool,
@@ -200,8 +225,6 @@ pub fn class_id_for(project_type: &str) -> Option<u32> {
 	}
 }
 
-// ── Public API functions ───────────────────────────────────────────────────────
-
 pub async fn search(
 	query: Option<String>,
 	game_version: Option<String>,
@@ -211,91 +234,60 @@ pub async fn search(
 	page: u32,
 	page_size: u32,
 ) -> crate::Result<CfSearchResult> {
-	let client = cf_client(cf_api_key()?)?;
-
-	// Use relevance sort when there's a search query, popularity otherwise.
-	let sort_field = if query.as_deref().map_or(true, str::is_empty) {
-		"2"
-	} else {
-		"1"
-	};
-
-	let mut params: Vec<(&str, String)> = vec![
-		("gameId", MINECRAFT_GAME_ID.to_string()),
-		("classId", class_id.to_string()),
-		("pageSize", page_size.to_string()),
-		("index", (page * page_size).to_string()),
-		("sortField", sort_field.to_string()),
-		("sortOrder", "desc".to_string()),
-	];
-
-	if let Some(q) = &query {
-		if !q.is_empty() {
-			params.push(("searchFilter", q.clone()));
-		}
-	}
-	if let Some(gv) = &game_version {
-		params.push(("gameVersion", gv.clone()));
-	}
-	if let Some(cat) = category_id {
-		params.push(("categoryId", cat.to_string()));
-	}
-	if let Some(l) = &loader {
-		if let Some(lt) = loader_type_id(l) {
-			params.push(("modLoaderType", lt.to_string()));
-		}
-	}
-
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/search"))
-		.query(&params)
-		.send()
-		.await?;
-
-	if !resp.status().is_success() {
-		let status = resp.status();
-		let body = resp.text().await.unwrap_or_default();
-		return Err(crate::ErrorKind::OtherError(format!(
-			"CurseForge search failed ({status}): {body}"
-		))
-		.into());
-	}
-
-	Ok(resp.json::<CfSearchResult>().await?)
+	client::Api::new()?
+		.search(
+			query,
+			game_version,
+			loader,
+			category_id,
+			class_id,
+			page,
+			page_size,
+		)
+		.await
 }
 
 pub async fn get_categories(class_id: u32) -> crate::Result<Vec<CfCategory>> {
-	let client = cf_client(cf_api_key()?)?;
+	client::Api::new()?.categories(class_id).await
+}
 
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/categories"))
-		.query(&[
-			("gameId", MINECRAFT_GAME_ID.to_string()),
-			("classId", class_id.to_string()),
-		])
-		.send()
-		.await?;
-
-	let result: CfApiResponse<Vec<CfCategory>> = resp.json().await?;
-
-	// Filter out the root class entries (isClass = true)
-	Ok(result
-		.data
-		.into_iter()
-		.filter(|c| !c.is_class.unwrap_or(false))
-		.collect())
+pub async fn search_filtered(
+	query: Option<String>,
+	game_version: Option<String>,
+	loader: Option<String>,
+	category_id: Option<u32>,
+	class_id: u32,
+	page: u32,
+	page_size: u32,
+	game_versions: Option<Vec<String>>,
+	loaders: Option<Vec<String>>,
+	sort: Option<String>,
+) -> crate::Result<CfSearchResult> {
+	client::Api::new()?
+		.search_filtered(
+			query,
+			game_version,
+			loader,
+			category_id,
+			class_id,
+			page,
+			page_size,
+			game_versions,
+			loaders,
+			sort,
+		)
+		.await
 }
 
 pub async fn get_mod(mod_id: u32) -> crate::Result<CfMod> {
-	let client = cf_client(cf_api_key()?)?;
+	client::Api::new()?.project(mod_id).await
+}
 
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}"))
-		.send()
-		.await?;
-
-	let result: CfApiResponse<CfMod> = resp.json().await?;
-	Ok(result.data)
+pub async fn get_mods(mod_ids: Vec<u32>) -> crate::Result<Vec<CfMod>> {
+	if mod_ids.is_empty() {
+		return Ok(Vec::new());
+	}
+	client::Api::new()?.projects(mod_ids).await
 }
 
 pub async fn get_mod_files(
@@ -305,199 +297,248 @@ pub async fn get_mod_files(
 	page: Option<u32>,
 	page_size: Option<u32>,
 ) -> crate::Result<CfFilesResult> {
-	let client = cf_client(cf_api_key()?)?;
-
-	let page_size = page_size.unwrap_or(50).min(50);
-	let mut params: Vec<(&str, String)> = vec![
-		("pageSize", page_size.to_string()),
-		("index", (page.unwrap_or(0) * page_size).to_string()),
-	];
-	if let Some(gv) = &game_version {
-		params.push(("gameVersion", gv.clone()));
-	}
-	if let Some(l) = &loader {
-		if let Some(lt) = loader_type_id(l) {
-			params.push(("modLoaderType", lt.to_string()));
-		}
-	}
-
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}/files"))
-		.query(&params)
-		.send()
-		.await?;
-
-	Ok(resp.json::<CfFilesResult>().await?)
+	client::Api::new()?
+		.files(
+			mod_id,
+			game_version.as_deref(),
+			loader.as_deref(),
+			page.unwrap_or(0),
+			page_size.unwrap_or(50),
+		)
+		.await
 }
 
 pub async fn get_file(mod_id: u32, file_id: u32) -> crate::Result<CfFile> {
-	let client = cf_client(cf_api_key()?)?;
-
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}/files/{file_id}"))
-		.send()
-		.await?;
-
-	let result: CfApiResponse<CfFile> = resp.json().await?;
-	Ok(result.data)
+	client::Api::new()?.file(mod_id, file_id).await
 }
 
-/// Fetch the HTML changelog for a specific CurseForge file.
 pub async fn get_file_changelog(
 	mod_id: u32,
 	file_id: u32,
 ) -> crate::Result<String> {
-	let client = cf_client(cf_api_key()?)?;
-
-	let resp = client
-		.get(format!(
-			"{CF_API_URL}/v1/mods/{mod_id}/files/{file_id}/changelog"
-		))
-		.send()
-		.await?;
-	if !resp.status().is_success() {
-		return Ok(String::new());
-	}
-
-	let result: CfApiResponse<String> = resp.json().await?;
-	Ok(result.data)
+	client::Api::new()?
+		.text(&format!("/v1/mods/{mod_id}/files/{file_id}/changelog"))
+		.await
 }
 
-/// Fetch multiple CurseForge mods by ID in one request (used for resolving
-/// file dependency names).
-pub async fn get_mods(mod_ids: Vec<u32>) -> crate::Result<Vec<CfMod>> {
-	if mod_ids.is_empty() {
-		return Ok(Vec::new());
-	}
-	let client = cf_client(cf_api_key()?)?;
-
-	let resp = client
-		.post(format!("{CF_API_URL}/v1/mods"))
-		.json(&serde_json::json!({ "modIds": mod_ids }))
-		.send()
-		.await?;
-
-	let result: CfApiResponse<Vec<CfMod>> = resp.json().await?;
-	Ok(result.data)
+pub async fn get_mod_description(mod_id: u32) -> crate::Result<String> {
+	client::Api::new()?
+		.text(&format!("/v1/mods/{mod_id}/description"))
+		.await
 }
 
-async fn file_download_url(
-	client: &reqwest::Client,
-	mod_id: u32,
-	file_id: u32,
-) -> crate::Result<String> {
-	let resp = client
-		.get(format!(
-			"{CF_API_URL}/v1/mods/{mod_id}/files/{file_id}/download-url"
-		))
-		.send()
-		.await?;
+struct StagedFile {
+	file: CfFile,
+	path: PathBuf,
+	bundled: bool,
+}
 
-	if !resp.status().is_success() {
-		return Err(crate::ErrorKind::OtherError(format!(
-			"CurseForge file {file_id} is not available for download \
-			(the author may have disabled distribution)"
-		))
-		.into());
+struct StagedInstall {
+	_directory: tempfile::TempDir,
+	files: Vec<StagedFile>,
+}
+
+fn cf_error(message: impl Into<String>) -> crate::Error {
+	crate::ErrorKind::OtherError(message.into()).into()
+}
+
+async fn stage_files(
+	api: &client::Api,
+	files: Vec<CfFile>,
+	installed_hashes: &HashSet<String>,
+	loading_bar: Option<&crate::event::LoadingBarId>,
+) -> crate::Result<StagedInstall> {
+	let directory = tempfile::tempdir()?;
+	let mut staged = Vec::new();
+	let total = files.len();
+	let mut names = HashSet::new();
+	for (index, file) in files.into_iter().enumerate() {
+		client::validate_file_name(&file.file_name)?;
+		if !names.insert(file.file_name.to_lowercase()) {
+			return Err(cf_error(format!(
+				"CurseForge returned duplicate file name {}",
+				file.file_name
+			)));
+		}
+		if !file.hashes.iter().any(|hash| {
+			hash.algo == 1
+				&& installed_hashes.contains(&hash.value.to_lowercase())
+		}) {
+			let label = format!(
+				"{} (project {}, file {})",
+				file.file_name, file.mod_id, file.id
+			);
+			let result = async {
+				let download = api.prepare(file).await?;
+				let bytes = api.download(&download).await?;
+				let path = directory.path().join(index.to_string());
+				tokio::fs::write(&path, bytes).await?;
+				Ok::<_, crate::Error>(StagedFile {
+					file: download.file,
+					path,
+					bundled: false,
+				})
+			}
+			.await
+			.map_err(|error| {
+				cf_error(format!(
+					"Could not install required CurseForge file {label}: {error}"
+				))
+			})?;
+			staged.push(result);
+		}
+		if let Some(bar) = loading_bar {
+			let _ = crate::event::emit::emit_loading(
+				bar,
+				1.0,
+				Some(&format!("Preparing mods ({}/{total})", index + 1)),
+			);
+		}
 	}
-
-	let result: CfApiResponse<Option<String>> = resp.json().await?;
-	result.data.ok_or_else(|| {
-		crate::ErrorKind::OtherError(
-			"CurseForge: mod author has disabled file distribution".to_string(),
-		)
-		.into()
+	Ok(StagedInstall {
+		_directory: directory,
+		files: staged,
 	})
 }
 
-/// Download the best matching CurseForge file and add it to the given profile.
-/// Finds the most stable release for the specified game_version + loader, fetches the
-/// download URL via the official API endpoint, and writes it into the instance folder.
+fn project_type(
+	class_id: Option<u32>,
+	fallback: Option<crate::state::ProjectType>,
+) -> crate::Result<Option<crate::state::ProjectType>> {
+	use crate::state::ProjectType;
+	match class_id {
+		Some(6) => Ok(Some(ProjectType::Mod)),
+		Some(12) => Ok(Some(ProjectType::ResourcePack)),
+		Some(6552) => Ok(Some(ProjectType::ShaderPack)),
+		Some(4471) => {
+			Err(cf_error("Install CurseForge modpacks as a new instance"))
+		}
+		_ => Ok(fallback),
+	}
+}
+
+/// Install the selected project together with its required, compatible dependencies.
 pub async fn install_mod(
 	profile_path: &str,
 	mod_id: u32,
-	game_version: Option<String>,
-	loader: Option<String>,
-	project_type: Option<crate::state::ProjectType>,
+	_game_version: Option<String>,
+	_loader: Option<String>,
+	requested_type: Option<crate::state::ProjectType>,
 ) -> crate::Result<String> {
-	let client = cf_client(cf_api_key()?)?;
-
-	// 1. Fetch files compatible with the requested version/loader
-	let mut file_params: Vec<(&str, String)> =
-		vec![("pageSize", "50".to_string())];
-	if let Some(gv) = &game_version {
-		file_params.push(("gameVersion", gv.clone()));
+	let api = client::Api::new()?;
+	let profile = crate::api::profile::get(profile_path)
+		.await?
+		.ok_or_else(|| cf_error("The target instance no longer exists"))?;
+	let kind =
+		project_type(api.project(mod_id).await?.class_id, requested_type)?;
+	let loader = if kind == Some(crate::state::ProjectType::Mod) {
+		Some(profile.loader.as_str())
+	} else {
+		None
+	};
+	if loader == Some("vanilla") {
+		return Err(cf_error(
+			"Choose a modded instance before installing CurseForge mods",
+		));
 	}
-	if let Some(l) = &loader {
-		if let Some(lt) = loader_type_id(l) {
-			file_params.push(("modLoaderType", lt.to_string()));
+	let file = api
+		.best_file(mod_id, Some(&profile.game_version), loader, &HashSet::new())
+		.await?;
+	install_into_profile(&api, profile_path, file, kind).await
+}
+
+/// File names and compatibility come from the API and target profile, not caller input.
+pub async fn install_mod_file(
+	profile_path: &str,
+	mod_id: u32,
+	file_id: u32,
+	_file_name: &str,
+	requested_type: Option<crate::state::ProjectType>,
+) -> crate::Result<String> {
+	let api = client::Api::new()?;
+	let kind =
+		project_type(api.project(mod_id).await?.class_id, requested_type)?;
+	let file = api.file(mod_id, file_id).await?;
+	install_into_profile(&api, profile_path, file, kind).await
+}
+
+async fn install_into_profile(
+	api: &client::Api,
+	profile_path: &str,
+	root: CfFile,
+	kind: Option<crate::state::ProjectType>,
+) -> crate::Result<String> {
+	let profile = crate::api::profile::get(profile_path)
+		.await?
+		.ok_or_else(|| cf_error("The target instance no longer exists"))?;
+	let is_mod = kind == Some(crate::state::ProjectType::Mod);
+	let loader = profile.loader.as_str();
+	if !root.game_versions.contains(&profile.game_version)
+		|| (is_mod
+			&& (loader == "vanilla"
+				|| !root
+					.game_versions
+					.iter()
+					.any(|v| v.eq_ignore_ascii_case(loader))))
+	{
+		return Err(cf_error(
+			"This CurseForge file does not support the target instance's Minecraft version and loader",
+		));
+	}
+	let root_name = root.file_name.clone();
+	client::validate_file_name(&root_name)?;
+	let existing =
+		crate::api::profile::get_projects(profile_path, None).await?;
+	let installed_hashes = existing
+		.iter()
+		.filter(|entry| !entry.key().ends_with(".disabled"))
+		.map(|entry| entry.hash.to_lowercase())
+		.collect::<HashSet<_>>();
+	let files = if is_mod {
+		api.dependencies(root, &profile.game_version, loader, &installed_hashes)
+			.await?
+	} else {
+		vec![root]
+	};
+	let staged = stage_files(api, files, &installed_hashes, None).await?;
+	let base = crate::api::profile::get_full_path(profile_path).await?;
+	for file in &staged.files {
+		let folder = kind.map(|t| t.get_folder()).unwrap_or("mods");
+		let target = base.join(folder).join(&file.file.file_name);
+		if target.exists() {
+			return Err(cf_error(format!(
+				"{} already exists in this instance. Remove or update the existing file before installing another version.",
+				file.file.file_name
+			)));
 		}
 	}
-
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}/files"))
-		.query(&file_params)
-		.send()
-		.await?;
-
-	let files: CfApiResponse<Vec<CfFile>> = resp.json().await?;
-	let files = files.data;
-
-	// 2. Pick best file: stable (release_type 1) > beta (2) > alpha (3); most recent first
-	let best = files
-		.iter()
-		.filter(|f| f.is_available)
-		.min_by_key(|f| f.release_type)
-		.ok_or_else(|| {
-			crate::ErrorKind::OtherError(
-				"No compatible CurseForge file found for this game version and loader"
-					.to_string(),
-			)
-		})?;
-
-	let file_id = best.id;
-	let file_name = best.file_name.clone();
-
-	// 3. Get download URL from the official API endpoint
-	let url = file_download_url(&client, mod_id, file_id).await?;
-
-	// 4. Download
-	let download_resp = client.get(&url).send().await?;
-	if !download_resp.status().is_success() {
-		return Err(crate::ErrorKind::OtherError(format!(
-			"Failed to download CurseForge file: HTTP {}",
-			download_resp.status()
-		))
-		.into());
-	}
-	let bytes: Bytes = download_resp.bytes().await?;
-
-	// 5. Write into the profile via the standard project-bytes path
 	let state = crate::State::get().await?;
-	let rel_path = crate::state::Profile::add_project_bytes(
-		profile_path,
-		&file_name,
-		bytes,
-		None,
-		project_type,
-		None,
-		&state.io_semaphore,
-		&state.pool,
-	)
-	.await?;
-
+	for file in &staged.files {
+		crate::state::Profile::add_project_bytes(
+			profile_path,
+			&file.file.file_name,
+			Bytes::from(tokio::fs::read(&file.path).await?),
+			None,
+			kind,
+			None,
+			&state.io_semaphore,
+			&state.pool,
+		)
+		.await?;
+	}
 	crate::event::emit::emit_profile(
 		profile_path,
 		crate::event::ProfilePayloadType::Edited,
 	)
 	.await?;
-
-	Ok(rel_path)
+	Ok(format!(
+		"{}/{}",
+		kind.map(|t| t.get_folder()).unwrap_or("mods"),
+		root_name
+	))
 }
 
-// ── CF modpack manifest types ──────────────────────────────────────────────────
-
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct CfPackManifest {
 	minecraft: CfPackMinecraft,
@@ -511,21 +552,21 @@ fn default_overrides_dir() -> String {
 	"overrides".to_string()
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct CfPackMinecraft {
 	version: String,
+	#[serde(default)]
 	mod_loaders: Vec<CfPackLoader>,
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Deserialize, Serialize)]
 struct CfPackLoader {
 	id: String,
 	primary: bool,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 struct CfPackFileRef {
 	#[serde(rename = "projectID")]
 	project_id: u32,
@@ -534,325 +575,279 @@ struct CfPackFileRef {
 	required: bool,
 }
 
-fn parse_loader_id(id: &str) -> (crate::state::ModLoader, Option<String>) {
-	// CF loader IDs look like "forge-47.0.0", "fabric-0.14.21", "neoforge-20.4.0"
-	for (prefix, loader) in &[
+fn parse_loader_id(
+	id: &str,
+) -> crate::Result<(crate::state::ModLoader, Option<String>)> {
+	for (prefix, loader) in [
 		("neoforge-", crate::state::ModLoader::NeoForge),
 		("forge-", crate::state::ModLoader::Forge),
 		("fabric-", crate::state::ModLoader::Fabric),
 		("quilt-", crate::state::ModLoader::Quilt),
 	] {
-		if let Some(ver) = id.strip_prefix(prefix) {
-			return (*loader, Some(ver.to_string()));
+		if let Some(version) = id.strip_prefix(prefix).filter(|v| !v.is_empty())
+		{
+			return Ok((loader, Some(version.to_string())));
 		}
 	}
-	(crate::state::ModLoader::Vanilla, None)
+	Err(cf_error(format!(
+		"Unsupported CurseForge modpack loader: {id}"
+	)))
 }
 
-// ── Description & modpack install ─────────────────────────────────────────────
-
-/// Fetch the long HTML description for a CurseForge mod.
-pub async fn get_mod_description(mod_id: u32) -> crate::Result<String> {
-	let client = cf_client(cf_api_key()?)?;
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}/description"))
-		.send()
-		.await?;
-	if !resp.status().is_success() {
-		return Ok(String::new());
+fn override_relative_path(
+	overrides: &str,
+	name: &str,
+) -> crate::Result<Option<PathBuf>> {
+	fn safe(path: &str) -> bool {
+		!path.is_empty()
+			&& !path.contains(['\\', ':', '\0'])
+			&& path.split('/').all(|part| !matches!(part, "" | "." | ".."))
 	}
-	let result: CfApiResponse<String> = resp.json().await?;
-	Ok(result.data)
-}
-
-/// Download and install a CurseForge mod file with a known file ID into a profile.
-pub async fn install_mod_file(
-	profile_path: &str,
-	mod_id: u32,
-	file_id: u32,
-	file_name: &str,
-	project_type: Option<crate::state::ProjectType>,
-) -> crate::Result<String> {
-	let client = cf_client(cf_api_key()?)?;
-	let url = file_download_url(&client, mod_id, file_id).await?;
-
-	let download_resp = client.get(&url).send().await?;
-	if !download_resp.status().is_success() {
-		return Err(crate::ErrorKind::OtherError(format!(
-			"Failed to download CurseForge file: HTTP {}",
-			download_resp.status()
-		))
-		.into());
+	let overrides = overrides.trim_end_matches('/');
+	if !safe(overrides) {
+		return Err(cf_error("Unsafe CurseForge overrides directory"));
 	}
-	let bytes: bytes::Bytes = download_resp.bytes().await?;
-
-	let state = crate::State::get().await?;
-	let rel_path = crate::state::Profile::add_project_bytes(
-		profile_path,
-		file_name,
-		bytes,
-		None,
-		project_type,
-		None,
-		&state.io_semaphore,
-		&state.pool,
-	)
-	.await?;
-
-	crate::event::emit::emit_profile(
-		profile_path,
-		crate::event::ProfilePayloadType::Edited,
-	)
-	.await?;
-
-	Ok(rel_path)
-}
-
-async fn fetch_mod_icon(client: &reqwest::Client, mod_id: u32) -> Option<String> {
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}"))
-		.send()
-		.await
-		.ok()?;
-	resp.json::<CfApiResponse<CfMod>>()
-		.await
-		.ok()
-		.and_then(|d| d.data.logo)
-		.and_then(|l| l.thumbnail_url)
-}
-
-async fn install_modpack_inner(
-	client: &reqwest::Client,
-	mod_id: u32,
-	file_id: u32,
-	icon_url: Option<String>,
-) -> crate::Result<String> {
-	// Get the download URL via the official endpoint
-	let url = file_download_url(client, mod_id, file_id).await?;
-
-	// 3. Download the zip
-	let zip_bytes = client.get(&url).send().await?.bytes().await?;
-
-	// 4. Parse manifest.json from the zip
-	let manifest: CfPackManifest = {
-		let cursor = std::io::Cursor::new(zip_bytes.as_ref());
-		let mut archive = zip::ZipArchive::new(cursor).map_err(|e| {
-			crate::ErrorKind::OtherError(format!("Failed to open modpack zip: {e}"))
-		})?;
-		let mut entry = archive.by_name("manifest.json").map_err(|_| {
-			crate::ErrorKind::OtherError(
-				"CurseForge modpack is missing manifest.json".to_string(),
-			)
-		})?;
-		let mut s = String::new();
-		entry.read_to_string(&mut s)?;
-		serde_json::from_str(&s)?
+	let Some(relative) = name.strip_prefix(&format!("{overrides}/")) else {
+		return Ok(None);
 	};
-
-	// 5. Determine the mod loader from the manifest
-	let primary_loader = manifest
-		.minecraft
-		.mod_loaders
-		.iter()
-		.find(|l| l.primary)
-		.or_else(|| manifest.minecraft.mod_loaders.first());
-	let (loader, loader_version) = primary_loader
-		.map(|l| parse_loader_id(&l.id))
-		.unwrap_or((crate::state::ModLoader::Vanilla, None));
-
-	// 6. Create the new profile (installs the loader)
-	let profile_path = crate::api::profile::create::profile_create(
-		manifest.name.clone(),
-		manifest.minecraft.version.clone(),
-		loader,
-		loader_version,
-		None,
-		None,
-		Some(false), // DO install the loader
-	)
-	.await?;
-
-	// 6b. Set the modpack icon as an HTTPS URL directly on the profile so it
-	//     works both in the app UI (getDisplayIconUrl handles https:// links)
-	//     and in Discord Rich Presence (large_image accepts https:// URLs).
-	if let Some(ref url) = icon_url {
-		let url_clone = url.clone();
-		let _ = crate::api::profile::edit(&profile_path, |prof| {
-			prof.icon_path = Some(url_clone.clone());
-			async { Ok(()) }
-		})
-		.await;
+	let relative = relative.trim_end_matches('/');
+	if !safe(relative) {
+		return Err(cf_error(format!(
+			"Unsafe CurseForge override path: {name}"
+		)));
 	}
+	Ok(Some(PathBuf::from(relative)))
+}
 
-	// 7. Download and install each required mod file with progress reporting
-	let required_files: Vec<&CfPackFileRef> =
-		manifest.files.iter().filter(|f| f.required).collect();
-	let total = required_files.len();
-	let loading_bar = crate::event::emit::init_loading(
-		crate::event::LoadingBarType::CfModpackInstall {
-			pack_name: manifest.name.clone(),
-			icon: icon_url.clone(),
-		},
-		total.max(1) as f64,
-		"Downloading mods",
-	)
-	.await
-	.ok();
-
-	let state = crate::State::get().await?;
-	for (idx, file_ref) in required_files.iter().enumerate() {
-		let dl_url =
-			match file_download_url(client, file_ref.project_id, file_ref.file_id).await {
-				Ok(u) => u,
-				Err(e) => {
-					tracing::warn!(
-						"Skipping CF file {}/{}: {}",
-						file_ref.project_id,
-						file_ref.file_id,
-						e
-					);
-					if let Some(ref bar) = loading_bar {
-						let _ = crate::event::emit::emit_loading(
-							bar,
-							1.0,
-							Some(&format!("Downloading mods ({}/{total})", idx + 1)),
-						);
-					}
-					continue;
-				}
-			};
-		let mod_bytes = match client.get(&dl_url).send().await {
-			Ok(r) => match r.bytes().await {
-				Ok(b) => b,
-				Err(e) => {
-					tracing::warn!("Failed to download {}: {}", dl_url, e);
-					if let Some(ref bar) = loading_bar {
-						let _ = crate::event::emit::emit_loading(
-							bar,
-							1.0,
-							Some(&format!("Downloading mods ({}/{total})", idx + 1)),
-						);
-					}
-					continue;
-				}
-			},
-			Err(e) => {
-				tracing::warn!("Failed to request {}: {}", dl_url, e);
-				if let Some(ref bar) = loading_bar {
-					let _ = crate::event::emit::emit_loading(
-						bar,
-						1.0,
-						Some(&format!("Downloading mods ({}/{total})", idx + 1)),
-					);
-				}
-				continue;
-			}
+fn copy_overrides(
+	zip_bytes: &[u8],
+	overrides: &str,
+	target: Option<&Path>,
+) -> crate::Result<()> {
+	let mut archive = zip::ZipArchive::new(std::io::Cursor::new(zip_bytes))
+		.map_err(|e| {
+			cf_error(format!("Invalid CurseForge modpack archive: {e}"))
+		})?;
+	for index in 0..archive.len() {
+		let mut entry = archive
+			.by_index(index)
+			.map_err(|e| cf_error(e.to_string()))?;
+		if entry.is_dir() {
+			continue;
+		}
+		let Some(relative) = override_relative_path(overrides, entry.name())?
+		else {
+			continue;
 		};
-		// Extract a clean file name from the URL (strip query params)
-		let file_name = dl_url
-			.split('?')
-			.next()
-			.unwrap_or(&dl_url)
-			.split('/')
-			.last()
-			.unwrap_or("mod.jar")
-			.to_string();
-		if let Err(e) = crate::state::Profile::add_project_bytes(
+		if entry
+			.unix_mode()
+			.is_some_and(|mode| mode & 0o170000 == 0o120000)
+		{
+			return Err(cf_error(
+				"CurseForge overrides cannot contain symbolic links",
+			));
+		}
+		if let Some(target) = target {
+			let destination = target.join(relative);
+			if let Some(parent) = destination.parent() {
+				std::fs::create_dir_all(parent)?;
+			}
+			let mut output = std::fs::File::create(destination)?;
+			std::io::copy(&mut entry, &mut output)?;
+		}
+	}
+	Ok(())
+}
+
+fn pack_datapack_directory(
+	zip_bytes: &[u8],
+	overrides: &str,
+) -> crate::Result<Option<PathBuf>> {
+	let archive = zip::ZipArchive::new(std::io::Cursor::new(zip_bytes))
+		.map_err(|error| cf_error(error.to_string()))?;
+	let directory = Path::new("config/paxi/datapacks");
+	for name in archive.file_names() {
+		if override_relative_path(overrides, name.trim_end_matches('/'))?
+			.is_some_and(|path| path.starts_with(directory))
+		{
+			return Ok(Some(directory.to_path_buf()));
+		}
+	}
+	Ok(None)
+}
+
+fn is_datapack(bytes: &[u8]) -> crate::Result<bool> {
+	let mut archive = zip::ZipArchive::new(std::io::Cursor::new(bytes))
+		.map_err(|error| cf_error(error.to_string()))?;
+	Ok(archive.by_name("pack.mcmeta").is_ok()
+		&& archive.file_names().any(|name| name.starts_with("data/")))
+}
+
+async fn finish_modpack_profile(
+	profile_path: &str,
+	manifest: &CfPackManifest,
+	zip_bytes: &[u8],
+	files: &[StagedFile],
+	icon: &Option<String>,
+) -> crate::Result<()> {
+	crate::api::profile::edit(&profile_path, |profile| {
+		profile.install_stage =
+			crate::state::ProfileInstallStage::PackInstalling;
+		profile.icon_path.clone_from(icon);
+		async { Ok(()) }
+	})
+	.await?;
+	let state = crate::State::get().await?;
+	let base = crate::api::profile::get_full_path(&profile_path).await?;
+	copy_overrides(&zip_bytes, &manifest.overrides, Some(&base))?;
+	let datapack_directory =
+		pack_datapack_directory(zip_bytes, &manifest.overrides)?;
+	for file in files {
+		if file.bundled {
+			continue;
+		}
+		let kind = file
+			.file
+			.file_name
+			.to_lowercase()
+			.ends_with(".jar")
+			.then_some(crate::state::ProjectType::Mod);
+		let bytes = Bytes::from(tokio::fs::read(&file.path).await?);
+		if kind.is_none()
+			&& let Some(directory) = &datapack_directory
+			&& is_datapack(&bytes)?
+		{
+			crate::util::fetch::write(
+				&base.join(directory).join(&file.file.file_name),
+				&bytes,
+				&state.io_semaphore,
+			)
+			.await?;
+			continue;
+		}
+		crate::state::Profile::add_project_bytes(
 			&profile_path,
-			&file_name,
-			mod_bytes,
+			&file.file.file_name,
+			bytes,
 			None,
-			Some(crate::state::ProjectType::Mod),
+			kind,
 			None,
 			&state.io_semaphore,
 			&state.pool,
 		)
-		.await
-		{
-			tracing::warn!("Failed to add {} to profile: {}", file_name, e);
-		}
-		if let Some(ref bar) = loading_bar {
-			let _ = crate::event::emit::emit_loading(
-				bar,
-				1.0,
-				Some(&format!("Downloading mods ({}/{total})", idx + 1)),
-			);
-		}
+		.await?;
 	}
-
-	// 8. Copy override files from the zip into the profile
-	let overrides_prefix =
-		format!("{}/", manifest.overrides.trim_end_matches('/'));
-	let profile_base = crate::api::profile::get_full_path(&profile_path).await?;
-	{
-		let cursor = std::io::Cursor::new(zip_bytes.as_ref());
-		let mut archive = zip::ZipArchive::new(cursor).map_err(|e| {
-			crate::ErrorKind::OtherError(format!("Failed to re-read modpack zip: {e}"))
-		})?;
-		for i in 0..archive.len() {
-			let mut entry = match archive.by_index(i) {
-				Ok(e) => e,
-				Err(_) => continue,
-			};
-			let name = entry.name().to_string();
-			if !name.starts_with(&overrides_prefix) || name.ends_with('/') {
-				continue;
-			}
-			let rel = &name[overrides_prefix.len()..];
-			if rel.is_empty() {
-				continue;
-			}
-			let dest = profile_base.join(rel);
-			if let Some(parent) = dest.parent() {
-				let _ = std::fs::create_dir_all(parent);
-			}
-			let mut buf = Vec::new();
-			if entry.read_to_end(&mut buf).is_ok() {
-				let _ = std::fs::write(&dest, &buf);
-			}
-		}
-	}
-
-	// 9. Signal that the profile was updated
+	crate::api::profile::edit(&profile_path, |profile| {
+		profile.install_stage =
+			crate::state::ProfileInstallStage::PackInstalled;
+		async { Ok(()) }
+	})
+	.await?;
+	let profile = crate::api::profile::get(&profile_path)
+		.await?
+		.ok_or_else(|| cf_error("The new CurseForge instance disappeared"))?;
+	crate::launcher::install_minecraft(&profile, None, false).await?;
 	crate::event::emit::emit_profile(
 		&profile_path,
 		crate::event::ProfilePayloadType::Edited,
 	)
 	.await?;
-
-	Ok(profile_path)
+	Ok(())
 }
 
-/// Download a CurseForge modpack, parse its manifest, create a new instance, and
-/// install all listed mod files into it.  Returns the new profile path.
-pub async fn install_modpack(mod_id: u32) -> crate::Result<String> {
-	let client = cf_client(cf_api_key()?)?;
-	let icon_url = fetch_mod_icon(&client, mod_id).await;
-
-	let resp = client
-		.get(format!("{CF_API_URL}/v1/mods/{mod_id}/files"))
-		.query(&[("pageSize", "50")])
-		.send()
-		.await?;
-	let files: CfApiResponse<Vec<CfFile>> = resp.json().await?;
-	let best = files
-		.data
-		.iter()
-		.filter(|f| f.is_available)
-		.min_by_key(|f| f.release_type)
-		.ok_or_else(|| {
-			crate::ErrorKind::OtherError(
-				"No compatible CurseForge modpack file found".to_string(),
-			)
+async fn install_modpack_inner(
+	api: &client::Api,
+	mod_id: u32,
+	file_id: u32,
+) -> crate::Result<String> {
+	let project = api.project(mod_id).await?;
+	let icon = project
+		.logo
+		.and_then(|logo| logo.thumbnail_url.or(logo.url));
+	let download = api.prepare(api.file(mod_id, file_id).await?).await?;
+	let zip_bytes = api.download(&download).await?;
+	let manifest: CfPackManifest = {
+		let mut archive = zip::ZipArchive::new(std::io::Cursor::new(
+			&zip_bytes,
+		))
+		.map_err(|e| {
+			cf_error(format!("Invalid CurseForge modpack archive: {e}"))
 		})?;
-	let file_id = best.id;
-
-	install_modpack_inner(&client, mod_id, file_id, icon_url).await
+		let mut entry = archive.by_name("manifest.json").map_err(|_| {
+			cf_error("CurseForge modpack is missing manifest.json")
+		})?;
+		let mut json = String::new();
+		entry.read_to_string(&mut json)?;
+		serde_json::from_str(&json)?
+	};
+	copy_overrides(&zip_bytes, &manifest.overrides, None)?;
+	let primary = manifest
+		.minecraft
+		.mod_loaders
+		.iter()
+		.find(|l| l.primary)
+		.or_else(|| manifest.minecraft.mod_loaders.first());
+	let (loader, version) = primary
+		.map(|l| parse_loader_id(&l.id))
+		.transpose()?
+		.unwrap_or((crate::state::ModLoader::Vanilla, None));
+	let bar = crate::event::emit::init_loading(
+		crate::event::LoadingBarType::CfModpackInstall {
+			pack_name: manifest.name.clone(),
+			icon: icon.clone(),
+		},
+		manifest.files.iter().filter(|f| f.required).count().max(1) as f64,
+		"Preparing mods",
+	)
+	.await
+	.ok();
+	let mut files = Vec::new();
+	for reference in manifest.files.iter().filter(|f| f.required) {
+		files.push(api.file(reference.project_id, reference.file_id).await?);
+	}
+	let staged = stage_files(api, files, &HashSet::new(), bar.as_ref()).await?;
+	let profile_path = crate::api::profile::create::profile_create(
+		manifest.name.clone(),
+		manifest.minecraft.version.clone(),
+		loader,
+		version,
+		None,
+		None,
+		Some(true),
+	)
+	.await?;
+	let result = finish_modpack_profile(
+		&profile_path,
+		&manifest,
+		&zip_bytes,
+		&staged.files,
+		&icon,
+	)
+	.await
+	.map(|()| profile_path.clone());
+	if result.is_err() {
+		if let Err(error) = crate::api::profile::remove(&profile_path).await {
+			tracing::warn!(
+				"Could not remove incomplete CurseForge instance {profile_path}: {error}"
+			);
+		}
+	}
+	result
 }
 
-/// Install a specific CurseForge modpack file by file ID.  Returns the new profile path.
-pub async fn install_modpack_file(mod_id: u32, file_id: u32) -> crate::Result<String> {
-	let client = cf_client(cf_api_key()?)?;
-	let icon_url = fetch_mod_icon(&client, mod_id).await;
-	install_modpack_inner(&client, mod_id, file_id, icon_url).await
+/// Install a complete CurseForge pack; missing required files fail the installation.
+pub async fn install_modpack(mod_id: u32) -> crate::Result<String> {
+	let api = client::Api::new()?;
+	let file = api.best_file(mod_id, None, None, &HashSet::new()).await?;
+	install_modpack_inner(&api, mod_id, file.id).await
 }
+
+pub async fn install_modpack_file(
+	mod_id: u32,
+	file_id: u32,
+) -> crate::Result<String> {
+	install_modpack_inner(&client::Api::new()?, mod_id, file_id).await
+}
+
+#[cfg(test)]
+mod tests;

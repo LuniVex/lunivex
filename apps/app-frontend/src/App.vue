@@ -61,6 +61,7 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import AccountsCard from '@/components/ui/AccountsCard.vue'
 import AppActionBar from '@/components/ui/AppActionBar.vue'
 import Breadcrumbs from '@/components/ui/Breadcrumbs.vue'
+import CfInstallRecovery from '@/components/ui/CfInstallRecovery.vue'
 import ErrorModal from '@/components/ui/ErrorModal.vue'
 import FriendsList from '@/components/ui/friends/FriendsList.vue'
 import AddServerToInstanceModal from '@/components/ui/install_flow/AddServerToInstanceModal.vue'
@@ -1333,12 +1334,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 								<circle cx="32.57" cy="19" r="17.14" fill="black" />
 							</mask>
 						</defs>
-						<rect
-							width="48"
-							height="48"
-							mask="url(#lvCrescentMask)"
-							fill="url(#lvCrescentGrad)"
-						/>
+						<rect width="48" height="48" mask="url(#lvCrescentMask)" fill="url(#lvCrescentGrad)" />
 					</svg>
 					<span class="text-contrast font-semibold text-lg leading-none">LuniVex</span>
 				</span>
@@ -1496,6 +1492,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	<NotificationPanel :has-sidebar="sidebarVisible" />
 	<PopupNotificationPanel :has-sidebar="sidebarVisible" />
 	<ErrorModal ref="errorModal" />
+	<CfInstallRecovery v-if="stateInitialized" />
 	<MinecraftAuthErrorModal ref="minecraftAuthErrorModal" />
 	<ContentInstallModal
 		ref="modInstallModal"

@@ -1,0 +1,136 @@
+name: LuniVex Windows test build
+
+on:
+  push:
+    branches:
+      - fix/1.1.1-curseforge
+    paths:
+      - .github/workflows/lunivex-preview.yml
+      - .cargo/**
+      - Cargo.toml
+      - Cargo.lock
+      - pnpm-lock.yaml
+      - 'apps/app/**'
+      - 'apps/app-frontend/**'
+      - 'packages/app-lib/**'
+      - 'packages/assets/**'
+      - 'packages/ui/**'
+      - 'packages/utils/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-test:
+    name: Build Windows test installer
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      DO_NOT_TRACK: '1'
+      TURBO_TELEMETRY_DISABLED: '1'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Check CurseForge build configuration
+        shell: pwsh
+        env:
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:CURSEFORGE_API_KEY)) {
+            throw "Add the repository Actions secret CURSEFORGE_API_KEY, then re-run this job. The test installer needs it for live CurseForge requests."
+          }
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@2b1f5e9b395427c92ee4e3331786ca3c37afe2d7 # v1.16.0
+        with:
+          rustflags: ''
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Prepare test version and configuration
+        shell: bash
+        env:
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+
+          const version = '1.1.1-test.' + process.env.GITHUB_RUN_NUMBER;
+          for (const path of ['apps/app/Cargo.toml', 'packages/app-lib/Cargo.toml']) {
+            const original = readFileSync(path, 'utf8');
+            const updated = original.replace(/^version\s*=\s*"[^"]*"/m, 'version = "' + version + '"');
+            if (updated === original) throw new Error('Could not set package version in ' + path);
+            writeFileSync(path, updated);
+          }
+
+          const packagePath = 'apps/app-frontend/package.json';
+          const frontend = JSON.parse(readFileSync(packagePath, 'utf8'));
+          frontend.version = version;
+          writeFileSync(packagePath, JSON.stringify(frontend, null, '\t') + '\n');
+
+          const key = process.env.CURSEFORGE_API_KEY?.trim();
+          if (!key || /['\r\n]/.test(key)) throw new Error('Invalid CurseForge API key configuration.');
+          const production = readFileSync('packages/app-lib/.env.prod', 'utf8');
+          const environment = production.replace(/^CURSEFORGE_API_KEY=.*(?:\r?\n|$)/gm, '');
+          writeFileSync('packages/app-lib/.env', environment.trimEnd() + "\nCURSEFORGE_API_KEY='" + key + "'\n");
+
+          const baseConfig = JSON.parse(readFileSync('apps/app/tauri.conf.json', 'utf8'));
+          const preview = {
+            productName: 'LuniVex Test',
+            mainBinaryName: 'LuniVex Test',
+            identifier: 'xyz.lunivex.test',
+            bundle: { createUpdaterArtifacts: false, fileAssociations: [] },
+            app: { windows: baseConfig.app.windows.map(window => ({ ...window, title: 'LuniVex Test ' + version })) },
+            plugins: { 'deep-link': { desktop: { schemes: ['lunivex-test'] } } },
+          };
+          writeFileSync('apps/app/tauri-preview.conf.json', JSON.stringify(preview, null, '\t') + '\n');
+          console.log('Prepared LuniVex Test ' + version + ' from ' + process.env.GITHUB_SHA);
+          NODE
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Windows test installer
+        run: pnpm --filter=@modrinth/app run tauri build --config tauri-preview.conf.json --bundles nsis
+
+      - name: Write installer checksums
+        shell: pwsh
+        run: |
+          $installers = @(Get-ChildItem -Path target/release/bundle/nsis -Filter '*-setup.exe')
+          if ($installers.Count -ne 1) {
+            throw "Expected exactly one Windows test installer."
+          }
+          $installers | ForEach-Object {
+            $hash = (Get-FileHash -Algorithm SHA256 -Path $_.FullName).Hash.ToLowerInvariant()
+            "$hash  $($_.Name)"
+          } | Set-Content -Path target/release/bundle/nsis/SHA256SUMS.txt -Encoding utf8
+
+      - name: Upload Windows test installer
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: LuniVex-1.1.1-test-windows-x64-${{ github.sha }}
+          path: |
+            target/release/bundle/nsis/*-setup.exe
+            target/release/bundle/nsis/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
