@@ -137,9 +137,11 @@ mod tests {
 
 	#[test]
 	fn corruption_does_not_pass_just_because_the_size_matches() {
+		let mut corrupted = *b"abc";
+		corrupted[2] ^= 1;
 		let result =
 			spec(vec![Checksum::new(HashAlgorithm::Sha1, SHA1).unwrap()])
-				.verify(b"abd");
+				.verify(&corrupted);
 		assert!(matches!(
 			result,
 			Err(IntegrityError::ChecksumMismatch { .. })

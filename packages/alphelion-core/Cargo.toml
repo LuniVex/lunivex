@@ -1,11 +1,11 @@
 [package]
 name = "alphelion-core"
 version = "0.0.1"
-description = "Interface-independent foundations for the LuniVex Minecraft client"
 edition.workspace = true
 rust-version.workspace = true
-license = "GPL-3.0-only"
+description = "Interface-independent foundations for the LuniVex Minecraft client"
 repository = "https://github.com/LuniVex/lunivex"
+license = "GPL-3.0-only"
 publish = false
 
 [dependencies]
