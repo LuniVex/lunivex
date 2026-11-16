@@ -55,4 +55,36 @@ jobs:
             downloadUrlSupplied: typeof data === 'string' && data.length > 0,
           }));
           if (game.status !== 200) throw new Error('The key did not pass the Minecraft API access check.');
+          import { writeFileSync } from 'node:fs';
+          import { createHash } from 'node:crypto';
+          async function getData(path) {
+            const response = await fetch(base + path, {
+              headers: { 'x-api-key': key, Accept: 'application/json' },
+              signal: AbortSignal.timeout(15000), redirect: 'error',
+            });
+            if (!response.ok) throw new Error('Pack metadata HTTP ' + response.status);
+            return (await response.json()).data;
+          }
+          const pack = await getData('/v1/mods/466901');
+          if (pack.allowModDistribution === false) throw new Error('The modpack does not allow third-party downloads.');
+          const packFile = await getData('/v1/mods/466901/files/9563730');
+          const downloadUrl = packFile.downloadUrl || await getData('/v1/mods/466901/files/9563730/download-url');
+          if (!downloadUrl || new URL(downloadUrl).protocol !== 'https:') throw new Error('No permitted HTTPS modpack download was provided.');
+          const download = await fetch(downloadUrl, { signal: AbortSignal.timeout(120000) });
+          if (!download.ok) throw new Error('Modpack download HTTP ' + download.status);
+          const bytes = Buffer.from(await download.arrayBuffer());
+          const sha1 = packFile.hashes.find(hash => hash.algo === 1)?.value;
+          if (!sha1 || createHash('sha1').update(bytes).digest('hex') !== sha1.toLowerCase()) throw new Error('Modpack checksum mismatch.');
+          writeFileSync('pack-inspection.zip', bytes);
           NODE
+
+      - name: Inspect modpack content locations
+        run: |
+          python - <<'PY'
+          import zipfile,json
+          with zipfile.ZipFile('pack-inspection.zip') as archive:
+            names=archive.namelist()
+            manifest=json.loads(archive.read('manifest.json'))
+            selected=[name for name in names if '/paxi/' in name or '/openloader/' in name or '/global_packs/' in name]
+            print(json.dumps({'pack':manifest['name'],'contentLocations':selected[:50],'contentLocationCount':len(selected),'requiredFiles':sum(bool(item.get('required')) for item in manifest['files'])}))
+          PY
