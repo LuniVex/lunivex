@@ -528,10 +528,17 @@ impl Session {
 					.ok()
 					.as_deref() == Some(id.as_bytes())
 				{
-					self.record.profile_path = Some(
-						directory.file_name().to_string_lossy().to_string(),
-					);
-					break;
+					let path =
+						directory.file_name().to_string_lossy().to_string();
+					if crate::api::profile::get(&path).await?.is_some_and(
+						|profile| {
+							profile.install_stage
+								!= crate::state::ProfileInstallStage::Installed
+						},
+					) {
+						self.record.profile_path = Some(path);
+						break;
+					}
 				}
 			}
 		}
@@ -574,6 +581,14 @@ impl Session {
 			self.save().await?;
 			path
 		};
+		if crate::api::profile::get(&profile_path).await?.is_some_and(
+			|profile| {
+				profile.install_stage
+					== crate::state::ProfileInstallStage::Installed
+			},
+		) {
+			return self.complete(profile_path).await;
+		}
 		let files = self
 			.record
 			.entries
@@ -605,6 +620,13 @@ impl Session {
 			.await;
 			return Err(error);
 		}
+		self.complete(profile_path).await
+	}
+
+	async fn complete(
+		&mut self,
+		profile_path: String,
+	) -> crate::Result<String> {
 		self.record.completed = true;
 		self.record.error = None;
 		self.save().await?;
