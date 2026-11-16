@@ -1,0 +1,58 @@
+name: CurseForge access check
+
+on:
+  push:
+    branches:
+      - fix/1.1.1-curseforge
+    paths:
+      - .github/workflows/curseforge-access.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: '24'
+
+      - name: Check Minecraft and the reported required file
+        env:
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+        run: |
+          node --input-type=module <<'NODE'
+          const key = process.env.CURSEFORGE_API_KEY?.trim();
+          if (!key) throw new Error('CURSEFORGE_API_KEY is unavailable to this job.');
+          const base = 'https://api.curseforge.com';
+          async function inspect(label, path, summarize) {
+            const response = await fetch(base + path, {
+              headers: { 'x-api-key': key, Accept: 'application/json' },
+              signal: AbortSignal.timeout(15000),
+              redirect: 'error',
+            });
+            const payload = await response.json().catch(() => ({}));
+            const result = { check: label, status: response.status, ...summarize(payload.data) };
+            console.log(JSON.stringify(result));
+            return result;
+          }
+          const game = await inspect('minecraft', '/v1/games/432', data => ({ gameId: data?.id ?? null }));
+          await inspect('reported-project', '/v1/mods/1411033', data => ({
+            projectId: data?.id ?? null,
+            classId: data?.classId ?? null,
+            allowModDistribution: data?.allowModDistribution ?? null,
+          }));
+          await inspect('reported-file', '/v1/mods/1411033/files/8619298', data => ({
+            fileId: data?.id ?? null,
+            isAvailable: data?.isAvailable ?? null,
+            downloadUrlSupplied: typeof data?.downloadUrl === 'string' && data.downloadUrl.length > 0,
+          }));
+          await inspect('reported-download-url', '/v1/mods/1411033/files/8619298/download-url', data => ({
+            downloadUrlSupplied: typeof data === 'string' && data.length > 0,
+          }));
+          if (game.status !== 200) throw new Error('The key did not pass the Minecraft API access check.');
+          NODE
