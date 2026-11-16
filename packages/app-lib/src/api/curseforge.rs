@@ -7,6 +7,13 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 mod client;
+mod recovery;
+
+pub use recovery::{
+	CfImportResult, CfMissingFile, CfPackInstallResult, CfPendingInstall,
+	discard_install, import_install_files, pending_installs, resume_install,
+	start_install,
+};
 
 const CF_API_URL: &str = "https://api.curseforge.com";
 const MINECRAFT_GAME_ID: u32 = 432;
@@ -323,6 +330,7 @@ pub async fn get_mod_description(mod_id: u32) -> crate::Result<String> {
 struct StagedFile {
 	file: CfFile,
 	path: PathBuf,
+	bundled: bool,
 }
 
 struct StagedInstall {
@@ -368,6 +376,7 @@ async fn stage_files(
 				Ok::<_, crate::Error>(StagedFile {
 					file: download.file,
 					path,
+					bundled: false,
 				})
 			}
 			.await
@@ -529,7 +538,7 @@ async fn install_into_profile(
 	))
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct CfPackManifest {
 	minecraft: CfPackMinecraft,
@@ -543,7 +552,7 @@ fn default_overrides_dir() -> String {
 	"overrides".to_string()
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct CfPackMinecraft {
 	version: String,
@@ -551,13 +560,13 @@ struct CfPackMinecraft {
 	mod_loaders: Vec<CfPackLoader>,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 struct CfPackLoader {
 	id: String,
 	primary: bool,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Serialize)]
 struct CfPackFileRef {
 	#[serde(rename = "projectID")]
 	project_id: u32,
@@ -650,6 +659,102 @@ fn copy_overrides(
 	Ok(())
 }
 
+fn pack_datapack_directory(
+	zip_bytes: &[u8],
+	overrides: &str,
+) -> crate::Result<Option<PathBuf>> {
+	let archive = zip::ZipArchive::new(std::io::Cursor::new(zip_bytes))
+		.map_err(|error| cf_error(error.to_string()))?;
+	let directory = Path::new("config/paxi/datapacks");
+	for name in archive.file_names() {
+		if override_relative_path(overrides, name.trim_end_matches('/'))?
+			.is_some_and(|path| path.starts_with(directory))
+		{
+			return Ok(Some(directory.to_path_buf()));
+		}
+	}
+	Ok(None)
+}
+
+fn is_datapack(bytes: &[u8]) -> crate::Result<bool> {
+	let mut archive = zip::ZipArchive::new(std::io::Cursor::new(bytes))
+		.map_err(|error| cf_error(error.to_string()))?;
+	Ok(archive.by_name("pack.mcmeta").is_ok()
+		&& archive.file_names().any(|name| name.starts_with("data/")))
+}
+
+async fn finish_modpack_profile(
+	profile_path: &str,
+	manifest: &CfPackManifest,
+	zip_bytes: &[u8],
+	files: &[StagedFile],
+	icon: &Option<String>,
+) -> crate::Result<()> {
+	crate::api::profile::edit(&profile_path, |profile| {
+		profile.install_stage =
+			crate::state::ProfileInstallStage::PackInstalling;
+		profile.icon_path.clone_from(icon);
+		async { Ok(()) }
+	})
+	.await?;
+	let state = crate::State::get().await?;
+	let base = crate::api::profile::get_full_path(&profile_path).await?;
+	copy_overrides(&zip_bytes, &manifest.overrides, Some(&base))?;
+	let datapack_directory =
+		pack_datapack_directory(zip_bytes, &manifest.overrides)?;
+	for file in files {
+		if file.bundled {
+			continue;
+		}
+		let kind = file
+			.file
+			.file_name
+			.to_lowercase()
+			.ends_with(".jar")
+			.then_some(crate::state::ProjectType::Mod);
+		let bytes = Bytes::from(tokio::fs::read(&file.path).await?);
+		if kind.is_none()
+			&& let Some(directory) = &datapack_directory
+			&& is_datapack(&bytes)?
+		{
+			crate::util::fetch::write(
+				&base.join(directory).join(&file.file.file_name),
+				&bytes,
+				&state.io_semaphore,
+			)
+			.await?;
+			continue;
+		}
+		crate::state::Profile::add_project_bytes(
+			&profile_path,
+			&file.file.file_name,
+			bytes,
+			None,
+			kind,
+			None,
+			&state.io_semaphore,
+			&state.pool,
+		)
+		.await?;
+	}
+	crate::api::profile::edit(&profile_path, |profile| {
+		profile.install_stage =
+			crate::state::ProfileInstallStage::PackInstalled;
+		async { Ok(()) }
+	})
+	.await?;
+	let profile = crate::api::profile::get(&profile_path)
+		.await?
+		.ok_or_else(|| cf_error("The new CurseForge instance disappeared"))?;
+	crate::launcher::install_minecraft(&profile, None, false).await?;
+	crate::event::emit::emit_profile(
+		&profile_path,
+		crate::event::ProfilePayloadType::Edited,
+	)
+	.await?;
+	Ok(())
+}
+
 async fn install_modpack_inner(
 	api: &client::Api,
 	mod_id: u32,
@@ -702,8 +807,8 @@ async fn install_modpack_inner(
 	}
 	let staged = stage_files(api, files, &HashSet::new(), bar.as_ref()).await?;
 	let profile_path = crate::api::profile::create::profile_create(
-		manifest.name,
-		manifest.minecraft.version,
+		manifest.name.clone(),
+		manifest.minecraft.version.clone(),
 		loader,
 		version,
 		None,
@@ -711,55 +816,15 @@ async fn install_modpack_inner(
 		Some(true),
 	)
 	.await?;
-	let result = async {
-		crate::api::profile::edit(&profile_path, |profile| {
-			profile.install_stage =
-				crate::state::ProfileInstallStage::PackInstalling;
-			profile.icon_path.clone_from(&icon);
-			async { Ok(()) }
-		})
-		.await?;
-		let state = crate::State::get().await?;
-		for file in &staged.files {
-			let kind = file
-				.file
-				.file_name
-				.to_lowercase()
-				.ends_with(".jar")
-				.then_some(crate::state::ProjectType::Mod);
-			crate::state::Profile::add_project_bytes(
-				&profile_path,
-				&file.file.file_name,
-				Bytes::from(tokio::fs::read(&file.path).await?),
-				None,
-				kind,
-				None,
-				&state.io_semaphore,
-				&state.pool,
-			)
-			.await?;
-		}
-		let base = crate::api::profile::get_full_path(&profile_path).await?;
-		copy_overrides(&zip_bytes, &manifest.overrides, Some(&base))?;
-		crate::api::profile::edit(&profile_path, |profile| {
-			profile.install_stage =
-				crate::state::ProfileInstallStage::PackInstalled;
-			async { Ok(()) }
-		})
-		.await?;
-		let profile =
-			crate::api::profile::get(&profile_path).await?.ok_or_else(
-				|| cf_error("The new CurseForge instance disappeared"),
-			)?;
-		crate::launcher::install_minecraft(&profile, None, false).await?;
-		crate::event::emit::emit_profile(
-			&profile_path,
-			crate::event::ProfilePayloadType::Edited,
-		)
-		.await?;
-		Ok::<_, crate::Error>(profile_path.clone())
-	}
-	.await;
+	let result = finish_modpack_profile(
+		&profile_path,
+		&manifest,
+		&zip_bytes,
+		&staged.files,
+		&icon,
+	)
+	.await
+	.map(|()| profile_path.clone());
 	if result.is_err() {
 		if let Err(error) = crate::api::profile::remove(&profile_path).await {
 			tracing::warn!(

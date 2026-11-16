@@ -359,6 +359,19 @@ impl Api {
 	}
 
 	pub async fn prepare(&self, file: CfFile) -> crate::Result<Download> {
+		let label = format!(
+			"{} (project {}, file {})",
+			file.file_name, file.mod_id, file.id
+		);
+		self.download_option(file).await?.ok_or_else(|| failure(format!(
+			"CurseForge does not provide a download for {label}. This required file must be obtained manually from CurseForge; automatic installation cannot complete."
+		)))
+	}
+
+	pub(super) async fn download_option(
+		&self,
+		file: CfFile,
+	) -> crate::Result<Option<Download>> {
 		validate_file_name(&file.file_name)?;
 		if !file.is_available {
 			return Err(failure(format!(
@@ -366,15 +379,22 @@ impl Api {
 				file.mod_id, file.id
 			)));
 		}
+		if let Some(url) =
+			file.download_url.as_ref().filter(|url| !url.is_empty())
+		{
+			return Ok(Some(Download {
+				url: url.clone(),
+				file,
+			}));
+		}
 		let path =
 			format!("/v1/mods/{}/files/{}/download-url", file.mod_id, file.id);
 		let result: CfApiResponse<Option<String>> =
 			self.get(&path, &[]).await?;
-		let url = result.data.filter(|u| !u.is_empty()).ok_or_else(|| failure(format!(
-			"CurseForge does not provide a download for {} (project {}, file {}). This required file must be obtained manually from CurseForge; automatic installation cannot complete.",
-			file.file_name, file.mod_id, file.id
-		)))?;
-		Ok(Download { file, url })
+		Ok(result
+			.data
+			.filter(|url| !url.is_empty())
+			.map(|url| Download { file, url }))
 	}
 
 	pub async fn download(&self, download: &Download) -> crate::Result<Bytes> {

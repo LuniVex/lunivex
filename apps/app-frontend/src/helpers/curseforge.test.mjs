@@ -1,7 +1,40 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { curseforge_search, parseCurseForgeSearchParams } from './curseforge.js'
+import {
+	curseforge_search,
+	isCurseForgeInstallPaused,
+	onCurseForgeInstallPaused,
+	parseCurseForgeSearchParams,
+	resolveCurseForgePackInstall,
+} from './curseforge.js'
+
+test('paused installs notify recovery without pretending an instance was installed', () => {
+	const pending = { id: '12-34', downloadedFiles: 4, missingFiles: [{ fileId: 5 }] }
+	const events = []
+	const unsubscribe = onCurseForgeInstallPaused((job) => events.push(job))
+	try {
+		assert.throws(
+			() => resolveCurseForgePackInstall({ profilePath: null, pending }),
+			(error) => isCurseForgeInstallPaused(error) && error.pending === pending,
+		)
+		assert.deepEqual(events, [pending])
+		assert.equal(
+			resolveCurseForgePackInstall({ profilePath: 'Ready instance', pending: null }),
+			'Ready instance',
+		)
+		assert.deepEqual(events, [pending])
+	} finally {
+		unsubscribe()
+	}
+})
+
+test('malformed installation replies cannot be used as an instance path', () => {
+	for (const value of [null, {}, { profilePath: '' }, { pending: {} }]) {
+		assert.throws(() => resolveCurseForgePackInstall(value), /invalid installation result/)
+	}
+	assert.equal(isCurseForgeInstallPaused(new Error('HTTP 403')), false)
+})
 
 test('search text is decoded once and keeps literal percent and plus characters', () => {
 	const params = new URLSearchParams({ query: '100% + fun', limit: '100', offset: '100' })

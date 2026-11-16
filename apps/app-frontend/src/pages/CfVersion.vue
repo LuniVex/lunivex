@@ -23,6 +23,7 @@ import {
 	curseforge_get_mods,
 	curseforge_install_mod_file,
 	curseforge_install_modpack_file,
+	isCurseForgeInstallPaused,
 } from '@/helpers/curseforge.js'
 import { get as getInstance } from '@/helpers/profile'
 import { releaseColor } from '@/helpers/utils'
@@ -148,7 +149,7 @@ async function handleInstall() {
 			installed.value = true
 			router.push(`/instance/${encodeURIComponent(profilePath)}`)
 		} catch (err) {
-			handleError(err as Error)
+			if (!isCurseForgeInstallPaused(err)) handleError(err as Error)
 		} finally {
 			installing.value = false
 		}

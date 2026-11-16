@@ -39,6 +39,10 @@ fn main() {
                         "curseforge_get_mod_description",
                         "curseforge_install_modpack",
                         "curseforge_install_modpack_file",
+                        "curseforge_pending_installs",
+                        "curseforge_resume_install",
+                        "curseforge_import_install_files",
+                        "curseforge_discard_install",
                     ])
                     .default_permission(
                         DefaultPermissionRule::AllowAllCommands,

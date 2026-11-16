@@ -60,6 +60,7 @@ import {
 	curseforge_install_mod_file,
 	curseforge_install_modpack,
 	curseforge_install_modpack_file,
+	isCurseForgeInstallPaused,
 } from '@/helpers/curseforge.js'
 import { get as getInstance, get_projects as getInstanceProjects } from '@/helpers/profile'
 import { get_game_versions } from '@/helpers/tags.js'
@@ -503,7 +504,7 @@ async function handleInstall() {
 			installed.value = true
 			router.push(`/instance/${encodeURIComponent(profilePath)}`)
 		} catch (err) {
-			handleError(err as Error)
+			if (!isCurseForgeInstallPaused(err)) handleError(err as Error)
 		} finally {
 			installing.value = false
 		}
@@ -586,7 +587,7 @@ async function handleVersionInstall(file: CfFile) {
 			const profilePath = await curseforge_install_modpack_file(mod.value.id, file.id)
 			router.push(`/instance/${encodeURIComponent(profilePath)}`)
 		} catch (err) {
-			handleError(err as Error)
+			if (!isCurseForgeInstallPaused(err)) handleError(err as Error)
 		} finally {
 			installingFileIds.value = new Set([...installingFileIds.value].filter((id) => id !== file.id))
 		}

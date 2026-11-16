@@ -4,7 +4,7 @@ import { injectNotificationManager } from '@modrinth/ui'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { curseforge_install_modpack } from '@/helpers/curseforge.js'
+import { curseforge_install_modpack, isCurseForgeInstallPaused } from '@/helpers/curseforge.js'
 
 export type CfFeaturedMod = {
 	id: number
@@ -34,7 +34,7 @@ async function handleInstall(mod: CfFeaturedMod) {
 		await curseforge_install_modpack(mod.id)
 		installedIds.value = [...installedIds.value, mod.id]
 	} catch (err) {
-		handleError(err as Error)
+		if (!isCurseForgeInstallPaused(err)) handleError(err as Error)
 	} finally {
 		installingIds.value = installingIds.value.filter((id) => id !== mod.id)
 	}
@@ -62,18 +62,8 @@ function navigate(id: number) {
 				@keydown.enter="navigate(mod.id)"
 			>
 				<div class="featured-media">
-					<img
-						v-if="mod.bannerUrl"
-						:src="mod.bannerUrl"
-						:alt="mod.name"
-						class="featured-banner"
-					/>
-					<img
-						v-else-if="mod.logoUrl"
-						:src="mod.logoUrl"
-						:alt="mod.name"
-						class="featured-thumb"
-					/>
+					<img v-if="mod.bannerUrl" :src="mod.bannerUrl" :alt="mod.name" class="featured-banner" />
+					<img v-else-if="mod.logoUrl" :src="mod.logoUrl" :alt="mod.name" class="featured-thumb" />
 					<div v-else class="featured-thumb featured-thumb-fallback" />
 				</div>
 				<div class="featured-info">

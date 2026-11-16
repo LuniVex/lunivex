@@ -1,6 +1,7 @@
 use crate::api::Result;
 use theseus::curseforge::{
-	CfCategory, CfFile, CfFilesResult, CfMod, CfSearchResult,
+	CfCategory, CfFile, CfFilesResult, CfImportResult, CfMod,
+	CfPackInstallResult, CfPendingInstall, CfSearchResult,
 };
 use theseus::data::ProjectType;
 
@@ -19,6 +20,10 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 			curseforge_get_mod_description,
 			curseforge_install_modpack,
 			curseforge_install_modpack_file,
+			curseforge_pending_installs,
+			curseforge_resume_install,
+			curseforge_import_install_files,
+			curseforge_discard_install,
 		])
 		.build()
 }
@@ -132,10 +137,12 @@ pub async fn curseforge_get_mod_description(mod_id: u32) -> Result<String> {
 }
 
 /// Download a CurseForge modpack and install it as a new instance.
-/// Returns the path of the newly created profile.
+/// Returns the installed profile or saved progress that can be resumed.
 #[tauri::command]
-pub async fn curseforge_install_modpack(mod_id: u32) -> Result<String> {
-	Ok(theseus::curseforge::install_modpack(mod_id).await?)
+pub async fn curseforge_install_modpack(
+	mod_id: u32,
+) -> Result<CfPackInstallResult> {
+	Ok(theseus::curseforge::start_install(mod_id, None).await?)
 }
 
 /// Install a specific CurseForge mod file (by file ID) into an existing instance.
@@ -164,11 +171,36 @@ pub async fn curseforge_install_mod_file(
 }
 
 /// Install a specific CurseForge modpack file (by file ID) as a new instance.
-/// Returns the path of the newly created profile.
+/// Returns the installed profile or saved progress that can be resumed.
 #[tauri::command]
 pub async fn curseforge_install_modpack_file(
 	mod_id: u32,
 	file_id: u32,
-) -> Result<String> {
-	Ok(theseus::curseforge::install_modpack_file(mod_id, file_id).await?)
+) -> Result<CfPackInstallResult> {
+	Ok(theseus::curseforge::start_install(mod_id, Some(file_id)).await?)
+}
+
+#[tauri::command]
+pub async fn curseforge_pending_installs() -> Result<Vec<CfPendingInstall>> {
+	Ok(theseus::curseforge::pending_installs().await?)
+}
+
+#[tauri::command]
+pub async fn curseforge_resume_install(
+	job_id: &str,
+) -> Result<CfPackInstallResult> {
+	Ok(theseus::curseforge::resume_install(job_id).await?)
+}
+
+#[tauri::command]
+pub async fn curseforge_import_install_files(
+	job_id: &str,
+	paths: Vec<String>,
+) -> Result<CfImportResult> {
+	Ok(theseus::curseforge::import_install_files(job_id, paths).await?)
+}
+
+#[tauri::command]
+pub async fn curseforge_discard_install(job_id: &str) -> Result<()> {
+	Ok(theseus::curseforge::discard_install(job_id).await?)
 }

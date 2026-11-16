@@ -8,15 +8,17 @@ use std::sync::{
 };
 use std::thread;
 
-struct Server {
-	url: String,
-	requests: Arc<Mutex<Vec<String>>>,
+pub(super) struct Server {
+	pub(super) url: String,
+	pub(super) requests: Arc<Mutex<Vec<String>>>,
 	stop: Arc<AtomicBool>,
 	thread: Option<thread::JoinHandle<()>>,
 }
 
 impl Server {
-	fn new(handler: impl Fn(&str) -> (u16, Vec<u8>) + Send + 'static) -> Self {
+	pub(super) fn new(
+		handler: impl Fn(&str) -> (u16, Vec<u8>) + Send + 'static,
+	) -> Self {
 		let listener = TcpListener::bind("127.0.0.1:0").unwrap();
 		let url = format!("http://{}", listener.local_addr().unwrap());
 		listener.set_nonblocking(true).unwrap();
@@ -67,7 +69,7 @@ impl Server {
 		}
 	}
 
-	fn api(&self) -> client::Api {
+	pub(super) fn api(&self) -> client::Api {
 		client::Api::for_test(self.url.clone())
 	}
 }
@@ -79,11 +81,11 @@ impl Drop for Server {
 	}
 }
 
-fn response(value: Value) -> (u16, Vec<u8>) {
+pub(super) fn response(value: Value) -> (u16, Vec<u8>) {
 	(200, serde_json::to_vec(&value).unwrap())
 }
 
-fn file(mod_id: u32, id: u32) -> CfFile {
+pub(super) fn file(mod_id: u32, id: u32) -> CfFile {
 	serde_json::from_value(json!({
 		"id": id, "modId": mod_id, "displayName": "Test mod", "fileName": format!("mod-{mod_id}-{id}.jar"),
 		"gameVersions": ["1.20.1", "Fabric"], "releaseType": 1,
@@ -110,7 +112,7 @@ fn files_page(target: &str, files: &[CfFile]) -> (u16, Vec<u8>) {
 	)
 }
 
-fn archive(entries: &[(&str, &[u8])]) -> Vec<u8> {
+pub(super) fn archive(entries: &[(&str, &[u8])]) -> Vec<u8> {
 	let mut zip = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
 	for (name, contents) in entries {
 		zip.start_file(*name, zip::write::SimpleFileOptions::default())

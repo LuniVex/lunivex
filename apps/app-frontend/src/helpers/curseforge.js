@@ -1,5 +1,52 @@
 import { invoke } from '@tauri-apps/api/core'
 
+const pausedInstallListeners = new Set()
+
+export class CurseForgeInstallPaused extends Error {
+	constructor(pending) {
+		super('Installation paused. Your downloads are saved; open Saved installs to continue.')
+		this.name = 'CurseForgeInstallPaused'
+		this.code = 'CURSEFORGE_INSTALL_PAUSED'
+		this.pending = pending
+	}
+}
+
+export function isCurseForgeInstallPaused(error) {
+	return error?.code === 'CURSEFORGE_INSTALL_PAUSED'
+}
+
+export function onCurseForgeInstallPaused(listener) {
+	pausedInstallListeners.add(listener)
+	return () => pausedInstallListeners.delete(listener)
+}
+
+export function resolveCurseForgePackInstall(result) {
+	if (typeof result?.profilePath === 'string' && result.profilePath && !result.pending) {
+		return result.profilePath
+	}
+	if (typeof result?.pending?.id === 'string') {
+		for (const listener of pausedInstallListeners) listener(result.pending)
+		throw new CurseForgeInstallPaused(result.pending)
+	}
+	throw new Error('CurseForge returned an invalid installation result')
+}
+
+export async function curseforge_pending_installs() {
+	return await invoke('plugin:curseforge|curseforge_pending_installs')
+}
+
+export async function curseforge_resume_install(jobId) {
+	return await invoke('plugin:curseforge|curseforge_resume_install', { jobId })
+}
+
+export async function curseforge_import_install_files(jobId, paths) {
+	return await invoke('plugin:curseforge|curseforge_import_install_files', { jobId, paths })
+}
+
+export async function curseforge_discard_install(jobId) {
+	return await invoke('plugin:curseforge|curseforge_discard_install', { jobId })
+}
+
 export function parseCurseForgeSearchParams(requestParams) {
 	const params = new URLSearchParams(requestParams)
 	const pageSize = Number(params.get('limit') ?? 20)
@@ -124,7 +171,9 @@ export function stripCfDescriptionExtraField(html) {
 }
 
 export async function curseforge_install_modpack(modId) {
-	return await invoke('plugin:curseforge|curseforge_install_modpack', { modId })
+	return resolveCurseForgePackInstall(
+		await invoke('plugin:curseforge|curseforge_install_modpack', { modId }),
+	)
 }
 
 export async function curseforge_install_mod_file({
@@ -144,5 +193,7 @@ export async function curseforge_install_mod_file({
 }
 
 export async function curseforge_install_modpack_file(modId, fileId) {
-	return await invoke('plugin:curseforge|curseforge_install_modpack_file', { modId, fileId })
+	return resolveCurseForgePackInstall(
+		await invoke('plugin:curseforge|curseforge_install_modpack_file', { modId, fileId }),
+	)
 }

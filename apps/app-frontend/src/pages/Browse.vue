@@ -48,6 +48,7 @@ import {
 	curseforge_install_mod,
 	curseforge_install_modpack,
 	curseforge_search,
+	isCurseForgeInstallPaused,
 	parseCurseForgeSearchParams,
 } from '@/helpers/curseforge.js'
 import { profile_listener } from '@/helpers/events.js'
@@ -814,7 +815,7 @@ function getCardActions(
 								await curseforge_install_modpack(cfModId)
 								installedCfProjectIds.value = new Set([...installedCfProjectIds.value, cfId])
 							} catch (err) {
-								handleError(err as Error)
+								if (!isCurseForgeInstallPaused(err)) handleError(err as Error)
 							} finally {
 								setProjectInstalling(cfId, false)
 							}
