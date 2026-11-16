@@ -499,26 +499,30 @@ pub(super) fn validate_download(
 	file: &CfFile,
 	bytes: &[u8],
 ) -> crate::Result<()> {
-	if file
-		.file_length
-		.is_some_and(|length| length != bytes.len() as u64)
-	{
-		return Err(failure(format!(
+	use alphelion_core::integrity::{
+		Checksum, HashAlgorithm, IntegrityError, IntegritySpec,
+	};
+	let corrupt =
+		|| failure(format!("Corrupt CurseForge download: {}", file.file_name));
+	let checksums = file
+		.hashes
+		.iter()
+		.filter(|hash| hash.algo == 1)
+		.map(|hash| Checksum::new(HashAlgorithm::Sha1, hash.value.clone()))
+		.collect::<Result<Vec<_>, _>>()
+		.map_err(|_| corrupt())?;
+	IntegritySpec {
+		expected_size: file.file_length,
+		checksums,
+	}
+	.verify(bytes)
+	.map_err(|error| match error {
+		IntegrityError::SizeMismatch { .. } => failure(format!(
 			"Incomplete CurseForge download: {}",
 			file.file_name
-		)));
-	}
-	for hash in file.hashes.iter().filter(|hash| hash.algo == 1) {
-		if !sha1_smol::Sha1::from(bytes)
-			.hexdigest()
-			.eq_ignore_ascii_case(&hash.value)
-		{
-			return Err(failure(format!(
-				"Corrupt CurseForge download: {}",
-				file.file_name
-			)));
-		}
-	}
+		)),
+		_ => corrupt(),
+	})?;
 	zip::ZipArchive::new(std::io::Cursor::new(bytes)).map_err(|e| {
 		failure(format!(
 			"Invalid CurseForge archive {}: {e}",

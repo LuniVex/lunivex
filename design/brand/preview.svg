@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="740" viewBox="0 0 1200 740" role="img" aria-labelledby="title desc">
+	<title id="title">LuniVex Client logo studies</title>
+	<desc id="desc">Three monochrome logo drafts, each shown at large and taskbar sizes: orbital L, trajectory L and stellar L.</desc>
+<defs>
+<symbol id="orbit" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<ellipse cx="128" cy="128" rx="105" ry="43" transform="rotate(-24 128 128)" fill="none" stroke="#edf2f7" stroke-width="15"/>
+	<circle cx="128" cy="128" r="60" fill="#edf2f7"/>
+	<path d="M107 87H128V145H164V166H107Z" fill="#11151b"/>
+</symbol>
+<symbol id="trajectory" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<path d="M69 171C34 155 44 104 94 70C142 38 195 43 207 72" fill="none" stroke="#edf2f7" stroke-width="19" stroke-linecap="round"/>
+	<path d="M99 103V172H171" fill="none" stroke="#edf2f7" stroke-width="23" stroke-linejoin="round"/>
+	<circle cx="210" cy="96" r="14" fill="#edf2f7"/>
+</symbol>
+<symbol id="nova" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<path d="M128 28L149 83L201 55L174 108L229 128L174 149L201 201L149 174L128 229L107 174L55 201L82 149L27 128L82 107L55 55L107 82Z" fill="#edf2f7"/>
+	<path d="M108 98H128V139H158V158H108Z" fill="#11151b"/>
+</symbol>
+</defs>
+	<rect width="1200" height="740" fill="#0b0e12"/>
+	<g font-family="DejaVu Sans, sans-serif">
+		<text x="64" y="71" font-size="30" font-weight="bold" fill="#edf2f7">LuniVex</text>
+		<text x="64" y="105" font-size="15" fill="#929ca9">Client identity / first symbol studies</text>
+		<path d="M64 132H1136M410 166V650M790 166V650" fill="none" stroke="#252b34"/>
+		<use x="80" y="176" width="256" height="256" xlink:href="#orbit"/>
+		<use x="472" y="176" width="256" height="256" xlink:href="#trajectory"/>
+		<use x="864" y="176" width="256" height="256" xlink:href="#nova"/>
+		<g fill="#edf2f7" font-size="24" font-weight="bold">
+			<text x="80" y="485">01 / Orbit</text>
+			<text x="472" y="485">02 / Trajectory</text>
+			<text x="864" y="485">03 / Nova</text>
+		</g>
+		<g fill="#929ca9" font-size="14">
+			<text x="80" y="515">A planet, an orbit, a quiet L.</text>
+			<text x="472" y="515">A path around the initial.</text>
+			<text x="864" y="515">A sharper stellar silhouette.</text>
+			<text x="80" y="562">16 / 24 / 32 / 48 px</text>
+			<text x="472" y="562">16 / 24 / 32 / 48 px</text>
+			<text x="864" y="562">16 / 24 / 32 / 48 px</text>
+		</g>
+		<use x="80" y="596" width="16" height="16" xlink:href="#orbit"/>
+		<use x="120" y="592" width="24" height="24" xlink:href="#orbit"/>
+		<use x="168" y="588" width="32" height="32" xlink:href="#orbit"/>
+		<use x="224" y="580" width="48" height="48" xlink:href="#orbit"/>
+		<use x="472" y="596" width="16" height="16" xlink:href="#trajectory"/>
+		<use x="512" y="592" width="24" height="24" xlink:href="#trajectory"/>
+		<use x="560" y="588" width="32" height="32" xlink:href="#trajectory"/>
+		<use x="616" y="580" width="48" height="48" xlink:href="#trajectory"/>
+		<use x="864" y="596" width="16" height="16" xlink:href="#nova"/>
+		<use x="904" y="592" width="24" height="24" xlink:href="#nova"/>
+		<use x="952" y="588" width="32" height="32" xlink:href="#nova"/>
+		<use x="1008" y="580" width="48" height="48" xlink:href="#nova"/>
+		<text x="64" y="699" font-size="13" fill="#687482">Shape studies only. The app icon and colours have not been changed.</text>
+	</g>
+</svg>

@@ -1,0 +1,17 @@
+[package]
+name = "alphelion-core"
+version = "0.0.1"
+description = "Interface-independent foundations for the LuniVex Minecraft client"
+edition.workspace = true
+rust-version.workspace = true
+license = "GPL-3.0-only"
+repository = "https://github.com/LuniVex/lunivex"
+publish = false
+
+[dependencies]
+sha1_smol = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+
+[lints]
+workspace = true

@@ -5,6 +5,7 @@ members = [
   "apps/app-playground",
   "apps/daedalus_client",
   "apps/labrinth",
+  "packages/alphelion-core",
   "packages/app-lib",
   "packages/ariadne",
   "packages/daedalus",
@@ -29,6 +30,7 @@ actix-rt = "2.11.0"
 actix-web = "4.11.0"
 actix-web-prom = "0.10.0"
 actix-ws = "0.3.0"
+alphelion-core = { path = "packages/alphelion-core" }
 arc-swap = "1.7.1"
 argon2 = { version = "0.5.3", features = ["std"] }
 ariadne = { path = "packages/ariadne" }

@@ -5,6 +5,7 @@ version = "1.0.0-local"
 edition.workspace = true
 
 [dependencies]
+alphelion-core = { workspace = true }
 ariadne = { workspace = true }
 async-compression = { workspace = true, features = ["gzip", "tokio"] }
 async-minecraft-ping = { workspace = true, features = ["srv"] }
