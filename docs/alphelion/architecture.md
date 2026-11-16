@@ -38,10 +38,17 @@ client, Java build, database, global application state or telemetry. Its first
 module checks file sizes and SHA-1/SHA-512 checksums. Verification reports which
 checks were possible when provider metadata is incomplete.
 
-The current CurseForge adapter delegates those checks to Alphelion. It still
-handles CurseForge metadata, archive validation and user-facing errors. Download
-recovery and instance ownership stay in the compatibility layer until their own
-migration has tests.
+The installation module builds a unique required-file plan and checks recovered
+progress against it. Missing, unexpected or duplicate saved entries cannot make
+an installation ready. Pending and manual downloads stay distinct; every required
+file must pass the adapter's current integrity checks before staged files can be
+applied. Readiness does not claim that the instance or Minecraft is installed.
+
+The current CurseForge adapter uses both modules. It still handles provider
+metadata, archive validation, disk storage, instance ownership and user-facing
+errors. Existing saved sessions keep their schema and location. Pending progress
+is reconstructed from checked files, rather than file existence. The original
+pack archive is checked again when resuming a pending installation.
 
 This is the first extracted part of the engine, not a complete engine rewrite.
 The existing `theseus` library remains the working compatibility layer.
@@ -51,7 +58,7 @@ The existing `theseus` library remains the working compatibility layer.
 | Area | Responsibility | State |
 | --- | --- | --- |
 | Integrity | Size and checksum verification shared by providers | Implemented |
-| Installation | Plans, saved progress, manual files and completion rules | Next extraction |
+| Installation | Required-file plans, recovered progress and readiness rules | Implemented; persistence remains in the adapter |
 | Instances | Client profiles, local content and configuration ownership | Planned |
 | Runtime | Java selection, launch arguments, processes and logs | Planned |
 | Providers | Minecraft, Microsoft, Modrinth and CurseForge integrations | Existing adapters; migrate gradually |

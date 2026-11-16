@@ -1,4 +1,5 @@
 use super::*;
+use alphelion_core::installation::{FileState, InstallPlan, InstallProgress};
 use std::sync::LazyLock;
 use tokio::sync::Mutex;
 
@@ -68,6 +69,16 @@ struct Record {
 pub(super) struct Session {
 	directory: PathBuf,
 	record: Record,
+}
+
+fn required_plan(manifest: &CfPackManifest) -> InstallPlan<(u32, u32)> {
+	InstallPlan::new(
+		manifest
+			.files
+			.iter()
+			.filter(|file| file.required)
+			.map(|file| (file.project_id, file.file_id)),
+	)
 }
 
 fn lock_error() -> crate::Error {
@@ -232,14 +243,15 @@ impl Session {
 		let download = api.prepare(archive.clone()).await?;
 		let bytes = api.download(&download).await?;
 		let manifest = read_manifest(&bytes)?;
-		let mut seen = HashSet::new();
-		let entries = manifest
-			.files
+		let entries = required_plan(&manifest)
+			.files()
 			.iter()
-			.filter(|file| file.required)
-			.filter(|file| seen.insert((file.project_id, file.file_id)))
-			.map(|reference| Entry {
-				reference: reference.clone(),
+			.map(|&(project_id, file_id)| Entry {
+				reference: CfPackFileRef {
+					project_id,
+					file_id,
+					required: true,
+				},
 				metadata: None,
 				manual: false,
 				source_url: None,
@@ -295,7 +307,21 @@ impl Session {
 		if let Some(path) = &record.profile_path {
 			client::validate_file_name(path)?;
 		}
-		Ok(Self { directory, record })
+		let session = Self { directory, record };
+		session.check_saved_plan(&session.record.manifest)?;
+		Ok(session)
+	}
+
+	fn check_saved_plan(&self, manifest: &CfPackManifest) -> crate::Result<()> {
+		required_plan(manifest)
+			.reconcile(self.record.entries.iter().map(|entry| {
+				(
+					(entry.reference.project_id, entry.reference.file_id),
+					FileState::Pending,
+				)
+			}))
+			.map(|_| ())
+			.map_err(|error| cf_error(error.to_string()))
 	}
 
 	async fn save(&self) -> crate::Result<()> {
@@ -334,13 +360,14 @@ impl Session {
 	}
 
 	async fn summary(&self) -> crate::Result<CfPendingInstall> {
-		let mut downloaded_files = 0;
+		let progress = self.progress().await?;
+		let manual = progress.manual_files().copied().collect::<HashSet<_>>();
 		let mut missing_files = Vec::new();
 		for entry in &self.record.entries {
-			if self.file_path(entry).is_file() {
-				downloaded_files += 1;
-			} else if entry.manual
-				&& let Some(file) = &entry.metadata
+			if manual.contains(&(
+				entry.reference.project_id,
+				entry.reference.file_id,
+			)) && let Some(file) = &entry.metadata
 			{
 				missing_files.push(CfMissingFile {
 					mod_id: file.mod_id,
@@ -355,11 +382,31 @@ impl Session {
 			mod_id: self.record.mod_id,
 			file_id: self.record.file_id,
 			name: self.record.manifest.name.clone(),
-			downloaded_files,
-			total_files: self.record.entries.len(),
+			downloaded_files: progress.verified_files(),
+			total_files: progress.total_files(),
 			missing_files,
 			error: self.record.error.clone(),
 		})
+	}
+
+	async fn progress(&self) -> crate::Result<InstallProgress<(u32, u32)>> {
+		let mut states = Vec::with_capacity(self.record.entries.len());
+		for entry in &self.record.entries {
+			let state = if self.valid_cached_file(entry).await? {
+				FileState::Verified
+			} else if entry.manual && entry.metadata.is_some() {
+				FileState::ManualDownload
+			} else {
+				FileState::Pending
+			};
+			states.push((
+				(entry.reference.project_id, entry.reference.file_id),
+				state,
+			));
+		}
+		required_plan(&self.record.manifest)
+			.reconcile(states)
+			.map_err(|error| cf_error(error.to_string()))
 	}
 
 	async fn archive_bytes(&self, api: &client::Api) -> crate::Result<Vec<u8>> {
@@ -381,15 +428,18 @@ impl Session {
 		zip_bytes: Option<&[u8]>,
 		bar: Option<&crate::event::LoadingBarId>,
 	) -> crate::Result<bool> {
+		self.check_saved_plan(&self.record.manifest)?;
+		let plan = required_plan(&self.record.manifest);
 		let mut bundled = zip_bytes
 			.map(|bytes| {
 				BundledFiles::new(bytes, &self.record.manifest.overrides)
 			})
 			.transpose()?;
-		let mut complete = true;
+		let mut states = Vec::with_capacity(self.record.entries.len());
 		let mut names = HashSet::new();
 		for index in 0..self.record.entries.len() {
 			let mut entry = self.record.entries[index].clone();
+			let mut file_state = FileState::Verified;
 			let file = match entry.metadata.clone() {
 				Some(file) => file,
 				None => {
@@ -445,7 +495,7 @@ impl Session {
 					}
 					Ok(None) => {
 						entry.manual = true;
-						complete = false;
+						file_state = FileState::ManualDownload;
 					}
 					Err(error) => {
 						self.record.entries[index] = entry;
@@ -454,6 +504,10 @@ impl Session {
 					}
 				}
 			}
+			states.push((
+				(entry.reference.project_id, entry.reference.file_id),
+				file_state,
+			));
 			self.record.entries[index] = entry;
 			self.save().await?;
 			if let Some(bar) = bar {
@@ -464,7 +518,10 @@ impl Session {
 				);
 			}
 		}
-		Ok(complete)
+		Ok(plan
+			.reconcile(states)
+			.map_err(|error| cf_error(error.to_string()))?
+			.is_ready())
 	}
 
 	async fn import(
@@ -515,6 +572,10 @@ impl Session {
 	}
 
 	async fn finish(&mut self, bytes: &[u8]) -> crate::Result<String> {
+		self.progress()
+			.await?
+			.ensure_ready()
+			.map_err(|error| cf_error(error.to_string()))?;
 		let state = crate::State::get().await?;
 		let marker_name = ".lunivex-curseforge-install";
 		let id = identifier(self.record.mod_id, self.record.file_id);
@@ -659,25 +720,7 @@ impl Session {
 		let result = async {
 			let bytes = self.archive_bytes(api).await?;
 			let manifest = read_manifest(&bytes)?;
-			let expected = manifest
-				.files
-				.iter()
-				.filter(|file| file.required)
-				.map(|file| (file.project_id, file.file_id))
-				.collect::<HashSet<_>>();
-			let saved = self
-				.record
-				.entries
-				.iter()
-				.map(|entry| {
-					(entry.reference.project_id, entry.reference.file_id)
-				})
-				.collect::<HashSet<_>>();
-			if expected != saved {
-				return Err(cf_error(
-					"Saved installation files do not match the original modpack",
-				));
-			}
+			self.check_saved_plan(&manifest)?;
 			self.record.manifest = manifest;
 			if self.prepare_files(api, Some(&bytes), bar.as_ref()).await? {
 				return Ok(Some(self.finish(&bytes).await?));
@@ -1149,6 +1192,88 @@ mod tests {
 			checked_directory(Path::new("/installations"), "12-34").unwrap(),
 			Path::new("/installations/12-34")
 		);
+	}
+
+	#[tokio::test]
+	async fn recovery_counts_only_verified_files_and_keeps_manual_files_visible()
+	 {
+		let bytes = archive(&[("fabric.mod.json", b"{}")]);
+		let root = tempfile::tempdir().unwrap();
+		let mut session =
+			fixture(root.path(), vec![metadata(1, &bytes, None)]).await;
+		session.record.entries[0].manual = true;
+		session.save().await.unwrap();
+		let path = session.file_path(&session.record.entries[0]);
+		write_atomic(&path, b"broken cache").await.unwrap();
+		let pending = session.summary().await.unwrap();
+		assert_eq!(pending.downloaded_files, 0);
+		assert_eq!(pending.total_files, 1);
+		assert_eq!(pending.missing_files.len(), 1);
+		assert!(!path.exists());
+		write_atomic(&path, &bytes).await.unwrap();
+		let restored = Session::load(root.path(), "99-99").await.unwrap();
+		let pending = restored.summary().await.unwrap();
+		assert_eq!(pending.downloaded_files, 1);
+		assert!(pending.missing_files.is_empty());
+	}
+
+	#[tokio::test]
+	async fn duplicate_or_missing_saved_entries_cannot_restore_a_plan() {
+		let bytes = archive(&[("fabric.mod.json", b"{}")]);
+		let root = tempfile::tempdir().unwrap();
+		let mut session =
+			fixture(root.path(), vec![metadata(1, &bytes, None)]).await;
+		session
+			.record
+			.entries
+			.push(session.record.entries[0].clone());
+		session.save().await.unwrap();
+		assert!(Session::load(root.path(), "99-99").await.is_err());
+		session.record.entries.clear();
+		session.save().await.unwrap();
+		assert!(Session::load(root.path(), "99-99").await.is_err());
+	}
+
+	#[tokio::test]
+	async fn the_original_archive_remains_the_source_of_required_files() {
+		let bytes = archive(&[("fabric.mod.json", b"{}")]);
+		let root = tempfile::tempdir().unwrap();
+		let mut session =
+			fixture(root.path(), vec![metadata(1, &bytes, None)]).await;
+		session.record.entries.clear();
+		session.record.manifest.files.clear();
+		session.save().await.unwrap();
+		let mut restored = Session::load(root.path(), "99-99").await.unwrap();
+		let api = Server::new(|_| panic!("The saved archive is already valid"));
+		let result = restored.run(&api.api()).await.unwrap();
+		assert!(result.profile_path.is_none());
+		assert!(
+			result
+				.pending
+				.unwrap()
+				.error
+				.unwrap()
+				.contains("required installation plan")
+		);
+		assert!(!restored.record.completed);
+	}
+
+	#[tokio::test]
+	async fn missing_files_block_profile_creation_before_application_state_is_needed()
+	 {
+		let bytes = archive(&[("fabric.mod.json", b"{}")]);
+		let root = tempfile::tempdir().unwrap();
+		let mut session =
+			fixture(root.path(), vec![metadata(1, &bytes, None)]).await;
+		let result = session.finish(&[]).await;
+		assert!(
+			result
+				.unwrap_err()
+				.to_string()
+				.contains("Required files have not all been verified")
+		);
+		assert!(session.record.profile_path.is_none());
+		assert!(!session.record.completed);
 	}
 
 	#[tokio::test]
