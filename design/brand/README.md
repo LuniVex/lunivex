@@ -1,5 +1,13 @@
 # LuniVex Client logo studies
 
+The selected direction is the ringed planet from option 1 of the second round.
+
+- `lunivex-symbol.svg`: the master mark, with a transparent background.
+- `lunivex-icon.svg`: the mark on a rounded dark backplate.
+- `lunivex-icon.png`: a 512-pixel export for previews.
+
+These masters use monochrome colours while the final palette is decided.
+
 The current round is `preview-v2.svg` / `preview-v2.png`: standalone symbols
 without an initial. The editable sources are `orbit-symbol.svg`,
 `trajectory-symbol.svg` and `nova-symbol.svg`.

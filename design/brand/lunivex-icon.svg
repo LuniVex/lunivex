@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" color="#edf2f7" role="img" aria-labelledby="title">
+	<title id="title">LuniVex ringed planet icon</title>
+	<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<ellipse cx="128" cy="128" rx="105" ry="43" transform="rotate(-24 128 128)" fill="none" stroke="currentColor" stroke-width="15"/>
+	<circle cx="128" cy="128" r="60" fill="currentColor"/>
+</svg>

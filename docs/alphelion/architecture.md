@@ -86,6 +86,6 @@ is the architectural reference: distinct responsibilities for the app, content,
 accounts, Java and game services. This implementation uses original LuniVex code;
 no OneClient code or branding has been copied.
 
-LuniVex remains the client name; Alphelion remains the core name. Logo studies in
-`design/brand` explore an orbital/stellar identity in monochrome. Selecting a
-symbol comes before selecting a replacement palette or applying it to the app.
+LuniVex remains the client name; Alphelion remains the core name. Its selected
+symbol is the ringed planet, with master SVG assets in `design/brand`. The final
+palette and wordmark are separate design decisions.
