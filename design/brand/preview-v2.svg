@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="740" viewBox="0 0 1200 740" role="img" aria-labelledby="title desc">
+	<title id="title">LuniVex standalone symbol studies</title>
+	<desc id="desc">Three standalone symbols shown at large and taskbar sizes: a ringed planet, an orbital path and a nova.</desc>
+<defs>
+<symbol id="orbit" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<ellipse cx="128" cy="128" rx="105" ry="43" transform="rotate(-24 128 128)" fill="none" stroke="#edf2f7" stroke-width="15"/>
+	<circle cx="128" cy="128" r="60" fill="#edf2f7"/>
+</symbol>
+<symbol id="trajectory" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<g transform="rotate(-32 128 128)">
+		<ellipse cx="128" cy="128" rx="98" ry="58" fill="none" stroke="#edf2f7" stroke-width="17"/>
+		<circle cx="90" cy="128" r="18" fill="#edf2f7"/>
+		<circle cx="198" cy="169" r="25" fill="#11151b"/>
+		<circle cx="198" cy="169" r="16" fill="#edf2f7"/>
+	</g>
+</symbol>
+<symbol id="nova" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="54" fill="#11151b"/>
+	<path d="M128 28L149 83L201 55L174 108L229 128L174 149L201 201L149 174L128 229L107 174L55 201L82 149L27 128L82 107L55 55L107 82Z" fill="#edf2f7"/>
+	<circle cx="128" cy="128" r="23" fill="#11151b"/>
+</symbol>
+</defs>
+	<rect width="1200" height="740" fill="#0b0e12"/>
+	<g font-family="DejaVu Sans, sans-serif">
+		<text x="64" y="71" font-size="30" font-weight="bold" fill="#edf2f7">LuniVex</text>
+		<text x="64" y="105" font-size="15" fill="#929ca9">Client identity / standalone symbols</text>
+		<path d="M64 132H1136M410 166V650M790 166V650" fill="none" stroke="#252b34"/>
+		<use x="80" y="176" width="256" height="256" xlink:href="#orbit"/>
+		<use x="472" y="176" width="256" height="256" xlink:href="#trajectory"/>
+		<use x="864" y="176" width="256" height="256" xlink:href="#nova"/>
+		<g fill="#edf2f7" font-size="24" font-weight="bold">
+			<text x="80" y="485">01 / Planet</text>
+			<text x="472" y="485">02 / Orbit</text>
+			<text x="864" y="485">03 / Nova</text>
+		</g>
+		<g fill="#929ca9" font-size="14">
+			<text x="80" y="515">A simple ringed planet.</text>
+			<text x="472" y="515">An orbit and its moving point.</text>
+			<text x="864" y="515">A stellar burst with an open core.</text>
+			<text x="80" y="562">16 / 24 / 32 / 48 px</text>
+			<text x="472" y="562">16 / 24 / 32 / 48 px</text>
+			<text x="864" y="562">16 / 24 / 32 / 48 px</text>
+		</g>
+		<use x="80" y="596" width="16" height="16" xlink:href="#orbit"/>
+		<use x="120" y="592" width="24" height="24" xlink:href="#orbit"/>
+		<use x="168" y="588" width="32" height="32" xlink:href="#orbit"/>
+		<use x="224" y="580" width="48" height="48" xlink:href="#orbit"/>
+		<use x="472" y="596" width="16" height="16" xlink:href="#trajectory"/>
+		<use x="512" y="592" width="24" height="24" xlink:href="#trajectory"/>
+		<use x="560" y="588" width="32" height="32" xlink:href="#trajectory"/>
+		<use x="616" y="580" width="48" height="48" xlink:href="#trajectory"/>
+		<use x="864" y="596" width="16" height="16" xlink:href="#nova"/>
+		<use x="904" y="592" width="24" height="24" xlink:href="#nova"/>
+		<use x="952" y="588" width="32" height="32" xlink:href="#nova"/>
+		<use x="1008" y="580" width="48" height="48" xlink:href="#nova"/>
+		<text x="64" y="699" font-size="13" fill="#687482">Symbol studies / shape first, colour later.</text>
+	</g>
+</svg>

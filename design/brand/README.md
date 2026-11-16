@@ -1,5 +1,11 @@
 # LuniVex Client logo studies
 
+The current round is `preview-v2.svg` / `preview-v2.png`: standalone symbols
+without an initial. The editable sources are `orbit-symbol.svg`,
+`trajectory-symbol.svg` and `nova-symbol.svg`.
+
+The earlier monogram studies are kept below for comparison.
+
 These are original SVG drafts for the client's orbital/stellar identity.
 The existing app icon is still in use. The three options are:
 
